@@ -7,21 +7,21 @@ on:
         branches: [ master ]
 
 jobs:
-   amd64_windows_gcc:
-    runs-on: windows-2019
-    defaults:
-      run:
-        shell: msys2 {0}
-    steps:
-    - uses: actions/checkout@v2
-    - uses: msys2/setup-msys2@v2
-      with:
-        install: gcc make mingw-w64-x86_64-opencl-icd-git mingw-w64-x86_64-opencl-headers
-    - run: gcc -v
-    - run: g++ test.cpp -o hello.exe
-    - run: file ./hello.exe
-    - run: ./hello
-    - run: g++ cl.cpp -lOpenCL -o cl.exe
+    amd64_windows_gcc:
+        runs-on: windows-2019
+        defaults:
+          run:
+            shell: msys2 {0}
+        steps:
+            - uses: actions/checkout@v2
+            - uses: msys2/setup-msys2@v2
+              with:
+                install: gcc make mingw-w64-x86_64-opencl-icd-git mingw-w64-x86_64-opencl-headers
+            - run: gcc -v
+            - run: g++ test.cpp -o hello.exe
+            - run: file ./hello.exe
+            - run: ./hello
+            - run: g++ cl.cpp -lOpenCL -o cl.exe
 
     build-windows-x64:
         runs-on: windows-2019
