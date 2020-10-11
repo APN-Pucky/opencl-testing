@@ -12,10 +12,10 @@ jobs:
         strategy:
           matrix:
             compiler: [gcc, clang]
-            msystem: [MINGW64]
+            msystem: [MINGW32, MINGW64]
             include:
-                #- msystem: MINGW32
-                #  mexe: mingw-w64-i686
+                - msystem: MINGW32
+                  mexe: mingw-w64-i686
                 - msystem: MINGW64
                   mexe: mingw-w64-x86_64
                 - compiler: gcc
