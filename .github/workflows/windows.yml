@@ -12,7 +12,7 @@ jobs:
         strategy:
           matrix:
             compiler: [gcc, clang]
-            msystem: [MINGW32, MINGW64]
+            msystem: [MINGW64]
             include:
                 - compiler: gcc
                   cc: gcc
@@ -28,14 +28,14 @@ jobs:
             - uses: msys2/setup-msys2@v2
               with:
                 install:  make cmake
-            - run: pacman --noconfirm -S gcc
+            - run: pacman --noconfirm -S mingw-w64-x86_64-gcc
               if: ${{ matrix.compiler == 'gcc' }}
             - run: pacman --noconfirm -S mingw-w64-x86_64-clang
               if: ${{ (matrix.msystem == 'MINGW64') && (matrix.compiler == 'clang') }}
             - run: pacman --noconfirm -S mingw-w64-i686-clang
               if: ${{ (matrix.msystem == 'MINGW32') && (matrix.compiler == 'clang') }}
-            - run: ${{ matrix.compiler }} --version
             - run: ls -la /usr/bin
+            - run: ${{ matrix.compiler }} --version
             - run: mkdir build 
             - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -Bbuild
             - run: make -C build install
