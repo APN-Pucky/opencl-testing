@@ -46,7 +46,7 @@ int main() {
     const int size_deck=10;
     const int sims = 1024;
     const int N = sims;
-    const ulong seed = 5;
+    const unsigned long seed = 5;
     int err;
 
     cl_platform_id platform;
