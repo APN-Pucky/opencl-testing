@@ -1,10 +1,11 @@
 
-add_executable( clewTTest clewTest.cpp )
-add_executable( clewTTestC clewTestC.c )
+add_executable( openclTest openclTest.cpp )
+add_executable( openclTestC openclTestC.c )
 
-target_link_libraries( clewTTest clew )
-target_link_libraries( clewTTestC clew )
+target_link_libraries( openclTest clew )
+target_link_libraries( openclTestC clew )
 
-install(TARGETS clewTTestC 
-	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
+install(TARGETS openclTestC RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS openclTest RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+	
