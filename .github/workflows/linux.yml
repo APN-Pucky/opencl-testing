@@ -20,5 +20,5 @@ jobs:
             - uses: actions/upload-artifact@v2
               with:
                 name: test
-                path: dist/bin/clewTTest/clewTTestC
+                path: dist/bin/clewTTestC
 
