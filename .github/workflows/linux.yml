@@ -21,9 +21,9 @@ jobs:
               if: ${{ matrix.compiler == '1' }}
             - run: mkdir build 
             - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist  -DCMAKE_C_COMPILER=${{ cc[matrix.compiler] }} -DCMAKE_CXX_COMPILER=${{ cxx[matrix.compiler] }} -Bbuild
-                with:
-                    cc: [gcc,clang]
-                    cxx: [g++,clang++]
+              with:
+                cc: [gcc,clang]
+                cxx: [g++,clang++]
             - run: make -C build install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
