@@ -29,6 +29,8 @@ jobs:
             shell: msys2 {0}
         steps:
             - uses: actions/checkout@v2
+              with:
+                submodules: true
             - uses: msys2/setup-msys2@v2
               with:
                 msystem: ${{ matrix.msystem }}
@@ -38,8 +40,10 @@ jobs:
             - run: ls -la /mingw32/bin/
             - run: ${{ matrix.compiler }} --version
             - run: mkdir build 
-            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -Bbuild
-            - run: make -C build install
+            - run: |
+                cd build
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -Bbuild
+                make install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
               with:

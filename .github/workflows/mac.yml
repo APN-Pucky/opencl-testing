@@ -14,8 +14,10 @@ jobs:
               with:
                 submodules: true
             - run: mkdir build 
-            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=g++ -Bbuild
-            - run: make -C build install
+            - run: |
+                cd build
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_CXX_COMPILER=g++ -Bbuild
+                make install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
               with:
