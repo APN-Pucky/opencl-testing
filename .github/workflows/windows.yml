@@ -23,11 +23,11 @@ jobs:
                 install:  make cmake
             - name: Setup Compiler
               run: pacman --noconfirm -S gcc
-                if: ${{ matrix.compiler == 'gcc' }}
+              if: ${{ matrix.compiler == 'gcc' }}
               run: pacman --noconfirm -S mingw-w64-x86_64-clang
-                if: ${{ (matrix.msystem == 'MINGW64') && (matrix.compiler == 'clang') }}
+              if: ${{ (matrix.msystem == 'MINGW64') && (matrix.compiler == 'clang') }}
               run: pacman --noconfirm -S mingw-w64-i686-clang
-                if: ${{ (matrix.msystem == 'MINGW32') && (matrix.compiler == 'clang') }}
+              if: ${{ (matrix.msystem == 'MINGW32') && (matrix.compiler == 'clang') }}
               run: ${{ matrix.compiler }} --version
             - run: ls -la /usr/bin
             - run: mkdir build 
