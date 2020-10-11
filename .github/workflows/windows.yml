@@ -9,46 +9,19 @@ on:
 jobs:
     compile_windows:
         runs-on: windows-2019
-        strategy:
-          matrix:
-            compiler: [gcc] #[gcc, clang]
-            msystem: [MINGW32 , MINGW64]
-            include:
-                - msystem: MINGW32
-                  mexe: mingw-w64-i686
-                - msystem: MINGW64
-                  mexe: mingw-w64-x86_64
-                - compiler: gcc
-                  cc: gcc
-                  cxx: g++
-                  # does not work with boost for somereason
-                #- compiler: clang
-                #  cc: clang
-                #  cxx: clang++
-        defaults:
-          run:
-            shell: msys2 {0}
         steps:
             - uses: actions/checkout@v2
               with:
                 submodules: true
-            - uses: msys2/setup-msys2@v2
-              with:
-                msystem: ${{ matrix.msystem }}
-                install:  make cmake 
-            - run: pacman --noconfirm -S ${{ matrix.mexe }}-boost
-            - run: pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
             - run: ls -la /usr/bin
-            - run: ls -la /mingw32/bin/
-            - run: ${{ matrix.compiler }} --version
+            - run: cl --version
             - run: mkdir build 
             - run: |
                 cd build
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
                 make install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
               with:
-                name: ${{ matrix.compiler }}-${{ matrix.msystem }}test-bin
+                name: win-test-bin
                 path: dist/bin/
-
