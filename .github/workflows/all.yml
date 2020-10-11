@@ -18,10 +18,9 @@ jobs:
               with:
                 install: gcc make cmake
             - run: mkdir build 
-            - run: cd build
-            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=g++
+            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=g++ -Bbuild
             - run: make install
-            - run: ls dist
+            - run: ls dist/bin
 
     build-windows-x64:
         runs-on: windows-2019
