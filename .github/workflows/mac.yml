@@ -13,7 +13,7 @@ jobs:
             - uses: actions/checkout@v2
             - run: mkdir build 
             - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=g++ -Bbuild
-            - run: make i-f build/nstall
+            - run: make -C build install
             - run: ls dist/bin
             - uses: actions/upload-artifact@v2
               with:
