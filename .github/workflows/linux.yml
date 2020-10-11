@@ -5,9 +5,9 @@ on:
         branches: [ master ]
     pull_request:
         branches: [ master ]
-        
-cc: [gcc,clang]
-cxx: [g++,clang++]
+env:        
+    cc: [gcc,clang]
+    cxx: [g++,clang++]
 
 jobs:
     compile_ubuntu:
@@ -23,7 +23,7 @@ jobs:
             - run: sudo apt-get install -y clang
               if: ${{ matrix.compiler == '1' }}
             - run: mkdir build 
-            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist  -DCMAKE_C_COMPILER=${{ cc[matrix.compiler] }} -DCMAKE_CXX_COMPILER=${{ cxx[matrix.compiler] }} -Bbuild
+            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist  -DCMAKE_C_COMPILER=${{ env.cc[matrix.compiler] }} -DCMAKE_CXX_COMPILER=${{ env.cxx[matrix.compiler] }} -Bbuild
             - run: make -C build install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
