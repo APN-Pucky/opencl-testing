@@ -16,12 +16,11 @@ jobs:
             - uses: actions/checkout@v2
             - uses: msys2/setup-msys2@v2
               with:
-                install: gcc make mingw-w64-x86_64-opencl-icd-git mingw-w64-x86_64-opencl-headers
-            - run: gcc -v
-            - run: g++ test.cpp -o hello.exe
-            - run: file ./hello.exe
-            - run: ./hello
-            - run: g++ cl.cpp -lOpenCL -o cl.exe
+                install: gcc make cmake
+            - run: md build 
+            - run: cd build
+            - run: cmake .. -DCMAKE_INSTALL_PREFIX=../dist
+            - run: make install
 
     build-windows-x64:
         runs-on: windows-2019
