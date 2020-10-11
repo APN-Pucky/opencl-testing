@@ -6,8 +6,8 @@ on:
     pull_request:
         branches: [ master ]
 env:        
-    cc: [gcc,clang]
-    cxx: [g++,clang++]
+    cc: [ gcc , clang ]
+    cxx: [ g++ , clang++ ]
 
 jobs:
     compile_ubuntu:
