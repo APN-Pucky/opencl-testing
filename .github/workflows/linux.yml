@@ -14,16 +14,20 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            compiler: [0, 1]
+            name: [ gcc , clang ]
+            include:
+                - name: gcc
+                  cc: gcc
+                  cxx: g++
+                - name: clang
+                  cc: clang
+                  cxx: clang++
         steps:
             - uses: actions/checkout@v2
             - run: sudo apt-get install -y make cmake
-            - run: sudo apt-get install -y gcc
-              if: ${{ matrix.compiler == '0' }}
-            - run: sudo apt-get install -y clang
-              if: ${{ matrix.compiler == '1' }}
+            - run: sudo apt-get install -y ${{ matrix.cc }}
             - run: mkdir build 
-            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist  -DCMAKE_C_COMPILER=${{ env.cc[matrix.compiler] }} -DCMAKE_CXX_COMPILER=${{ env.cxx[matrix.compiler] }} -Bbuild
+            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -Bbuild
             - run: make -C build install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
