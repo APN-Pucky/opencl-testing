@@ -1,10 +1,10 @@
 
-add_executable( clewTest clewTest.cpp )
-add_executable( clewTestC clewTestC.c )
+add_executable( clewTest2 clewTest.cpp )
+add_executable( clewTestC2 clewTestC.c )
 
-target_link_libraries( clewTest clew )
-target_link_libraries( clewTestC clew )
+target_link_libraries( clewTest2 clew )
+target_link_libraries( clewTestC2 clew )
 
-install(TARGETS clewTest 
+install(TARGETS clewTest2 
 	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
