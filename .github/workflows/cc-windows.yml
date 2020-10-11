@@ -7,32 +7,6 @@ on:
         branches: [ master ]
 
 jobs:
-    compile_windows:
-        runs-on: windows-2019
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                submodules: true
-            - uses: msys2/setup-msys2@v2
-              with:
-                msystem: ${{ matrix.msystem }}
-                install:  make cmake 
-            - run: pacman --noconfirm -S ${{ matrix.mexe }}-boost
-            - run: pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
-            - run: ls -la /usr/bin
-            - run: ls -la /mingw32/bin/
-            - run: ${{ matrix.compiler }} --version
-            - run: mkdir build 
-            - run: |
-                cd build
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
-                make install
-            - run: ls -la dist/bin/
-            - uses: actions/upload-artifact@v2
-              with:
-                name: ${{ matrix.compiler }}-${{ matrix.msystem }}test-bin
-                path: dist/bin/
-
     cross_compile_windows:
         runs-on: windows-2019
         strategy:
