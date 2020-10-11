@@ -19,7 +19,7 @@ jobs:
                 install: gcc make cmake
             - run: mkdir build 
             - run: cd build
-            - run: cmake .. -DCMAKE_INSTALL_PREFIX=../dist
+            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist
             - run: make install
             - run: ls dist
 
