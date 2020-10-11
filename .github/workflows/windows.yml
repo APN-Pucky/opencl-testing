@@ -1,4 +1,4 @@
-name: Build Every Commit
+name: Windows
 
 on:
     push:

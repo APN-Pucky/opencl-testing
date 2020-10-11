@@ -1,4 +1,4 @@
-name: Mac
+name: Ubuntu
 
 on:
     push:
@@ -7,10 +7,12 @@ on:
         branches: [ master ]
 
 jobs:
-    macos_gcc:
-        runs-on: macos-10.15
+    amd64_windows_gcc:
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
+            - name: Install dependencies
+                run: sudo apt-get install -y gcc make cmake
             - run: mkdir build 
             - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=g++ -Bbuild
             - run: make -C build install
