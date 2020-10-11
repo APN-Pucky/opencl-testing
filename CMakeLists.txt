@@ -5,6 +5,8 @@ cmake_minimum_required (VERSION 2.6)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(Boost_USE_STATIC_LIBS   ON)
+set( BUILD_SHARED_LIBRARIES OFF)
+set( CMAKE_EXE_LINKER_FLAGS "-static")
 find_package(Boost EXACT COMPONENTS system thread filesystem regex timer REQUIRED)
 
 
