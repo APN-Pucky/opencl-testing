@@ -41,11 +41,11 @@ int main() {
         printf("opencl library not found.\n");
         return -1;
     }
-    const int size_card=10+4*3*9+Skill::num_skills*2+2;
-    const int size_all_cards = 2*size_card;
-    const int size_deck=10;
-    const int sims = 1024;
-    const int N = sims;
+    const unsigned int size_card=10+4*3*9+Skill::num_skills*2+2;
+    const unsigned int size_all_cards = 2*size_card;
+    const unsigned int size_deck=10;
+    const unsigned int sims = 1024;
+    const unsigned int N = sims;
     const unsigned long seed = 5;
     int err;
 
