@@ -13,16 +13,16 @@ jobs:
             - uses: actions/checkout@v2
               with:
                 submodules: true
-            uses: ashutoshvarma/action-cmake-build@master
-            with:
-              build-dir: ${{ runner.workspace }}/build
-              # will set the CC & CXX for cmake
-              cc: cl
-              cxx: cl
-              build-type: Release
-              # Extra options pass to cmake while configuring project
-              configure-options: -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/dist
-              install-build: true
+            - uses: ashutoshvarma/action-cmake-build@master
+              with:
+                build-dir: ${{ runner.workspace }}/build
+                # will set the CC & CXX for cmake
+                cc: cl
+                cxx: cl
+                build-type: Release
+                # Extra options pass to cmake while configuring project
+                configure-options: -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/dist
+                install-build: true
             #- run: cl.exe --version
             #- run: md build 
             #- run: |
