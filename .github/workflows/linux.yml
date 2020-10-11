@@ -15,13 +15,13 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Install dependencies
-              - run: sudo apt-get install -y make cmake
-              - run: sudo apt-get install -y gcc
+              run: sudo apt-get install -y make cmake
+              run: sudo apt-get install -y gcc
                 if: ${{ matrix.compiler == 'gcc' }}
-              - run: sudo apt-get install -y clang
+              run: sudo apt-get install -y clang
                 if: ${{ matrix.compiler == 'clang' }}
             - run: mkdir build 
-            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=g++ -Bbuild
+            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_C_COMPILER=${{ matrix.compiler }} -Bbuild
             - run: make -C build install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
