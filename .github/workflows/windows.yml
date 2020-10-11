@@ -18,7 +18,7 @@ jobs:
               with:
                 install: gcc make cmake mingw-w64-x86_64-toolchain
             - run: mkdir build 
-            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=mingw-w64-x86_64-g++ -DCMAKE_C_COMPILER=mingw-w64-x86_64-gcc -Bbuild
+            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=mingw-w64-g++ -DCMAKE_C_COMPILER=mingw-w64-gcc -Bbuild
             - run: make -C build install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
