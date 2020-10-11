@@ -7,7 +7,7 @@ on:
         branches: [ master ]
 
 jobs:
-    macos_gcc:
+    compile_macos:
         runs-on: macos-10.15
         steps:
             - uses: actions/checkout@v2
