@@ -21,7 +21,7 @@ jobs:
             - uses: msys2/setup-msys2@v2
               with:
                 install:  make cmake
-            - run: pacman --noconfirm -S gcc
+            - run: pacman --noconfirm -S gcc g++
               if: ${{ matrix.compiler == 'gcc' }}
             - run: pacman --noconfirm -S mingw-w64-x86_64-clang
               if: ${{ (matrix.msystem == 'MINGW64') && (matrix.compiler == 'clang') }}
@@ -30,7 +30,7 @@ jobs:
             - run: ${{ matrix.compiler }} --version
             - run: ls -la /usr/bin
             - run: mkdir build 
-            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_C_COMPILER=${{ matrix.compiler }} -Bbuild
+            - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist  -Bbuild
             - run: make -C build install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
