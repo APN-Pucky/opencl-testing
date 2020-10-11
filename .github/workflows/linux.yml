@@ -12,7 +12,7 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Install dependencies
-                run: sudo apt-get install -y gcc make cmake
+              run: sudo apt-get install -y gcc make cmake
             - run: mkdir build 
             - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=g++ -Bbuild
             - run: make -C build install
