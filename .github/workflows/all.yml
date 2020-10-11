@@ -17,10 +17,11 @@ jobs:
             - uses: msys2/setup-msys2@v2
               with:
                 install: gcc make cmake
-            - run: md build 
+            - run: mkdir build 
             - run: cd build
             - run: cmake .. -DCMAKE_INSTALL_PREFIX=../dist
             - run: make install
+            - run: ls dist
 
     build-windows-x64:
         runs-on: windows-2019
