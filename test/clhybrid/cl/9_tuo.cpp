@@ -32,13 +32,10 @@ struct CardStatus cardstatus(__global int* all_cards, int id) {
 	return ret;
 }
 
-void test123(int abc) {
-
-}
 
 
 
-__kernel void simulate( __global int* all_cards, const unsigned int size_all_cards, __global int* gmydeck,__global int* genemydeck, __global int* g_winner, const unsigned int count, const ulong gseed) 
+__kernel void simulate( __global int* all_cards, const unsigned int size_all_cards, __global int* gmydeck,__global int* genemydeck, __global int* g_winner, const unsigned int count, const unsigned long gseed) 
 {
 	int id = get_global_id(0);	
 	ulong seed = gseed + id;

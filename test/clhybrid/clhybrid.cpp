@@ -159,7 +159,6 @@ int main() {
 	    printf("%d",results[i]);
     }
 
-    test123(0);
     simulate(allcards,size_all_cards,mydeck,enemydeck,results,N,seed);
 	printf("\nsingle run %d\n",results[0]);
 
