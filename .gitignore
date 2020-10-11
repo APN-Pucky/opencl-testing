@@ -9,3 +9,7 @@ build*/
 dist/
 
 Makefile
+
+CMakeFiles
+
+CMakeCache.txt
