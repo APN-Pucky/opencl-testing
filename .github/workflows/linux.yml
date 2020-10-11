@@ -19,6 +19,6 @@ jobs:
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
               with:
-                name: test
-                path: dist/bin/clewTTestC
+                name: test-bin
+                path: dist/bin/
 
