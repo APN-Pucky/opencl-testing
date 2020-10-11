@@ -21,6 +21,7 @@ jobs:
                   cxx: clang++
         steps:
             - uses: actions/checkout@v2
+            - run: ls -la
             - run: sudo apt-get install -y make cmake
             - run: sudo apt-get install -y ${{ matrix.compiler }}
             - run: mkdir build 
