@@ -200,7 +200,7 @@ int main(int argc, char** argv)
     printf("num platforms: %i\n", num_platforms);
     // Connect to a compute device
     //
-    int gpu = 0;
+    int gpu = 1;
     err = clGetDeviceIDs(platform_ids[0], gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
     if (err != CL_SUCCESS)
     {
