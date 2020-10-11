@@ -13,14 +13,13 @@ jobs:
             - uses: actions/checkout@v2
               with:
                 submodules: true
-            - run: ls -la /usr/bin
             - run: cl --version
-            - run: mkdir build 
+            - run: md build 
             - run: |
                 cd build
                 cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
                 make install
-            - run: ls -la dist/bin/
+            - run: dir dist/bin/
             - uses: actions/upload-artifact@v2
               with:
                 name: win-test-bin
