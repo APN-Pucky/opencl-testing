@@ -37,10 +37,6 @@ add_subdirectory(src)
 add_subdirectory(include)
 
 if( BUILD_TESTS )
-  add_subdirectory(clewTest)
-endif( BUILD_TESTS )
-
-if( BUILD_TESTS )
-  add_subdirectory(cltuo)
+  add_subdirectory(test)
 endif( BUILD_TESTS )
 

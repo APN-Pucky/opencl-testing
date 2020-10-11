@@ -1,0 +1,1 @@
+/usr/bin/c++   -fPIC -Wall    -lstdc++ -rdynamic CMakeFiles/clewTest.dir/clewTest.cpp.o  -o clewTest  ../src/libclew.a -ldl 
