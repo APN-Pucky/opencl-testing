@@ -13,7 +13,6 @@ jobs:
           matrix:
             compiler: [gcc, clang]
             msystem: [MINGW32, MINGW64]
-            name: [ gcc , clang ]
             include:
                 - compiler: gcc
                   cc: gcc
