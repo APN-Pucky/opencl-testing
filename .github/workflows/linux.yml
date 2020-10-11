@@ -9,10 +9,17 @@ on:
 jobs:
     amd64_windows_gcc:
         runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            compiler: [gcc, clang]
         steps:
             - uses: actions/checkout@v2
             - name: Install dependencies
-              run: sudo apt-get install -y gcc make cmake
+              - run: sudo apt-get install -y make cmake
+              - run: sudo apt-get install -y gcc
+                if: ${{ matrix.compiler == 'gcc' }}
+              - run: sudo apt-get install -y clang
+                if: ${{ matrix.compiler == 'clang' }}
             - run: mkdir build 
             - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=g++ -Bbuild
             - run: make -C build install
