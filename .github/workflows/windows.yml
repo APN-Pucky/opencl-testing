@@ -12,10 +12,10 @@ jobs:
         strategy:
           matrix:
             compiler: [gcc, clang]
-            msystem: [ MINGW64 ] #[MINGW32 , MINGW64]
+            msystem: [MINGW32 , MINGW64]
             include:
-                #- msystem: MINGW32
-                #  mexe: mingw-w64-i686
+                - msystem: MINGW32
+                  mexe: mingw-w64-i686
                 - msystem: MINGW64
                   mexe: mingw-w64-x86_64
                 - compiler: gcc
@@ -34,7 +34,9 @@ jobs:
             - uses: msys2/setup-msys2@v2
               with:
                 msystem: ${{ matrix.msystem }}
-                install:  make cmake ${{ matrix.mexe }}-boost
+                install:  make cmake 
+            - run: pacman --noconfirm -S ${{ matrix.mexe }}-boost
+                if: $ {{  matrix.compiler  == gcc }}
             - run: pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
             - run: ls -la /usr/bin
             - run: ls -la /mingw32/bin/
