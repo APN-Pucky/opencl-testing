@@ -34,7 +34,7 @@ jobs:
             - uses: msys2/setup-msys2@v2
               with:
                 msystem: ${{ matrix.msystem }}
-                install:  make cmake mingw-w64-boost
+                install:  make cmake ${{ matrix.mexe }}-boost
             - run: pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
             - run: ls -la /usr/bin
             - run: ls -la /mingw32/bin/
