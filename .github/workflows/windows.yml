@@ -30,6 +30,7 @@ jobs:
                 install:  make cmake
             - run: pacman --noconfirm -S ${{ matrix.msystem }}-${{ matrix.compiler }}
             - run: ls -la /usr/bin
+            - run: ls -la /
             - run: ${{ matrix.compiler }} --version
             - run: mkdir build 
             - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -Bbuild
