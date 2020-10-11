@@ -36,7 +36,6 @@ jobs:
                 msystem: ${{ matrix.msystem }}
                 install:  make cmake 
             - run: pacman --noconfirm -S ${{ matrix.mexe }}-boost
-              if: ${{  matrix.compiler  == 'gcc' }}
             - run: pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
             - run: ls -la /usr/bin
             - run: ls -la /mingw32/bin/
