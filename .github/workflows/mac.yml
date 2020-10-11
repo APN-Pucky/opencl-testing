@@ -14,9 +14,9 @@ jobs:
             - run: mkdir build 
             - run: cmake . -DCMAKE_INSTALL_PREFIX=./dist -DCMAKE_CXX_COMPILER=g++ -Bbuild
             - run: make -C build install
-            - run: ls dist/bin
+            - run: ls dist/bin/clewTTest
             - uses: actions/upload-artifact@v2
               with:
                 name: test
-                path: dist/bin/test.exe
+                path: dist/bin/clewTTest/clewTTestC.osx
 
