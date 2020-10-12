@@ -6,10 +6,15 @@ cmake_minimum_required (VERSION 2.6)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set( BUILD_SHARED_LIBRARIES OFF)
-if(STATICLINKING)
+
+if(TOO_C_STATIC)
   set( CMAKE_EXE_LINKER_FLAGS "-static -static-libgcc -static-libstdc++")
+endif()
+
+if(TOO_BOOST_STATIC)
   set(Boost_USE_STATIC_LIBS   ON)
 endif()
+
 if( NOT BUILD_SHARED_LIBRARY )
   add_definitions(-Dclew_STATIC)
 endif()

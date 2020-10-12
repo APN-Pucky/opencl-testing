@@ -27,7 +27,8 @@ jobs:
                 cxx: cl
                 build-type: Release
                 # Extra options pass to cmake while configuring project
-                configure-options: -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}\dist 
+                configure-options: -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}\dist -DTOO_BOOST_STATIC=1
+
 
                 install-build: true
             #- run: cl.exe --version

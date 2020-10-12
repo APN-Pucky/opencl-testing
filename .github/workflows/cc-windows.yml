@@ -44,7 +44,7 @@ jobs:
             - run: mkdir build 
             - run: |
                 cd build
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -DSTATICLINKING=1
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -DTOO_C_STATIC=1
                 make install
             - run: ls -la dist/bin/
             - uses: actions/upload-artifact@v2
