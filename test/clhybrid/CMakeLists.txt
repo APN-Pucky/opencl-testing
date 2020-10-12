@@ -8,5 +8,7 @@ target_link_libraries( clhybridTest clew ${Boost_LIBRARIES} )
 
 
 
-install(TARGETS clhybridTest RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 	
+install(TARGETS clhybridTest RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/test)
+install(DIRECTORY cl RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/test)
+install(DIRECTORY clh RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/test)
