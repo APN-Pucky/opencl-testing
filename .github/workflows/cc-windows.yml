@@ -36,17 +36,20 @@ jobs:
               with:
                 msystem: ${{ matrix.msystem }}
                 install:  make cmake 
-            - run: pacman --noconfirm -S ${{ matrix.mexe }}-boost
-            - run: pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
-            - run: ls -la /usr/bin
-            - run: ls -la /mingw32/bin/
-            - run: ${{ matrix.compiler }} --version
-            - run: mkdir build 
-            - run: |
+            - name: Install Dependencies
+              run: |
+                pacman --noconfirm -S ${{ matrix.mexe }}-boost
+                pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
+            - name:  Build
+              run: |
+                mkdir build
                 cd build
                 cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -DTOO_C_STATIC=1
                 make install
-            - run: ls -la dist/bin/
+            - name: Test
+              run: |
+                cd build
+                make test
             - uses: actions/upload-artifact@v2
               with:
                 name: ${{ matrix.compiler }}-${{ matrix.msystem }}test-bin
