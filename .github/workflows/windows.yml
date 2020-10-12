@@ -36,8 +36,8 @@ jobs:
             #    cd build
             #    cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
             #    make install
-            #- run: dir dist/bin/
+            - run: dir .
             - uses: actions/upload-artifact@v2
               with:
                 name: win-test-bin
-                path: dist/bin/
+                path: dist\bin\
