@@ -10,7 +10,7 @@ set( CMAKE_EXE_LINKER_FLAGS "-static")
 endif()
 
 set(Boost_USE_STATIC_LIBS   ON)
-find_package(Boost EXACT COMPONENTS system thread filesystem regex timer REQUIRED)
+find_package(Boost EXACT COMPONENTS filesystem REQUIRED)
 
 
 if( NOT BUILD_SHARED_LIBRARY )
