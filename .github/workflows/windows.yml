@@ -14,7 +14,7 @@ jobs:
               with:
                 submodules: true
             - name: env
-              run: echo "::set-env name=BOOST_ROOT_LATEST::$env:BOOST_ROOT_1_72_0"
+              run: echo "::set-env name=BOOST_ROOT_LATEST::$env:BOOST_ROOT_1_69_0"
             - uses: ashutoshvarma/action-cmake-build@master
               with:
                 build-dir: ${{ runner.workspace }}\build
