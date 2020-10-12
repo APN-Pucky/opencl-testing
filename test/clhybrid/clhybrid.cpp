@@ -144,10 +144,11 @@ int main() {
     clSetKernelArg(kernel, index++, sizeof(cl_mem), &input2);
     clSetKernelArg(kernel, index++, sizeof(cl_mem), &output);
     clSetKernelArg(kernel, index++, sizeof(unsigned int), &N);
-    clSetKernelArg(kernel, index++, sizeof(unsigned long), &seed);
+    clSetKernelArg(kernel, index++, sizeof(unsigned int), &seed);
 
     clGetKernelWorkGroupInfo(kernel, device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local), &local, NULL);
     global = N;
+    printf("global: %d local %d\n",global, local);
     err = clEnqueueNDRangeKernel(commands, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
     if(err) printf("NDRANGE Kernel error%d",err);
 
@@ -159,7 +160,7 @@ int main() {
 	    printf("%d",results[i]);
     }
 
-    simulate(allcards,size_all_cards,mydeck,enemydeck,results,N,seed);
+    //simulate(allcards,size_all_cards,mydeck,enemydeck,results,N,seed);
 	printf("\nsingle run %d\n",results[0]);
 
 
