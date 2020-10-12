@@ -19,8 +19,8 @@ jobs:
               run: echo "::set-env name=BOOST_INCLUDEDIR::$env:BOOST_ROOT_1_69_0\include"
             - name: env3
               run: echo "::set-env name=BOOST_LIBRARYDIR::$env:BOOST_ROOT_1_69_0\lib"
-            - run: dir ${{ BOOST_ROOT_1_69_0}}\include
-            - run: dir ${{ BOOST_ROOT_1_69_0}}\include\boost
+            - run: dir ${{ env.BOOST_ROOT_1_69_0}}\include
+            - run: dir ${{ env.BOOST_ROOT_1_69_0}}\include\boost
             - uses: ashutoshvarma/action-cmake-build@master
               with:
                 build-dir: ${{ runner.workspace }}\build
