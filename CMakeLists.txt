@@ -9,7 +9,7 @@ set( BUILD_SHARED_LIBRARIES OFF)
 
 if(TOO_C_STATIC) # This is MinGW
   set( CMAKE_EXE_LINKER_FLAGS "-static -static-libgcc -static-libstdc++")
-  set( CMAKE_EXECUTABLE_SUFFIX "exe")
+  set( CMAKE_EXECUTABLE_SUFFIX ".exe")
 endif()
 
 if(TOO_BOOST_STATIC)
