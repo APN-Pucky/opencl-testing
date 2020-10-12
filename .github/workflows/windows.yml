@@ -13,15 +13,12 @@ jobs:
             - uses: actions/checkout@v2
               with:
                 submodules: true
-            #- name: env
-            #  run: echo "::set-env name=BOOST_ROOT::$env:BOOST_ROOT_1_69_0"
-            #- name: env2
-            #  run: echo "::set-env name=BOOST_INCLUDE_DIR::$env:BOOST_ROOT_1_72_0\include"
-            #- name: env3
-            #  run: echo "::set-env name=BOOST_LIBRARY_DIR::$env:BOOST_ROOT_1_69_0\lib"
-
-            - run: dir ${BOOST_ROOT_1_72_0}\include
-            - run: dir ${BOOST_ROOT_1_72_0}\include\boost
+            - name: env
+              run: echo "::set-env name=BOOST_ROOT::$env:BOOST_ROOT_1_69_0"
+            - name: env2
+              run: echo "::set-env name=BOOST_INCLUDE_DIR::$env:BOOST_ROOT_1_69_0\include"
+            - name: env3
+              run: echo "::set-env name=BOOST_LIBRARY_DIR::$env:BOOST_ROOT_1_69_0\lib"
             - uses: ashutoshvarma/action-cmake-build@master
               with:
                 build-dir: ${{ runner.workspace }}\build
@@ -30,7 +27,7 @@ jobs:
                 cxx: cl
                 build-type: Release
                 # Extra options pass to cmake while configuring project
-                configure-options: -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}\dist -DBOOST_ROOT:PATH=${BOOST_ROOT_1_72_0} -DBOOST_INCLUDE_DIR:PATH=${BOOST_ROOT_1_72_0}
+                configure-options: -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}\dist 
 
                 install-build: true
             #- run: cl.exe --version

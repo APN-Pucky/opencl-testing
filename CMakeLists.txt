@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set( BUILD_SHARED_LIBRARIES OFF)
 if(WIN32)
-set( CMAKE_EXE_LINKER_FLAGS "-static")
+set( CMAKE_EXE_LINKER_FLAGS "-static -static-libgcc -static-libstdc++")
 endif()
 
 set(Boost_USE_STATIC_LIBS   ON)
