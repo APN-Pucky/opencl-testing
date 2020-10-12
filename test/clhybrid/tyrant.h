@@ -447,7 +447,7 @@ extern unsigned debug_cached;
 extern bool debug_line;
 extern std::string debug_str;
 #ifndef NDEBUG
-#define _DEBUG_MSG(v, format, args...)                                  \
+#define _DEBUG_MSG(v, format, args, ...)                                  \
     {                                                                   \
         if(__builtin_expect(debug_print >= v, false))                   \
         {                                                               \
@@ -462,7 +462,7 @@ extern std::string debug_str;
             std::cout << std::flush;  }                                  \
         }                                                               \
     }
-#define _DEBUG_SELECTION(format, args...)                               \
+#define _DEBUG_SELECTION(format, args, ...)                               \
     {                                                                   \
         if(__builtin_expect(debug_print >= 2, 0))                       \
         {                                                               \
