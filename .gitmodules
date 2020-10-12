@@ -1,3 +1,6 @@
 [submodule "clew"]
 	path = external/clew
 	url = https://github.com/martijnberger/clew
+[submodule "external/clew"]
+	path = external/clew
+	url = https://github.com/martijnberger/clew
