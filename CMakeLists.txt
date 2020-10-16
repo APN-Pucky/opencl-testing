@@ -3,7 +3,7 @@ project(opencl-tyrant-optimizer)
 cmake_minimum_required (VERSION 2.6)
 
 # CXX + STATIC
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set( BUILD_SHARED_LIBRARIES OFF)
 
@@ -23,11 +23,12 @@ endif()
 
 # BOOST 
 #set(Boost_DEBUG 1)
-find_package(Boost EXACT COMPONENTS filesystem REQUIRED)
+find_package(Boost COMPONENTS filesystem REQUIRED)
 
 
 add_subdirectory(external)
 include_directories(external/clew/include)
+include_directories(src/h)
 add_subdirectory(src)
 enable_testing()
 add_subdirectory(test)

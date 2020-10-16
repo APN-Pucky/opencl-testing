@@ -7,102 +7,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tyrant.h"
-#include "9_tuo.h"
-#include <boost/filesystem.hpp>
+#include "tuo.h"
+#include "runner.h"
+#include "test.h"
 
-cl_program load_cl_programs(cl_context context) {
-    std::vector<std::string> filenames;
-    for (boost::filesystem::directory_entry& entry : boost::filesystem::directory_iterator("cl/"))  {
-        filenames.push_back(entry.path().string());
-    }
-    std::sort(filenames.begin(),filenames.end());
+int run4() {
+    int a=1,b=2,c=3;
+    auto r = Runner<int,int*>("test_return",test_return,a,&b);
+    r.set_mem<1>(CL_MEM_WRITE_ONLY,1,true);
+    r.run_opencl(1024);
+    printf("Result: %d ",b);
 
+}
+int run3() {
+    int a=1,b=2,c=3;
+    auto r = Runner<int*>("test_single_pointer",test_single_pointer,&b);
+    r.set_mem<0>(CL_MEM_READ_ONLY,1,false);
+    r.run_opencl(1024);
+}
+int run2() {
+    int a=1,b=2,c=3;
+    auto r = Runner<int>("test_single_param",test_single_param,b);
+    r.run_opencl(1024);
+}
+int run1() {
+    auto r = Runner<>("test_noop",test_noop);
+    r.run_opencl(1024);
 
-	int n =  filenames.size();
-	std::vector<std::string> files(n);
-    const char** programBuffer = (const char**) malloc(n);
-    size_t* programSize = ( size_t*) malloc(n);
-	for(int i=0; i < n; ++i) {
-        std::ifstream inFile;
-		inFile.open(filenames[i]); //open the input file
-    	std::stringstream strStream;
-    	strStream << inFile.rdbuf(); //read the file
-    	std::string str = strStream.str(); //str holds the content of the file
-		files.push_back(str);
-        programBuffer[i] = files.back().c_str();
-        programSize[i] = files.back().length();
-	}
-    return clCreateProgramWithSource(context, n,
-            programBuffer, programSize, NULL);
 }
 int run() {
-    int clpresent = 0 == clewInit();
-    if( !clpresent ) {
-        printf("opencl library not found.\n");
-        return -1;
-    }
     const unsigned int size_card=10+4*3*9+Skill::num_skills*2+2;
     const unsigned int size_all_cards = 2*size_card;
     const unsigned int size_deck=10;
     const unsigned int sims = 1024;
     const unsigned int N = sims;
     const unsigned long seed = 5;
-    int err;
-
-    cl_platform_id platform;
-    cl_device_id device_id;
-    cl_command_queue commands;
-    cl_context context;
-    cl_program program;
-
-    size_t kernelSourceSize;
-    size_t global,local;
-    char  *kernelSource;
-
-    printf("clGetPlatformIDs\n");
-    // get first available platform and gpu and create context
-    err = clGetPlatformIDs(1, &platform, NULL);
-    if (err != CL_SUCCESS) {
-        printf("something went wrong, errorcode %i\n", err);
-    		return -1;
-  	}
-
-    printf("clGetDeviceIDs\n");
-    clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device_id, NULL);
-    context = clCreateContext(NULL, 1, &device_id, NULL, NULL, NULL);
-
-    // create program from buffer
-    program = load_cl_programs(context);
-    err = clBuildProgram(program,0,NULL,"-D _OpenCL -I clh/",NULL,NULL);
-    size_t len = 0;
-    cl_int ret = CL_SUCCESS;
-    ret = clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, 0, NULL, &len);
-    char *buffer = (char*) calloc(len, sizeof(char));
-    ret = clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, len, buffer, NULL);
-
-    printf("%s",buffer);
-
-    if(err) printf("BUILD Kernel error%d",err);
-
-    // read kernel source back in from program to check
-    clGetProgramInfo(program, CL_PROGRAM_SOURCE, 0, NULL, &kernelSourceSize);
-    kernelSource = (char*) malloc(kernelSourceSize);
-    clGetProgramInfo(program, CL_PROGRAM_SOURCE, kernelSourceSize, kernelSource, NULL);
-    //printf("\nKernel source:\n\n%s\n", kernelSource);
-    free(kernelSource);
-
-    commands = clCreateCommandQueue(context, device_id, 0, &err);
-
-
-
-    cl_kernel kernel = clCreateKernel(program, "simulate",&err);
-    if(err) printf("KERNEL Kernel error%d",err);
-    cl_mem input0 = clCreateBuffer(context,  CL_MEM_READ_ONLY,  sizeof(int) * size_all_cards, NULL, NULL);
-    cl_mem input1 = clCreateBuffer(context,  CL_MEM_READ_ONLY,  sizeof(int) * size_deck, NULL, NULL);
-    cl_mem input2 = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(int) * size_deck, NULL, NULL);
-    cl_mem output = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(int) * N, NULL, NULL);
-
-
 
     int mydeck[size_deck];
     int enemydeck[size_deck];
@@ -129,49 +68,27 @@ int run() {
 	    enemydeck[i] = 2;
     }
     for(int i =0; i  < N; ++i) {
-	    results[i] = 2;
+	    results[i] = -2;
     }
 
-
-    clEnqueueWriteBuffer(commands, input0, CL_TRUE, 0, sizeof(int) * size_all_cards, allcards, 0, NULL, NULL);
-    clEnqueueWriteBuffer(commands, input1, CL_TRUE, 0, sizeof(int) * size_deck, mydeck, 0, NULL, NULL);
-    clEnqueueWriteBuffer(commands, input2, CL_TRUE, 0, sizeof(int) * size_deck, enemydeck, 0, NULL, NULL);
-
-    int index = 0;
-    clSetKernelArg(kernel, index++, sizeof(cl_mem), &input0);
-    clSetKernelArg(kernel, index++, sizeof(unsigned int), &size_all_cards);
-    clSetKernelArg(kernel, index++, sizeof(cl_mem), &input1);
-    clSetKernelArg(kernel, index++, sizeof(cl_mem), &input2);
-    clSetKernelArg(kernel, index++, sizeof(cl_mem), &output);
-    clSetKernelArg(kernel, index++, sizeof(unsigned int), &N);
-    clSetKernelArg(kernel, index++, sizeof(unsigned int), &seed);
-
-    clGetKernelWorkGroupInfo(kernel, device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local), &local, NULL);
-    global = N;
-    printf("global: %d local %d\n",global, local);
-    err = clEnqueueNDRangeKernel(commands, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
-    if(err) printf("NDRANGE Kernel error%d",err);
-
-    clFinish(commands);
-    clEnqueueReadBuffer( commands, output, CL_TRUE, 0, sizeof(int) * N, results, 0, NULL, NULL );
-
-
+    auto r = Runner<int,int*,int,int*,int,int*,int,int*,int,int>("simulate",simulate,size_all_cards,allcards,size_deck,mydeck,size_deck,enemydeck,N,results,N,seed);
+    r.set_mem<1>(CL_MEM_READ_ONLY,size_all_cards,false);
+    r.set_mem<3>(CL_MEM_READ_ONLY,size_deck,false);
+    r.set_mem<5>(CL_MEM_READ_ONLY,size_deck,false);
+    r.set_mem<7>(CL_MEM_WRITE_ONLY,N,true);
+    r.run_opencl(N);
     for (int i = 0; i  < N ; ++i) {
 	    printf("%d",results[i]);
     }
 
+    r.run_cpu();
+    printf("\nsingle run %d\n",results[0]);
+
+
+
+
     //simulate(allcards,size_all_cards,mydeck,enemydeck,results,N,seed);
-	printf("\nsingle run %d\n",results[0]);
+	//printf("\nsingle run %d\n",results[0]);
 
-
-
-    clReleaseMemObject(input1);
-    clReleaseMemObject(input2);
-    clReleaseMemObject(output);
-    clReleaseProgram(program);
-    clReleaseKernel(kernel);
-    clReleaseCommandQueue(commands);
-    clReleaseContext(context);
     return 0;
-
 }

@@ -1,8 +1,8 @@
 set( too_test_SRC 
-  too.test.cpp 
+  runner.test.cpp
 )
 
-set( TARGET_NAME too_test)
+set( TARGET_NAME runner_test)
 add_executable( ${TARGET_NAME} ../test.cpp ${too_test_SRC})
 
 target_link_libraries(${TARGET_NAME} PUBLIC too_lib)

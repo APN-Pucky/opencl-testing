@@ -1,5 +1,5 @@
-set( too_cxx_SRC too.cpp )
-set( too_ocl_SRC cl/9_tuo.cpp)
+set( too_cxx_SRC too.cpp runner.cpp)
+set( too_ocl_SRC cl/tuo.cpp cl/test.cpp)
 
 include_directories(h)
 include_directories(clh)
@@ -13,9 +13,12 @@ add_executable( too main.cpp )
 
 target_link_libraries(too too_lib )
 
+add_executable( told main.cpp too_old.cpp cl/tuo.cpp )
+target_link_libraries( told clew ${Boost_LIBRARIES} )
 
 
 install(TARGETS too RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS told RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS too_lib RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(DIRECTORY cl DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(DIRECTORY clh DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
