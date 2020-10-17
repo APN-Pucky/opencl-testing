@@ -26,7 +26,7 @@ endif()
 find_package(Boost COMPONENTS filesystem REQUIRED)
 
 
-find_package(MPI REQUIRED)
+find_package(MPI)
 if (MPI_FOUND)
     add_definitions(-DUSE_MPI)
     include_directories(SYSTEM ${MPI_INCLUDE_PATH})
