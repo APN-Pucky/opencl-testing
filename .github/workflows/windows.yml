@@ -23,7 +23,9 @@ jobs:
                 curl.exe -o msmpisdk.msi https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisdk.msi
                 dir
             - name: Install MSMPI
-              run: msiexec.exe /i msmpisdk.msi /qn
+              run: |
+                msiexec.exe /i msmpisdk.msi /qn
+                dir "C:\Program Files"
             - uses: ashutoshvarma/action-cmake-build@master
               with:
                 build-dir: ${{ runner.workspace }}\build
