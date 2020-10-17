@@ -26,11 +26,32 @@ endif()
 find_package(Boost COMPONENTS filesystem REQUIRED)
 
 
+
+
+
 add_subdirectory(external)
 include_directories(external/clew/include)
+
+if(TOO_COVERAGE)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
+include(CodeCoverage)
+APPEND_COVERAGE_COMPILER_FLAGS()
+endif()
+
 include_directories(src/h)
 add_subdirectory(src)
+
+#Tests
 enable_testing()
 add_subdirectory(test)
 
+if(TOO_COVERAGE)
+SETUP_TARGET_FOR_COVERAGE_LCOV(
+        NAME coverage                 
+        EXECUTABLE ctest #-j ${n_cores} # Executable in PROJECT_BINARY_DIR
+        DEPENDENCIES
+            test_test
+            too_test
+            runner_test)
+endif()
 

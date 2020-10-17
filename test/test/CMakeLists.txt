@@ -3,7 +3,7 @@ set( test_SRC
   test.test.cpp
 )
 
-set( TARGET_NAME test)
+set( TARGET_NAME test_test)
 add_executable( ${TARGET_NAME} ../test.cpp ${too_test_SRC})
 
 #target_link_libraries(${TARGET_NAME} PUBLIC too_lib)

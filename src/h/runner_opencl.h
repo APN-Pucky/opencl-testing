@@ -5,6 +5,10 @@
 #include <boost/filesystem.hpp>
 
 #include "runner.h"
+
+/*
+ * Loads cl programs in directories cl/ 
+ */
 cl_program load_cl_programs(cl_context context) {
     std::vector<std::string> filenames;
     for (boost::filesystem::directory_entry& entry : boost::filesystem::directory_iterator("cl/"))  {

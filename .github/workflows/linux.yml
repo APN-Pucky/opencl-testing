@@ -8,6 +8,46 @@ on:
 
 jobs:
     compile_ubuntu:
+      runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            compiler: [ gcc , clang ]
+            include:
+                - compiler: gcc
+                  cc: gcc
+                  cxx: g++
+                - compiler: clang
+                  cc: clang
+                  cxx: clang++
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                submodules: true
+            - name: Install Dependencies
+              run: |
+                sudo apt-get install -y make cmake libboost-all-dev lcov 
+                sudo apt-get install -y ${{ matrix.compiler }}
+            - name: Build
+              run: |
+                mkdir build
+                cd build 
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1
+                make install
+            - name: Test
+              run: |
+                cd build
+                make test
+            - name: Test
+              run: |
+                cd build
+                make test
+            - uses: actions/upload-artifact@v2
+              with:
+                name: ${{ matrix.compiler }}-test-bin
+                path: dist/
+
+
+    compile_ubuntu_coverage:
         runs-on: ubuntu-latest
         strategy:
           matrix:
@@ -25,20 +65,32 @@ jobs:
                 submodules: true
             - name: Install Dependencies
               run: |
-                sudo apt-get install -y make cmake libboost-all-dev
+                sudo apt-get install -y make cmake libboost-all-dev lcov 
                 sudo apt-get install -y ${{ matrix.compiler }}
             - name: Build
               run: |
                 mkdir build
                 cd build 
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1 -DTOO_COVERAGE=1
                 make install
-            - name: Test
+            - name: Test & Coverage
               run: |
                 cd build
-                make test
-            - uses: actions/upload-artifact@v2
+                make coverage
+            - name: Coveralls Parallel
+              uses: coverallsapp/github-action@master
               with:
-                name: ${{ matrix.compiler }}-test-bin
-                path: dist/
+                github-token: ${{ secrets.GITHUB_TOKEN }} 
+                flag-name: ${{ matrix.compiler }}-coverage
+                path-to-lcov: coverage.info
+                parallel: true
+    upload:
+      needs: compile_ubuntu_coverage
+      runs-on: ubuntu-latest
+      steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
 

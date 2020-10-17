@@ -10,6 +10,7 @@
 
 const int CLPRESENT = 0 == clewInit();
 
+
 template<typename ... Args>
 class Runner
 {
