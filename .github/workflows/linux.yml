@@ -83,7 +83,6 @@ jobs:
                 github-token: ${{ secrets.GITHUB_TOKEN }} 
                 flag-name: ${{ matrix.compiler }}-coverage
                 path-to-lcov: build/coverage.info
-                base-path: build/
                 parallel: true
     upload:
       needs: compile_ubuntu_coverage
