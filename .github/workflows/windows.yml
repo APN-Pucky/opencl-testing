@@ -18,10 +18,12 @@ jobs:
               with:
                 dotnet-version: '3.1.x'
             - run: |
-              git clone https://github.com/microsoft/Microsoft-MPI.git
-              cd Mictrosoft-MPI
-              msbuild
-            - run: dotnet add package MSMPIsdk --version 10.1.12498.18
+                git clone https://github.com/microsoft/Microsoft-MPI.git
+                cd Mictrosoft-MPI
+                msbuild
+            - run: |
+                dotnet new opencl-testing
+                dotnet add package MSMPIsdk --version 10.1.12498.18
             - name: Set Boost Environment Variables 
               run: |
                 echo "::set-env name=BOOST_ROOT::$env:BOOST_ROOT_1_69_0"
