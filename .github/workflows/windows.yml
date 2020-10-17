@@ -27,6 +27,7 @@ jobs:
                 msiexec.exe /i msmpisdk.msi /qn /L*V log.log
                 dir "C:\Program Files"
                 dir "C:\Program Files\Microsoft SDKs"
+                dir "C:\Program Files\Microsoft"
                 dir
                 type log.log
             - uses: ashutoshvarma/action-cmake-build@master
