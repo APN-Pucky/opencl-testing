@@ -2,8 +2,11 @@ set( too_test_SRC
   runner.test.cpp
 )
 
+include_directories(${Boost_INCLUDE_DIR})
+
 set( TARGET_NAME runner_test)
 add_executable( ${TARGET_NAME} ../test.cpp ${too_test_SRC})
+
 
 target_link_libraries(${TARGET_NAME} PUBLIC too_lib)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/external/catch/ )
