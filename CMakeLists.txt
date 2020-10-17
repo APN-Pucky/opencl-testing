@@ -33,7 +33,9 @@ else (MPI_FOUND)
     message(SEND_ERROR "This application cannot compile without MPI")
 endif (MPI_FOUND)
 # add this line only when you are using openmpi which has a different c++ bindings
-#add_definitions(-DOMPI_SKIP_MPICXX)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+add_definitions(-DOMPI_SKIP_MPICXX)
+endif()
 
 
 
