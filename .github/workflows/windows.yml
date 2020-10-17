@@ -18,10 +18,10 @@ jobs:
                 echo "::set-env name=BOOST_ROOT::$env:BOOST_ROOT_1_69_0"
                 echo "::set-env name=BOOST_INCLUDE_DIR::$env:BOOST_ROOT_1_69_0\include"
                 echo "::set-env name=BOOST_LIBRARY_DIR::$env:BOOST_ROOT_1_69_0\lib"
+            - name: Download MSMPI
+              run: curl.exe -o msmpisdk.msi https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisdk.msi
             - name: Install MSMPI
-              run: |
-                curl.exe -o msmpisdk.msi https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisdk.msi
-                msiexec.exe /i msmpisdk.msi /passive
+              run: msiexec.exe /i msmpisdk.msi /passive
             - uses: ashutoshvarma/action-cmake-build@master
               with:
                 build-dir: ${{ runner.workspace }}\build
