@@ -9,42 +9,42 @@ on:
 jobs:
     compile_ubuntu:
       runs-on: ubuntu-latest
-        strategy:
-          matrix:
-            compiler: [ gcc , clang ]
-            include:
-                - compiler: gcc
-                  cc: gcc
-                  cxx: g++
-                - compiler: clang
-                  cc: clang
-                  cxx: clang++
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                submodules: true
-            - name: Install Dependencies
-              run: |
-                sudo apt-get install -y make cmake libboost-all-dev lcov 
-                sudo apt-get install -y ${{ matrix.compiler }}
-            - name: Build
-              run: |
-                mkdir build
-                cd build 
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1
-                make install
-            - name: Test
-              run: |
-                cd build
-                make test
-            - name: Test
-              run: |
-                cd build
-                make test
-            - uses: actions/upload-artifact@v2
-              with:
-                name: ${{ matrix.compiler }}-test-bin
-                path: dist/
+      strategy:
+        matrix:
+          compiler: [ gcc , clang ]
+          include:
+              - compiler: gcc
+                cc: gcc
+                cxx: g++
+              - compiler: clang
+                cc: clang
+                cxx: clang++
+      steps:
+          - uses: actions/checkout@v2
+            with:
+              submodules: true
+          - name: Install Dependencies
+            run: |
+              sudo apt-get install -y make cmake libboost-all-dev lcov 
+              sudo apt-get install -y ${{ matrix.compiler }}
+          - name: Build
+            run: |
+              mkdir build
+              cd build 
+              cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1
+              make install
+          - name: Test
+            run: |
+              cd build
+              make test
+          - name: Test
+            run: |
+              cd build
+              make test
+          - uses: actions/upload-artifact@v2
+            with:
+              name: ${{ matrix.compiler }}-test-bin
+              path: dist/
 
 
     compile_ubuntu_coverage:
