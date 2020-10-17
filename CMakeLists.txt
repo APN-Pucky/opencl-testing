@@ -28,7 +28,7 @@ find_package(Boost COMPONENTS filesystem REQUIRED)
 
 find_package(MPI REQUIRED)
 if (MPI_FOUND)
-    add_compile_defintions(USE_MPI)
+    add_defintions(-DUSE_MPI)
     include_directories(SYSTEM ${MPI_INCLUDE_PATH})
 else (MPI_FOUND)
     message(WARNING "This application will compile without MPI")
