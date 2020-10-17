@@ -38,6 +38,7 @@ jobs:
                 install:  make cmake 
             - name: Install Dependencies
               run: |
+                pacman --noconfirm -S ${{ matrix.mexe }}-msmpi
                 pacman --noconfirm -S ${{ matrix.mexe }}-boost
                 pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
             - name:  Build
