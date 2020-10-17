@@ -20,7 +20,7 @@ jobs:
                 echo "::set-env name=BOOST_LIBRARY_DIR::$env:BOOST_ROOT_1_69_0\lib"
             - uses: msys2/setup-msys2@v2
               with:
-                msystem: mingw-w64_x86_64
+                msystem: MINGW64
                 install:  msmpi
             - uses: ashutoshvarma/action-cmake-build@master
               with:
