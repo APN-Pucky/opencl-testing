@@ -83,7 +83,7 @@ class Runner
         
 
         void run_opencl(); 
-        void run_mpi(int argc, char* argv[]);
+        void run_mpi();
 
     private:
         size_t N;

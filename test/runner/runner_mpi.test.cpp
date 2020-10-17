@@ -6,7 +6,7 @@
 TEST_CASE( "mpi unsigned add", "[mpi]" ) {
     unsigned int a=1,b=2,c=0;
     auto r = Runner("add",add,1,a,b,&c);
-    r.run_mpi(NULL,NULL);
+    r.run_mpi();
     //REQUIRE( c == 3 );
 }
 
