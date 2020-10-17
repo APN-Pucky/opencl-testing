@@ -1,10 +1,9 @@
 set( test_SRC 
-  test.cpp 
   test.test.cpp
 )
 
 set( TARGET_NAME test_test)
-add_executable( ${TARGET_NAME} ../test.cpp ${too_test_SRC})
+add_executable( ${TARGET_NAME} ../test.cpp ${test_SRC})
 
 #target_link_libraries(${TARGET_NAME} PUBLIC too_lib)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/external/catch/ )

@@ -2,6 +2,10 @@ set( too_test_SRC
   too.test.cpp 
 )
 
+include_directories(../../src/clh)
+include_directories(${Boost_INCLUDE_DIR})
+
+
 set( TARGET_NAME too_test)
 add_executable( ${TARGET_NAME} ../test.cpp ${too_test_SRC})
 

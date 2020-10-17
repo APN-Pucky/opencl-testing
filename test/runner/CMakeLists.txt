@@ -2,6 +2,7 @@ set( too_test_SRC
   runner.test.cpp
 )
 
+include_directories(../../src/clh)
 include_directories(${Boost_INCLUDE_DIR})
 
 set( TARGET_NAME runner_test)

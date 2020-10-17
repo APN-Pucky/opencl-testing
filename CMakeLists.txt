@@ -54,6 +54,7 @@ SETUP_TARGET_FOR_COVERAGE_LCOV(
             too_test
             runner_test
         EXCLUDE "/usr/*"
+        EXCLUDE "${PROJECT_SOURCE_DIR}/external/*"
         )
 endif()
 
