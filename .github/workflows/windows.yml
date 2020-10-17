@@ -29,8 +29,8 @@ jobs:
                 configure-options: -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}\dist -DTOO_BOOST_STATIC=1
                 run-test: true
                 install-build: true
-            - name: OpenCL?
-              run: ${{runner.workspace}}\dist\test\openclTestC.exe
+            #- name: OpenCL?
+            #  run: ${{runner.workspace}}\dist\test\openclTestC.exe
             - uses: actions/upload-artifact@v2
               with:
                 name: win-test-bin
