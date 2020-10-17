@@ -25,8 +25,9 @@ jobs:
             - name: Install MSMPI
               run: |
                 msiexec.exe /i msmpisdk.msi /qn /L*V log.log
-                type log.log
                 dir "C:\Program Files"
+                dir
+                type log.log
             - uses: ashutoshvarma/action-cmake-build@master
               with:
                 build-dir: ${{ runner.workspace }}\build
