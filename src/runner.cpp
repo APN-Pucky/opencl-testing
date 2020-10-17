@@ -16,20 +16,6 @@ void Runner::add_argument(T& t)
 }
 */
 
-
-
-void add( int a , int b , int* c  ) {
-    *c = a+b;
-}
-
-int main() {
-    int a=1,b=2,c=0;
-    auto r = Runner("add",add,1,a,b,&c);
-    r.run_cpu();
-    r.run_cpu();
-    printf("%d",c);
-
-}
 /*
  * Loads cl programs in directories cl/ 
  */
