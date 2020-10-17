@@ -41,6 +41,8 @@ jobs:
             run: |
               cd build
               make test
+          - name: OpenCL?
+            run: ./dist/test/openclTestC
           - uses: actions/upload-artifact@v2
             with:
               name: ${{ matrix.compiler }}-test-bin
