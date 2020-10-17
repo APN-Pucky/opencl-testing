@@ -17,6 +17,7 @@ int run4() {
     r.set_mem<1>(CL_MEM_WRITE_ONLY,1,true);
     r.run_opencl(1024);
     printf("Result: %d ",b);
+    return 0;
 
 }
 int run3() {
@@ -24,15 +25,18 @@ int run3() {
     auto r = Runner<int*>("test_single_pointer",test_single_pointer,&b);
     r.set_mem<0>(CL_MEM_READ_ONLY,1,false);
     r.run_opencl(1024);
+    return 0;
 }
 int run2() {
     int a=1,b=2,c=3;
     auto r = Runner<int>("test_single_param",test_single_param,b);
     r.run_opencl(1024);
+    return 0;
 }
 int run1() {
     auto r = Runner<>("test_noop",test_noop);
     r.run_opencl(1024);
+    return 0;
 
 }
 int run() {
