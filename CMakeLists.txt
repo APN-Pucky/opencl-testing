@@ -52,6 +52,8 @@ SETUP_TARGET_FOR_COVERAGE_LCOV(
         DEPENDENCIES
             test_test
             too_test
-            runner_test)
+            runner_test
+        EXCLUDE "/usr/*"
+        )
 endif()
 
