@@ -31,7 +31,7 @@ jobs:
             run: |
               mkdir build
               cd build 
-              cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1 -DTOO_TEST_MPI
+              cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1 -DTOO_TEST_MPI=1
               make install
           - name: Test
             run: |
@@ -71,7 +71,7 @@ jobs:
               run: |
                 mkdir build
                 cd build 
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1 -DTOO_COVERAGE=1
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1 -DTOO_COVERAGE=1 -DTOO_TEST_MPI=1
                 make install
             - name: Test & Coverage
               run: |
