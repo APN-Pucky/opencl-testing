@@ -13,17 +13,12 @@ jobs:
             - uses: actions/checkout@v2
               with:
                 submodules: true
-            - uses: actions/checkout@main
-            - uses: actions/setup-dotnet@v1
-              with:
-                dotnet-version: '3.1.x'
+            - name: Add msbuild to PATH
+              uses: microsoft/setup-msbuild@v1.0.2
             - run: |
                 git clone https://github.com/microsoft/Microsoft-MPI.git
                 cd Microsoft-MPI
                 msbuild
-            - run: |
-                dotnet new opencl-testing
-                dotnet add package MSMPIsdk --version 10.1.12498.18
             - name: Set Boost Environment Variables 
               run: |
                 echo "::set-env name=BOOST_ROOT::$env:BOOST_ROOT_1_69_0"
