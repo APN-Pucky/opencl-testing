@@ -19,7 +19,7 @@ jobs:
                 dotnet-version: '3.1.x'
             - run: |
                 git clone https://github.com/microsoft/Microsoft-MPI.git
-                cd Mictrosoft-MPI
+                cd Microsoft-MPI
                 msbuild
             - run: |
                 dotnet new opencl-testing
