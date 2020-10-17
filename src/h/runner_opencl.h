@@ -1,4 +1,5 @@
-#pragma once 
+#ifndef RUNNER_OPENCL_H
+#define RUNNER_OPENCL_H
 
 #include <sstream>
 #include <boost/filesystem.hpp>
@@ -196,3 +197,4 @@ void Runner<Args...>::run_opencl(size_t global)
     clReleaseCommandQueue(commands);
     clReleaseContext(context);
 } 
+#endif

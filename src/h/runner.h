@@ -1,4 +1,6 @@
-#pragma once 
+#ifndef RUNNER_H
+#define RUNNER_H
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -89,3 +91,4 @@ class Runner
 };
 
 #include "runner_opencl.h"
+#endif
