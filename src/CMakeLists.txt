@@ -7,8 +7,7 @@ include_directories(${Boost_INCLUDE_DIR})
  
 add_library( too_lib ${too_cxx_SRC} ${too_ocl_SRC})
 
-target_link_libraries(too_lib PUBLIC MPI::MPI_C )
-target_link_libraries( too_lib clew ${Boost_LIBRARIES} )
+target_link_libraries( too_lib clew ${Boost_LIBRARIES} MPI::MPI_C )
 
 add_executable( too main.cpp )
 
