@@ -46,7 +46,7 @@ TEST_CASE( "test sim run and return", "[cpu]" ) {
 	    results[i] = -2;
     }
 
-    auto r = Runner<int,int*,int,int*,int,int*,int,int*,int,int>("simulate",simulate,size_all_cards,allcards,size_deck,mydeck,size_deck,enemydeck,N,results,N,seed);
+    auto r = Runner<int,int*,int,int*,int,int*,int,int*,int,int>("simulate",simulate,N,size_all_cards,allcards,size_deck,mydeck,size_deck,enemydeck,N,results,N,seed);
     r.set_mem<1>(CL_MEM_READ_ONLY,size_all_cards,false);
     r.set_mem<3>(CL_MEM_READ_ONLY,size_deck,false);
     r.set_mem<5>(CL_MEM_READ_ONLY,size_deck,false);

@@ -11,13 +11,16 @@
 const int CLPRESENT = 0 == clewInit();
 
 
+cl_program load_cl_programs(cl_context context); 
+
 template<typename ... Args>
 class Runner
 {
     public:
-        Runner(std::string function_name_, void(*function_pointer_)(Args...), Args...args_) :
+        Runner(std::string function_name_, void(*function_pointer_)(Args...), size_t N_,Args...args_) :
             function_name(function_name_),
             function_pointer(function_pointer_),
+            N(N_),
             args(args_...),
             flags(sizeof...(Args)),
             mems(sizeof...(Args)),
@@ -79,9 +82,11 @@ class Runner
         }
         
 
-        void run_opencl(size_t global); 
+        void run_opencl(); 
+        void run_mpi(int argc, char* argv[]);
 
     private:
+        size_t N;
         std::vector<cl_mem> mems;
         std::vector<bool> read_mem;
         std::vector<cl_mem_flags> flags;
@@ -92,4 +97,5 @@ class Runner
 };
 
 #include "runner_opencl.h"
+#include "runner_mpi.h"
 #endif

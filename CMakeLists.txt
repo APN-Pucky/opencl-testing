@@ -1,6 +1,6 @@
 project(opencl-tyrant-optimizer)
 
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.0)
 
 # CXX + STATIC
 set(CMAKE_CXX_STANDARD 17)
@@ -26,6 +26,9 @@ endif()
 find_package(Boost COMPONENTS filesystem REQUIRED)
 
 
+find_package(MPI REQUIRED)
+# add this line only when you are using openmpi which has a different c++ bindings
+#add_definitions(-DOMPI_SKIP_MPICXX)
 
 
 

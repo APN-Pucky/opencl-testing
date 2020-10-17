@@ -6,34 +6,7 @@
 
 #include "runner.h"
 
-/*
- * Loads cl programs in directories cl/ 
- */
-cl_program load_cl_programs(cl_context context) {
-    std::vector<std::string> filenames;
-    for (boost::filesystem::directory_entry& entry : boost::filesystem::directory_iterator("cl/"))  {
-        filenames.push_back(entry.path().string());
-    }
-    std::sort(filenames.begin(),filenames.end());
 
-
-	int n =  filenames.size();
-	std::vector<std::string> files(n);
-    const char** programBuffer = (const char**) malloc(n);
-    size_t* programSize = ( size_t*) malloc(n);
-	for(int i=0; i < n; ++i) {
-        std::ifstream inFile;
-		inFile.open(filenames[i]); //open the input file
-    	std::stringstream strStream;
-    	strStream << inFile.rdbuf(); //read the file
-    	std::string str = strStream.str(); //str holds the content of the file
-		files.push_back(str);
-        programBuffer[i] = files.back().c_str();
-        programSize[i] = files.back().length();
-	}
-    return clCreateProgramWithSource(context, n,
-            programBuffer, programSize, NULL);
-}
 template<size_t I = 0,typename ...Args>
 void loop0(std::tuple<Args...>& args,cl_context& context, std::vector<size_t>& sizes,std::vector<cl_mem_flags>& flags,std::vector<cl_mem>& mems) {
     if constexpr(sizeof...(Args) >0) {
@@ -42,7 +15,7 @@ void loop0(std::tuple<Args...>& args,cl_context& context, std::vector<size_t>& s
         if(sizes[I] != 0) {
             cl_int err;
             mems[I] = clCreateBuffer(context,  flags[I],  sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], NULL, &err);
-            printf("Create %d %d \n",I,err);
+            printf("Create %ld %d \n",I,err);
         }
     }
     // do things
@@ -58,7 +31,7 @@ void loop1(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<siz
     {
         if(sizes[I] != 0 && !read_mem[I]) {
             cl_int ret = clEnqueueWriteBuffer(commands, mems[I], CL_TRUE, 0, sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], std::get<I>(args), 0, NULL, NULL);
-            printf("Write %d %d\n",I,ret);
+            printf("Write %ld %d\n",I,ret);
         }
     }
     // do things
@@ -75,12 +48,12 @@ void loop2(std::tuple<Args...>& args, cl_kernel& kernel, int& index, std::vector
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
                 clSetKernelArg(kernel, index++, sizeof(cl_mem), &mems[I]);
-                printf("Set Pointer %d %d",I,index);
+                printf("Set Pointer %ld %d",I,index);
             }
         }
         else {
             clSetKernelArg(kernel, index++, sizeof(typename std::tuple_element<I,std::tuple<Args...>>::type), &(std::get<I>(args)));
-            printf("Set Direct %d %d",I,index);
+            printf("Set Direct %ld %d",I,index);
             //printf("here where i should NAT be %d %d %d %d ",I,index,std::get<I>(args),sizeof(int));
         }
     // do things
@@ -95,8 +68,8 @@ void loop3(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<siz
     {
         if(sizes[I] != 0 && read_mem[I]) {
             cl_int ret =clEnqueueReadBuffer( commands, mems[I], CL_TRUE, 0, sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)*sizes[I], std::get<I>(args), 0, NULL, NULL );
-            printf("Read %d %d", I,ret);
-            printf("here where i should be %d %d %d ",I,sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type),std::get<I>(args)[1]);
+            printf("Read %ld %d", I,ret);
+            //printf("here where i should be %d %ld %d ",I,sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type),std::get<I>(args)[1]);
         }
     }
     // do things
@@ -106,7 +79,7 @@ void loop3(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<siz
 }
 
 template<typename ...Args>
-void Runner<Args...>::run_opencl(size_t global)
+void Runner<Args...>::run_opencl()
 {
     if( !CLPRESENT ) {
         printf("opencl library not found.\n");
@@ -122,7 +95,7 @@ void Runner<Args...>::run_opencl(size_t global)
     cl_program program;
 
     size_t kernelSourceSize;
-    size_t local;
+    size_t global=N,local;
     char  *kernelSource;
 
     printf("clGetPlatformIDs\n");
@@ -181,7 +154,7 @@ void Runner<Args...>::run_opencl(size_t global)
 
 
     clGetKernelWorkGroupInfo(kernel, device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local), &local, NULL);
-    printf("global: %d local %d\n",global, local);
+    printf("global: %ld local %ld\n",global, local);
     err = clEnqueueNDRangeKernel(commands, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
     if(err) printf("NDRANGE Kernel error%d",err);
 

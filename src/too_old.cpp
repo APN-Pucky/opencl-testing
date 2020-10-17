@@ -148,7 +148,7 @@ int run() {
 
     clGetKernelWorkGroupInfo(kernel, device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local), &local, NULL);
     global = N;
-    printf("global: %d local %d\n",global, local);
+    printf("global: %ld local %ld\n",global, local);
     err = clEnqueueNDRangeKernel(commands, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
     if(err) printf("NDRANGE Kernel error%d",err);
 

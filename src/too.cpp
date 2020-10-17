@@ -11,35 +11,11 @@
 #include "runner.h"
 #include "test.h"
 
-int run4() {
-    int a=1,b=2,c=3;
-    auto r = Runner<int,int*>("test_return",test_return,a,&b);
-    r.set_mem<1>(CL_MEM_WRITE_ONLY,1,true);
-    r.run_opencl(1024);
-    printf("Result: %d ",b);
-    return 0;
-
-}
-int run3() {
-    int a=1,b=2,c=3;
-    auto r = Runner<int*>("test_single_pointer",test_single_pointer,&b);
-    r.set_mem<0>(CL_MEM_READ_ONLY,1,false);
-    r.run_opencl(1024);
-    return 0;
-}
-int run2() {
-    int a=1,b=2,c=3;
-    auto r = Runner<int>("test_single_param",test_single_param,b);
-    r.run_opencl(1024);
-    return 0;
-}
-int run1() {
-    auto r = Runner<>("test_noop",test_noop);
-    r.run_opencl(1024);
-    return 0;
-
-}
 int run() {
+    return 0;
+}
+
+int runX() {
     const unsigned int size_card=10+4*3*9+Skill::num_skills*2+2;
     const unsigned int size_all_cards = 2*size_card;
     const unsigned int size_deck=10;
@@ -75,12 +51,12 @@ int run() {
 	    results[i] = -2;
     }
 
-    auto r = Runner<int,int*,int,int*,int,int*,int,int*,int,int>("simulate",simulate,size_all_cards,allcards,size_deck,mydeck,size_deck,enemydeck,N,results,N,seed);
+    auto r = Runner<int,int*,int,int*,int,int*,int,int*,int,int>("simulate",simulate,N,size_all_cards,allcards,size_deck,mydeck,size_deck,enemydeck,N,results,N,seed);
     r.set_mem<1>(CL_MEM_READ_ONLY,size_all_cards,false);
     r.set_mem<3>(CL_MEM_READ_ONLY,size_deck,false);
     r.set_mem<5>(CL_MEM_READ_ONLY,size_deck,false);
     r.set_mem<7>(CL_MEM_WRITE_ONLY,N,true);
-    r.run_opencl(N);
+    r.run_opencl();
     for (int i = 0; i  < N ; ++i) {
 	    printf("%d",results[i]);
     }
