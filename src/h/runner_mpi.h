@@ -17,11 +17,14 @@ void Runner<Args...>::run_mpi(int argc, char* argv[])
 
     if(taskid == MASTER) {
         printf("MASTER");
+        run_cpu();
     }
 
     if(taskid > MASTER) {
         printf("NOT MASTER");
+        run_cpu();
     }
+    //MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
 }
 #endif

@@ -10,10 +10,13 @@ TEST_CASE( "mpi unsigned add", "[mpi]" ) {
     //REQUIRE( c == 3 );
 }
 
-TEST_CASE( "mpi unsigned add parallel", "[mpi]" ) {
-    unsigned int a=1,b=2,c=0;
-    auto r = Runner("add",add,1,a,b,&c);
-    const char[] input = {"-n","4"}
-    r.run_mpi(2,&input);
-    //REQUIRE( c == 3 );
-}
+//TEST_CASE( "mpi unsigned add parallel", "[mpi]" ) {
+//    unsigned int a=1,b=2,c=0;
+//    auto r = Runner("add",add,1,a,b,&c);
+//    char* lel = "lel";
+//    char* n = "-n";
+//    char* num = "4";
+//    char* input[] = {lel,n,num};
+//    r.run_mpi(3,input);
+//    //REQUIRE( c == 3 );
+//}
