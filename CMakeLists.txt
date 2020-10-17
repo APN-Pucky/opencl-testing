@@ -27,6 +27,11 @@ find_package(Boost COMPONENTS filesystem REQUIRED)
 
 
 find_package(MPI REQUIRED)
+if (MPI_FOUND)
+    include_directories(SYSTEM ${MPI_INCLUDE_PATH})
+else (MPI_FOUND)
+    message(SEND_ERROR "This application cannot compile without MPI")
+endif (MPI_FOUND)
 # add this line only when you are using openmpi which has a different c++ bindings
 #add_definitions(-DOMPI_SKIP_MPICXX)
 
