@@ -83,7 +83,9 @@ class Runner
         
 
         void run_opencl(); 
+        #ifdef USE_MPI
         void run_mpi();
+        #endif
 
     private:
         size_t N;

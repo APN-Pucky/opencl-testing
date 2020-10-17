@@ -18,10 +18,6 @@ jobs:
                 echo "::set-env name=BOOST_ROOT::$env:BOOST_ROOT_1_69_0"
                 echo "::set-env name=BOOST_INCLUDE_DIR::$env:BOOST_ROOT_1_69_0\include"
                 echo "::set-env name=BOOST_LIBRARY_DIR::$env:BOOST_ROOT_1_69_0\lib"
-            - uses: msys2/setup-msys2@v2
-              with:
-                msystem: MINGW64
-                install:  mingw-w64-x86_64-msmpi
             - uses: ashutoshvarma/action-cmake-build@master
               with:
                 build-dir: ${{ runner.workspace }}\build
