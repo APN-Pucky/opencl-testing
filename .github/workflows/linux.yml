@@ -51,14 +51,14 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            compiler: [ gcc , clang ]
+            compiler: [ gcc ] #[ gcc , clang ]
             include:
                 - compiler: gcc
                   cc: gcc
                   cxx: g++
-                - compiler: clang
-                  cc: clang
-                  cxx: clang++
+                #- compiler: clang
+                #  cc: clang
+                #  cxx: clang++
         steps:
             - uses: actions/checkout@v2
               with:
