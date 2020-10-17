@@ -58,7 +58,7 @@ add_subdirectory(test)
 if(TOO_COVERAGE)
 SETUP_TARGET_FOR_COVERAGE_LCOV(
         NAME coverage                 
-        EXECUTABLE ctest --output-on-failure #-j ${n_cores} # Executable in PROJECT_BINARY_DIR
+        EXECUTABLE ctest --output-on-failure --verbose #-j ${n_cores} # Executable in PROJECT_BINARY_DIR
         DEPENDENCIES
             test_test
             too_test
