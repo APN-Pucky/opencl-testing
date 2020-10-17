@@ -30,7 +30,7 @@ jobs:
                 run-test: true
                 install-build: true
             - name: OpenCL?
-              run: ./dist/test/openclTestC.exe
+              run: ${{runner.workspace}}\dist\test\openclTestC.exe
             - uses: actions/upload-artifact@v2
               with:
                 name: win-test-bin
