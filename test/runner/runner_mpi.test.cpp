@@ -1,4 +1,5 @@
 #ifdef USE_MPI
+#ifdef USE_MPI_TEST
 #include "catch.hpp"
 #include "runner.h"
 #include "runner_test.h"
@@ -22,4 +23,5 @@ TEST_CASE( "mpi unsigned add", "[mpi]" ) {
 //    //REQUIRE( c == 3 );
 //}
 
+#endif
 #endif

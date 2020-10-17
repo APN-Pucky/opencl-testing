@@ -19,7 +19,7 @@ jobs:
               run: |
                 mkdir build
                 cd build
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_CXX_COMPILER=g++
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_CXX_COMPILER=g++ -DTOO_TEST_MPI
                 make install
             - name: Test
               run: |
