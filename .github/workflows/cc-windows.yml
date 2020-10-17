@@ -2,9 +2,9 @@ name: Cross-compile Windows
 
 on:
     push:
-        branches: [ master ]
+        branches: [ master , cc-windows]
     pull_request:
-        branches: [ master ]
+        branches: [ master , cc-windows]
 
 jobs:
     cross_compile_windows:
