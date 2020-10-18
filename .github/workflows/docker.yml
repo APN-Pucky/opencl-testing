@@ -16,7 +16,7 @@ jobs:
         name: Run on VM
   container:
     runs-on: ubuntu-latest
-    container: intelopencl/intel-opencl:ubuntu-20.04-ppa
+    container: chihchun/opencl-intel
     steps:
       - run: apt-get install clinfo
       - run: lscpu
