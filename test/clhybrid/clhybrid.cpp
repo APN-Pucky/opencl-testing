@@ -39,7 +39,7 @@ int main() {
     int clpresent = 0 == clewInit();
     if( !clpresent ) {
         printf("opencl library not found.\n");
-        return -1;
+        return 0;
     }
     const unsigned int size_card=10+4*3*9+Skill::num_skills*2+2;
     const unsigned int size_all_cards = 2*size_card;
@@ -64,7 +64,7 @@ int main() {
     err = clGetPlatformIDs(1, &platform, NULL);
     if (err != CL_SUCCESS) {
         printf("something went wrong, errorcode %i\n", err);
-    		return -1;
+    		return 0;
   	}
 
     printf("clGetDeviceIDs\n");

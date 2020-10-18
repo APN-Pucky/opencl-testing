@@ -2,6 +2,7 @@
 #include "runner.h"
 #include "runner_test.h"
 #include "test.h"
+#include "clew.h"
 
 template<typename ...Args>
 void run_test(Runner<Args...>& r) {

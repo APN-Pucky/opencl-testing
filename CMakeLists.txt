@@ -72,11 +72,14 @@ add_subdirectory(test)
 if(TOO_COVERAGE)
 SETUP_TARGET_FOR_COVERAGE_LCOV(
         NAME coverage                 
-        EXECUTABLE ctest --output-on-failure --verbose #-j ${n_cores} # Executable in PROJECT_BINARY_DIR
+        EXECUTABLE ctest --output-on-failure #-j ${n_cores} # Executable in PROJECT_BINARY_DIR
         DEPENDENCIES
+            opencl_find_test
+            opencl_run_test
+            clhybrid_test 
             test_test
-            too_test
             runner_test
+            too_test
         EXCLUDE "/usr/*"
         EXCLUDE "${PROJECT_SOURCE_DIR}/external/*"
         )

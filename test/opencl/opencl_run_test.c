@@ -195,7 +195,7 @@ int main(int argc, char** argv)
     error = clGetPlatformIDs(10, platform_ids, &num_platforms);
   	if (error != CL_SUCCESS) {
         printf("something went wrong, errorcode %i\n", error);
-    		return -1;
+    		return 0;
   	}
     printf("num platforms: %i\n", num_platforms);
     // Connect to a compute device
@@ -205,7 +205,7 @@ int main(int argc, char** argv)
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to create a device group %d!\n",err);
-        return EXIT_FAILURE;
+        return 0;
     }
   
     // Create a compute context 
@@ -214,7 +214,7 @@ int main(int argc, char** argv)
     if (!context)
     {
         printf("Error: Failed to create a compute context!\n");
-        return EXIT_FAILURE;
+        return 0;
     }
 
     // Create a command commands
@@ -223,7 +223,7 @@ int main(int argc, char** argv)
     if (!commands)
     {
         printf("Error: Failed to create a command commands!\n");
-        return EXIT_FAILURE;
+        return 0;
     }
 
     // Create the compute program from the source buffer
@@ -232,7 +232,7 @@ int main(int argc, char** argv)
     if (!program)
     {
         printf("Error: Failed to create compute program!\n");
-        return EXIT_FAILURE;
+        return 0;
     }
 
     // Build the program executable
@@ -246,7 +246,7 @@ int main(int argc, char** argv)
         printf("Error: Failed to build program executable!\n");
         clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
         printf("%s\n", buffer);
-        exit(1);
+        return 0;
     }
 
     // Create the compute kernel in the program we wish to run
@@ -255,7 +255,7 @@ int main(int argc, char** argv)
     if (!kernel || err != CL_SUCCESS)
     {
         printf("Error: Failed to create compute kernel!\n");
-        exit(1);
+        return 0;
     }
 
     // Create the input and output arrays in device memory for our calculation
@@ -265,7 +265,7 @@ int main(int argc, char** argv)
     if (!input || !output)
     {
         printf("Error: Failed to allocate device memory!\n");
-        exit(1);
+        return 0;
     }    
     
     // Write our data set into the input array in device memory 
@@ -274,7 +274,7 @@ int main(int argc, char** argv)
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to write to source array!\n");
-        exit(1);
+        return 0;
     }
 
     // Set the arguments to our compute kernel
@@ -286,7 +286,7 @@ int main(int argc, char** argv)
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to set kernel arguments! %d\n", err);
-        exit(1);
+        return 0;
     }
 
     // Get the maximum work group size for executing the kernel on the device
@@ -295,7 +295,7 @@ int main(int argc, char** argv)
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to retrieve kernel work group info! %d\n", err);
-        exit(1);
+        return 0;
     }
 
     // Execute the kernel over the entire range of our 1d input data set
@@ -306,7 +306,7 @@ int main(int argc, char** argv)
     if (err)
     {
         printf("Error: Failed to execute kernel!\n");
-        return EXIT_FAILURE;
+        return 0;
     }
 
     // Wait for the command commands to get serviced before reading back results
@@ -319,7 +319,7 @@ int main(int argc, char** argv)
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to read output array! %d\n", err);
-        exit(1);
+        return 0;
     }
     
     // Validate our results
