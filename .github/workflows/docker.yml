@@ -10,15 +10,23 @@ jobs:
   vm:
     runs-on: ubuntu-latest
     steps:
+      - run: sudo apt-get install alien libnuma1 wget tar clinfo libxcb-dri3-0 libxcb-dri2-0 rpm
+      - uses: actions/cache@v2
+        id: cache-packages  # give it a name for checking the cache hit-or-not
+        with:
+          path: ./l_opencl_p_18.1.0.015/  # what we cache: the folder
+          key: ${{ runner.os }}-download
       - run: | 
-          sudo apt-get install alien libnuma1 wget tar clinfo libxcb-dri3-0 libxcb-dri2-0 rpm
           wget https://registrationcenter-download.intel.com/akdlm/irc_nas/vcp/15532/l_opencl_p_18.1.0.015.tgz
           tar -xvf  l_opencl_p_18.1.0.015.tgz
+        if: steps.cache-packages.outputs.cache-hit != 'true'
+      - run: |
           cd l_opencl_p_18.1.0.015/rpm/
           fakeroot alien --to-deb opencl-*-base*.rpm
           fakeroot alien --to-deb opencl-*-intel*.rpm
-          sudo dpkg -i opencl-*-base*.deb
-          sudo dpkg -i opencl-*-intel*.deb
+          ls
+          sudo dpkg -i l-opencl-*-base*.deb
+          sudo dpkg -i l-opencl-*-intel*.deb
           sudo touch /etc/ld.so.conf.d/intelOpenCL.conf
           sudo echo "/opt/intel/opencl-1.2-6.4.0.25/lib64/clinfo" >> /etc/ld.so.conf.d/intelOpenCL.conf
           sudo mkdir -p /etc/OpenCL/vendors
