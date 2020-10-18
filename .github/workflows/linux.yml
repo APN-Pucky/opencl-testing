@@ -74,6 +74,7 @@ jobs:
         - run: |
             cd l_opencl_p_18.1.0.015/
             printf 'accept\naccept\n1\n1\n1\n' | sudo ./install.sh
+        - run: lscpu
         - run: sudo clinfo
         - run: clinfo
         - name: Download binaries
@@ -83,6 +84,7 @@ jobs:
         - run: ls
         - run: sudo chmod +x ./test/openclTestC
         - run: sudo ./test/openclTestC
+        - run: ./test/openclTestC
 
 
     compile_ubuntu_coverage:
