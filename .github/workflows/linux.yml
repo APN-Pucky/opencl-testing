@@ -47,43 +47,43 @@ jobs:
               name: ${{ matrix.compiler }}-test-bin
               path: dist/
 
-  test_opencl:
-    runs-on: ubuntu-latest
-    needs: compile_ubuntu
-    strategy:
-        matrix:
-          compiler: [ gcc ] #[ gcc , clang ]
-          include:
-              - compiler: gcc
-                cc: gcc
-                cxx: g++
-              #- compiler: clang
-              #  cc: clang
-              #  cxx: clang++
-    steps:
-      - run: sudo apt-get install alien libnuma1 wget tar clinfo libxcb-dri3-0 libxcb-dri2-0 rpm
-      - uses: actions/cache@v2
-        id: cache-packages  # give it a name for checking the cache hit-or-not
-        with:
-          path: ./l_opencl_p_18.1.0.015/  # what we cache: the folder
-          key: ${{ runner.os }}-download
-      - run: | 
-          wget https://registrationcenter-download.intel.com/akdlm/irc_nas/vcp/15532/l_opencl_p_18.1.0.015.tgz
-          tar -xvf  l_opencl_p_18.1.0.015.tgz
-        if: steps.cache-packages.outputs.cache-hit != 'true'
-      - run: |
-          cd l_opencl_p_18.1.0.015/
-          printf 'accept\naccept\n1\n1\n1\n' | sudo ./install.sh
-      - run: |
-          sudo clinfo
-          clinfo
-      - name: Download binaries
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ matrix.compiler }}-test-bin
-      - run: ls
-      - run: unzip ${{ matrix.compiler }}-test-bin
-      - run: ./test/openclTestC
+    test_opencl:
+      runs-on: ubuntu-latest
+      needs: compile_ubuntu
+      strategy:
+          matrix:
+            compiler: [ gcc ] #[ gcc , clang ]
+            include:
+                - compiler: gcc
+                  cc: gcc
+                  cxx: g++
+                #- compiler: clang
+                #  cc: clang
+                #  cxx: clang++
+      steps:
+        - run: sudo apt-get install alien libnuma1 wget tar clinfo libxcb-dri3-0 libxcb-dri2-0 rpm
+        - uses: actions/cache@v2
+          id: cache-packages  # give it a name for checking the cache hit-or-not
+          with:
+            path: ./l_opencl_p_18.1.0.015/  # what we cache: the folder
+            key: ${{ runner.os }}-download
+        - run: | 
+            wget https://registrationcenter-download.intel.com/akdlm/irc_nas/vcp/15532/l_opencl_p_18.1.0.015.tgz
+            tar -xvf  l_opencl_p_18.1.0.015.tgz
+          if: steps.cache-packages.outputs.cache-hit != 'true'
+        - run: |
+            cd l_opencl_p_18.1.0.015/
+            printf 'accept\naccept\n1\n1\n1\n' | sudo ./install.sh
+        - run: |
+            sudo clinfo
+            clinfo
+        - name: Download binaries
+          uses: actions/download-artifact@v2
+          with:
+            name: ${{ matrix.compiler }}-test-bin
+        - run: ls
+        - run: unzip ${{ matrix.compiler }}-test-bin
+        - run: ./test/openclTestC
 
 
     compile_ubuntu_coverage:
