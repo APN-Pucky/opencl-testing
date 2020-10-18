@@ -39,7 +39,7 @@ jobs:
               cd build
               make test
           - run: lscpu
-          - run: clinfo
+          - run: sudo clinfo
           - name: OpenCL?
             run: sudo oclgrind ./dist/test/openclTestC
           - uses: actions/upload-artifact@v2
