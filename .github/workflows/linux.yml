@@ -41,6 +41,7 @@ jobs:
             run: |
               cd build
               make test
+          - run: lscpu
           #- name: OpenCL?
           #  run: ./dist/test/openclTestC
           - uses: actions/upload-artifact@v2
