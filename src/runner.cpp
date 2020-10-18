@@ -1,4 +1,7 @@
 #include "runner.h"
+#include <csignal>
+#include <cstdlib>
+
 
 
 /*
@@ -52,6 +55,7 @@ cl_program load_cl_programs(cl_context context) {
             programBuffer, programSize, NULL);
 }
 
+#ifdef TOO_MPI
 void mpirunnerfinalize() {
     int already_finalized;
     MPI_Finalized(&already_finalized);
@@ -72,5 +76,5 @@ void mpirunnerinit() {
     std::signal(SIGTSTP,  sfinalize);
 
     std::atexit(mpirunnerfinalize);
-
 }
+#endif
