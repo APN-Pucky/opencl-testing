@@ -25,7 +25,7 @@ jobs:
               submodules: true
           - name: Install Dependencies
             run: |
-              sudo apt-get install -y make cmake libboost-all-dev lcov 
+              sudo apt-get install -y make cmake libboost-all-dev lcov fglrx=2:8.960-0ubuntu1 opencl-headers
               sudo apt-get install -y ${{ matrix.compiler }}
           - name: Build
             run: |
@@ -33,10 +33,6 @@ jobs:
               cd build 
               cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1 -DTOO_TEST_MPI=1
               make install
-          - name: Test
-            run: |
-              cd build
-              make test
           - name: Test
             run: |
               cd build
