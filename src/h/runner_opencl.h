@@ -107,7 +107,7 @@ void Runner<Args...>::run_opencl()
   	}
 
     printf("clGetDeviceIDs\n");
-    clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device_id, NULL);
+    clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 1, &device_id, NULL);
     context = clCreateContext(NULL, 1, &device_id, NULL, NULL, NULL);
 
     // create program from buffer
