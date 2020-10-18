@@ -15,7 +15,7 @@ jobs:
         name: Run on VM
   container:
     runs-on: ubuntu-latest
-    container: intelopencl/intel-opencl
+    container: intelopencl/intel-opencl:ubuntu-20.04-ppa
     steps:
       - run: |
           echo This job does specify a container.
