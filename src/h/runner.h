@@ -9,9 +9,9 @@
 #include "clew.h"
 
 const int CLPRESENT = 0 == clewInit();
-
-
 cl_program load_cl_programs(cl_context context); 
+extern int global_id;
+#define get_global_id global_id +
 
 template<typename ... Args>
 class Runner
@@ -44,7 +44,7 @@ class Runner
             std::get<I>(args)=t;
         }
         template<std::size_t I>
-        void set_mem(cl_mem_flags f, size_t t, bool read) {
+        void set_mem(cl_mem_flags f, size_t t, bool read=false) {
             flags[I] = f;
             sizes[I] = t;
             read_mem[I] = read;
@@ -81,7 +81,7 @@ class Runner
             //call(function_pointer,args);
         }
         
-
+        void run_openmp();
         void run_opencl(); 
         #ifdef TOO_MPI
         void run_mpi();
@@ -91,8 +91,8 @@ class Runner
         size_t N;
         std::vector<cl_mem> mems;
         std::vector<bool> read_mem;
-        std::vector<cl_mem_flags> flags;
         std::vector<size_t> sizes;
+        std::vector<cl_mem_flags> flags;
         std::string function_name;
         std::tuple<Args...> args;
         void(*function_pointer)(Args...);

@@ -1,6 +1,4 @@
 #include "runner.h"
-#include <csignal>
-#include <cstdlib>
 #include "mpi.h"
 
 
@@ -20,6 +18,7 @@ void Runner::add_argument(T& t)
 }
 */
 
+int global_id = 0;
 /*
  * Loads cl programs in directories cl/ 
  */
@@ -55,27 +54,3 @@ cl_program load_cl_programs(cl_context context) {
     return clCreateProgramWithSource(context, n,
             programBuffer, programSize, NULL);
 }
-
-#ifdef TOO_MPI
-void mpirunnerfinalize() {
-    int already_finalized;
-    MPI_Finalized(&already_finalized);
-    if(!already_finalized) MPI_Finalize();
-}
-void mpirunnerinit() {
-    int already_initialized;
-    MPI_Initialized(&already_initialized);
-    if(!already_initialized) MPI_Init(NULL,NULL);
-    auto sfinalize = [](int i = 0){ mpirunnerfinalize();};
-    //^C
-    std::signal(SIGINT, sfinalize);
-    //abort()
-    std::signal(SIGABRT, sfinalize );
-    //sent by "kill" command
-    std::signal(SIGTERM,  sfinalize);
-    //^Z
-    //std::signal(SIGTSTP,  sfinalize);
-
-    std::atexit(mpirunnerfinalize);
-}
-#endif

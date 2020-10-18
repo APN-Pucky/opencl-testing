@@ -1,4 +1,4 @@
-set( too_cxx_SRC too.cpp runner.cpp)
+set( too_cxx_SRC too.cpp runner.cpp mpi_util.cpp)
 set( too_ocl_SRC cl/tuo.cpp cl/test.cpp)
 
 include_directories(h)

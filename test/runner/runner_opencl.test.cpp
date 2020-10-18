@@ -4,7 +4,6 @@
 #include "runner_test.h"
 #include "test.h"
 
-/*
 TEST_CASE( "opencl unsigned add", "[opencl]" ) {
     unsigned int a=1,b=2,c=0;
     auto r = Runner("add",add,1,a,b,&c);
@@ -30,5 +29,5 @@ TEST_CASE( "opencl write to pointer", "[opencl]" ) {
 //    r.run_mpi(3,input);
 //    //REQUIRE( c == 3 );
 //}
-*/
+//*/
 #endif

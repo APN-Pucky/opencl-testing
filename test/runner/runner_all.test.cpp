@@ -52,3 +52,16 @@ TEST_CASE( "add together", "[runner]" ) {
     run_test(r);
     REQUIRE ( c == 3);
 }
+
+TEST_CASE( "array add", "[runner]" ) {
+    int N =10;
+    int c[N];
+    int a=1,b=2;
+    auto r = Runner("test_array_add",test_array_add,N,a,b,c,N);
+    r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
+    r.run_mpi();
+    for(int i = 0; i < N;++i)
+        REQUIRE( c[i] == 3 );
+    }
+};
+
