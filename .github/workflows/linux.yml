@@ -81,7 +81,8 @@ jobs:
           with:
             name: ${{ matrix.compiler }}-test-bin
         - run: ls
-        - run: ./test/openclTestC
+        - run: sudo chmod +x ./test/openclTestC
+        - run: sudo ./test/openclTestC
 
 
     compile_ubuntu_coverage:
