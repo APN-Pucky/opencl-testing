@@ -35,13 +35,6 @@ else (MPI_FOUND)
     include_directories(SYSTEM external/msmpi/include)
     message(WARNING "This application will compile without MPI")
 endif (MPI_FOUND)
-if(TOO_TEST_MPI)
-    add_definitions(-DTOO_TEST_MPI)
-endif()
-if(TOO_TEST_OPENCL)
-    add_definitions(-DTOO_TEST_OPENCL)
-endif()
-
 # add this line only when you are using openmpi which has a different c++ bindings
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 add_definitions(-DOMPI_SKIP_MPICXX)
@@ -62,8 +55,19 @@ include_directories(src/h)
 add_subdirectory(src)
 
 #Tests
+if(TOO_TEST_MPI)
+    add_definitions(-DTOO_TEST_MPI)
+endif()
+if(TOO_TEST_OPENCL)
+    add_definitions(-DTOO_TEST_OPENCL)
+endif()
+
+include(CTest)
+include(Catch)
 enable_testing()
 add_subdirectory(test)
+
+
 
 if(TOO_COVERAGE)
 SETUP_TARGET_FOR_COVERAGE_LCOV(

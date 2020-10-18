@@ -21,7 +21,14 @@ void Runner::add_argument(T& t)
  */
 cl_program load_cl_programs(cl_context context) {
     std::vector<std::string> filenames;
-    for (boost::filesystem::directory_entry& entry : boost::filesystem::directory_iterator("cl/"))  {
+    std::string path1 = "cl";
+    std::string path2 = "src/cl";
+    boost::filesystem::path full_path(boost::filesystem::current_path());
+    std::cout << "Current path is : " << full_path << std::endl;
+    if( ! boost::filesystem::is_directory(path1) ) {
+            path1 = path2;
+    }
+    for (boost::filesystem::directory_entry& entry : boost::filesystem::directory_iterator(path1))  {
         filenames.push_back(entry.path().string());
     }
     std::sort(filenames.begin(),filenames.end());

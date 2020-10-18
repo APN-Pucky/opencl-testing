@@ -112,7 +112,7 @@ void Runner<Args...>::run_opencl()
 
     // create program from buffer
     program = load_cl_programs(context);
-    err = clBuildProgram(program,0,NULL,"-D _OpenCL -I clh/ -cl-std=CL2.0",NULL,NULL);
+    err = clBuildProgram(program,0,NULL,"-D _OpenCL -I clh/ -I src/clh/ -cl-std=CL2.0",NULL,NULL);
     size_t len = 0;
     cl_int ret = CL_SUCCESS;
     ret = clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, 0, NULL, &len);
