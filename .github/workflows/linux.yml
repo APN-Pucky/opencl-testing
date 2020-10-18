@@ -74,15 +74,13 @@ jobs:
         - run: |
             cd l_opencl_p_18.1.0.015/
             printf 'accept\naccept\n1\n1\n1\n' | sudo ./install.sh
-        - run: |
-            sudo clinfo
-            clinfo
+        - run: sudo clinfo
+        - run: clinfo
         - name: Download binaries
           uses: actions/download-artifact@v2
           with:
             name: ${{ matrix.compiler }}-test-bin
         - run: ls
-        - run: unzip ${{ matrix.compiler }}-test-bin
         - run: ./test/openclTestC
 
 
