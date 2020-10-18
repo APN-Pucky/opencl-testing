@@ -73,7 +73,7 @@ void mpirunnerinit() {
     //sent by "kill" command
     std::signal(SIGTERM,  sfinalize);
     //^Z
-    std::signal(SIGTSTP,  sfinalize);
+    //std::signal(SIGTSTP,  sfinalize);
 
     std::atexit(mpirunnerfinalize);
 }
