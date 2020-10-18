@@ -18,7 +18,8 @@ jobs:
           export DIR=$(basename ${INTEL_SDK_URL} .tgz)
           tar zxvf ${TARBALL}
           for i in ${DIR}/rpm/*.rpm ; do alien --to-deb $i ; done
-          dpkg -i *.deb
+          sudo dpkg -i *.deb
+          sudo clinfo
 
       - run: docker run -t -i --device /dev/dri:/dev/dri -v $(pwd)/wip:/mnt -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY chihchun/opencl-intel:2016R2 clinfo 
       - run: |
