@@ -25,8 +25,9 @@ jobs:
               submodules: true
           - name: Install Dependencies
             run: |
-              sudo apt-get install -y make cmake libboost-all-dev lcov fglrx=2:8.960-0ubuntu1 opencl-headers
+              sudo apt-get install -y make cmake libboost-all-dev lcov
               sudo apt-get install -y ${{ matrix.compiler }}
+              sudo apt-cache search opencl
           - name: Build
             run: |
               mkdir build
