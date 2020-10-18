@@ -18,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     container: chihchun/opencl-intel
     steps:
-      - run: apt-get install clinfo
+      - run: apt-get install clinfo sudo
       - run: lscpu
-      - run: clinfo
+      - run: sudo clinfo
       - run: |
           echo This job does specify a container.
           echo It runs in the container instead of the VM.
