@@ -25,7 +25,7 @@ jobs:
               submodules: true
           - name: Install Dependencies
             run: |
-              sudo apt-get install -y make cmake libboost-all-dev lcov
+              sudo apt-get install -y make cmake libboost-all-dev lcov oclgrind
               sudo apt-get install -y ${{ matrix.compiler }}
               sudo apt-cache search opencl
           - name: Build
@@ -39,8 +39,8 @@ jobs:
               cd build
               make test
           - run: lscpu
-          #- name: OpenCL?
-          #  run: ./dist/test/openclTestC
+          - name: OpenCL?
+            run: ./dist/test/openclTestC
           - uses: actions/upload-artifact@v2
             with:
               name: ${{ matrix.compiler }}-test-bin
