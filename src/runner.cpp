@@ -1,6 +1,7 @@
 #include "runner.h"
 #include <csignal>
 #include <cstdlib>
+#include "mpi.h"
 
 
 
