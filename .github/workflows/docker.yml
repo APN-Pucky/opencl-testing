@@ -10,6 +10,8 @@ jobs:
   vm:
     runs-on: ubuntu-latest
     steps:
+      - run: sudo apt-get install docker
+      - run: docker run -t -i --device /dev/dri:/dev/dri -v $(pwd)/wip:/mnt -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY chihchun/opencl-intel:2016R2 clinfo 
       - run: |
           echo This job does not specify a container.
           echo It runs directly on the virtual machine.
@@ -18,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     container: chihchun/opencl-intel
     steps:
-      - run: apt-get install clinfo sudo
+      - run: apt-get install clinfo 
       - run: lscpu
-      - run: sudo clinfo
+      - run: clinfo
       - run: |
           echo This job does specify a container.
           echo It runs in the container instead of the VM.
