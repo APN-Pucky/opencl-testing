@@ -18,12 +18,6 @@ jobs:
                 echo "::set-env name=BOOST_ROOT::$env:BOOST_ROOT_1_69_0"
                 echo "::set-env name=BOOST_INCLUDE_DIR::$env:BOOST_ROOT_1_69_0\include"
                 echo "::set-env name=BOOST_LIBRARY_DIR::$env:BOOST_ROOT_1_69_0\lib"
-            - name: Download MSMPI
-              run: |
-                curl.exe -o msmpisdk.msi https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisdk.msi
-                dir
-            - name: Install MSMPI
-              run: msiexec.exe /i msmpisdk.msi /qn
             - uses: ashutoshvarma/action-cmake-build@master
               with:
                 build-dir: ${{ runner.workspace }}\build
@@ -35,6 +29,8 @@ jobs:
                 configure-options: -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}\dist -DTOO_BOOST_STATIC=1
                 run-test: true
                 install-build: true
+            #- name: OpenCL?
+            #  run: ${{runner.workspace}}\dist\test\openclTestC.exe
             - uses: actions/upload-artifact@v2
               with:
                 name: win-test-bin

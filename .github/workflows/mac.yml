@@ -19,12 +19,14 @@ jobs:
               run: |
                 mkdir build
                 cd build
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_CXX_COMPILER=g++
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DCMAKE_CXX_COMPILER=g++ -DTOO_TEST_MPI=1
                 make install
             - name: Test
               run: |
                 cd build
                 make test
+            #- name: OpenCL?
+            #  run: ./dist/test/openclTestC
             - uses: actions/upload-artifact@v2
               with:
                 name: test-bin

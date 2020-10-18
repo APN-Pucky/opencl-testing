@@ -1,5 +1,6 @@
 #ifndef RUNNER_MPI_H
 #define RUNNER_MPI_H
+#ifdef USE_MPI
 #include "mpi.h"
 #define MASTER 0
 
@@ -27,4 +28,5 @@ void Runner<Args...>::run_mpi()
     //MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
 }
+#endif
 #endif

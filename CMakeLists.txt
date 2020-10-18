@@ -26,12 +26,19 @@ endif()
 find_package(Boost COMPONENTS filesystem REQUIRED)
 
 
-find_package(MPI REQUIRED)
+find_package(MPI)
 if (MPI_FOUND)
+    add_definitions(-DUSE_MPI)
     include_directories(SYSTEM ${MPI_INCLUDE_PATH})
 else (MPI_FOUND)
-    message(SEND_ERROR "This application cannot compile without MPI")
+    add_definitions(-DUSE_MPI)
+    include_directories(SYSTEM external/msmpi/include)
+    message(WARNING "This application will compile without MPI")
 endif (MPI_FOUND)
+if(TOO_TEST_MPI)
+    add_definitions(-DUSE_MPI_TEST)
+endif()
+
 # add this line only when you are using openmpi which has a different c++ bindings
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 add_definitions(-DOMPI_SKIP_MPICXX)
