@@ -22,7 +22,7 @@ jobs:
         if: steps.cache-packages.outputs.cache-hit != 'true'
       - run: |
           cd l_opencl_p_18.1.0.015/
-          sudo ./install.sh
+          printf 'accept\n' | sudo ./install.sh
           cd rpm/
           fakeroot alien --to-deb intel-openclrt-18.1.0.015-18.1.0-015.x86_64.rpm
           fakeroot alien --to-deb intel-openclrt-pset-18.1.0.015-18.1.0-015.noarch.rpm
