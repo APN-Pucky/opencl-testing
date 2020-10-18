@@ -158,7 +158,7 @@ int main(int argc, char** argv)
     int clpresent = 0 == clewInit();
     if( !clpresent ) {
         printf("opencl library not found.\n");
-        return -1;
+        return 0;
     }
 
     print_platforms();

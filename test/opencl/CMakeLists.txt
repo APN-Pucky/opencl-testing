@@ -12,4 +12,4 @@ install(TARGETS opencl_find_test RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tes
 	
 
 add_test(NAME opencl_run_test  COMMAND opencl_run_test )
-add_test(NAME  opencl_find_test COMMAND opencl_find_test )
+add_test(NAME opencl_find_test COMMAND opencl_find_test )
