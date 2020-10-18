@@ -14,6 +14,11 @@ void run_test(Runner<Args...>& r) {
         r.run_opencl();
     }
 #endif
+#ifdef TOO_TEST_MPI
+    //SECTION("mpi") {
+    //    r.run_mpi();
+    //}
+#endif
 
 }
 

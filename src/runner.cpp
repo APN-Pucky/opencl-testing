@@ -51,3 +51,26 @@ cl_program load_cl_programs(cl_context context) {
     return clCreateProgramWithSource(context, n,
             programBuffer, programSize, NULL);
 }
+
+void mpirunnerfinalize() {
+    int already_finalized;
+    MPI_Finalized(&already_finalized);
+    if(!already_finalized) MPI_Finalize();
+}
+void mpirunnerinit() {
+    int already_initialized;
+    MPI_Initialized(&already_initialized);
+    if(!already_initialized) MPI_Init(NULL,NULL);
+    auto sfinalize = [](int i = 0){ mpirunnerfinalize();};
+    //^C
+    std::signal(SIGINT, sfinalize);
+    //abort()
+    std::signal(SIGABRT, sfinalize );
+    //sent by "kill" command
+    std::signal(SIGTERM,  sfinalize);
+    //^Z
+    std::signal(SIGTSTP,  sfinalize);
+
+    std::atexit(mpirunnerfinalize);
+
+}
