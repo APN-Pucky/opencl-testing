@@ -10,7 +10,16 @@ jobs:
   vm:
     runs-on: ubuntu-latest
     steps:
-      - run: sudo apt-get install docker
+      - run: | 
+          export INTEL_SDK_URL=http://registrationcenter-download.intel.com/akdlm/irc_nas/9553/intel_sdk_for_opencl_2016_ubuntu_6.2.0.1760_x64.tgz
+          wget http://registrationcenter-download.intel.com/akdlm/irc_nas/9553/intel_sdk_for_opencl_2016_ubuntu_6.2.0.1760_x64.tgz
+          sudo apt-get install alien wget tar clinfo libxcb-dri3-0 libxcb-dri2-0
+          export TARBALL=$(basename ${INTEL_SDK_URL})
+          export DIR=$(basename ${INTEL_SDK_URL} .tgz)
+          tar zxvf ${TARBALL}
+          for i in ${DIR}/rpm/*.rpm ; do alien --to-deb $i ; done
+          dpkg -i *.deb
+
       - run: docker run -t -i --device /dev/dri:/dev/dri -v $(pwd)/wip:/mnt -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY chihchun/opencl-intel:2016R2 clinfo 
       - run: |
           echo This job does not specify a container.
