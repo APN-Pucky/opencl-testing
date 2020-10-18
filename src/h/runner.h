@@ -83,7 +83,7 @@ class Runner
         
 
         void run_opencl(); 
-        #ifdef USE_MPI
+        #ifdef TOO_MPI
         void run_mpi();
         #endif
 

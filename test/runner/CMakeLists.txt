@@ -2,6 +2,7 @@ set( too_test_SRC
   runner_test.cpp
   runner_cpu.test.cpp
   runner_mpi.test.cpp
+  runner_opencl.test.cpp
 )
 
 include_directories(../../src/clh)

@@ -61,23 +61,7 @@ jobs:
                 #  cc: clang
                 #  cxx: clang++
       steps:
-        - run: sudo apt-get install alien libnuma1 wget tar clinfo libxcb-dri3-0 libxcb-dri2-0 rpm
-        - uses: actions/cache@v2
-          id: cache-packages  # give it a name for checking the cache hit-or-not
-          with:
-            path: ./l_opencl_p_18.1.0.015/  # what we cache: the folder
-            key: ${{ runner.os }}-download
-        - run: | 
-            wget https://registrationcenter-download.intel.com/akdlm/irc_nas/vcp/15532/l_opencl_p_18.1.0.015.tgz
-            tar -xvf  l_opencl_p_18.1.0.015.tgz
-          if: steps.cache-packages.outputs.cache-hit != 'true'
-        - run: |
-            cd l_opencl_p_18.1.0.015/
-            printf 'accept\naccept\n1\n1\n1\n' | sudo ./install.sh
-        - run: lscpu
-        - run: sudo clinfo
-        - run: clinfo
-        - name: Download binaries
+                - name: Download binaries
           uses: actions/download-artifact@v2
           with:
             name: ${{ matrix.compiler }}-test-bin
@@ -107,11 +91,31 @@ jobs:
               run: |
                 sudo apt-get install -y make cmake libboost-all-dev lcov 
                 sudo apt-get install -y ${{ matrix.compiler }}
+
+            # OpenCL Intel Xeon CPU SDK
+            - run: sudo apt-get install alien libnuma1 wget tar clinfo libxcb-dri3-0 libxcb-dri2-0 rpm
+            - uses: actions/cache@v2
+              id: cache-packages  # give it a name for checking the cache hit-or-not
+              with:
+                path: ./l_opencl_p_18.1.0.015/  # what we cache: the folder
+                key: ${{ runner.os }}-download
+            - run: | 
+                wget https://registrationcenter-download.intel.com/akdlm/irc_nas/vcp/15532/l_opencl_p_18.1.0.015.tgz
+                tar -xvf  l_opencl_p_18.1.0.015.tgz
+              if: steps.cache-packages.outputs.cache-hit != 'true'
+            - run: |
+                cd l_opencl_p_18.1.0.015/
+                printf 'accept\naccept\n1\n1\n1\n' | sudo ./install.sh
+            - run: lscpu
+            - run: sudo clinfo
+            - run: clinfo
+            # OpenCL End
+
             - name: Build
               run: |
                 mkdir build
                 cd build 
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1 -DTOO_COVERAGE=1 -DTOO_TEST_MPI=1
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist  -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}  -DTOO_BOOST_STATIC=1 -DTOO_COVERAGE=1 -DTOO_TEST_MPI=1 -DTOO_TEST_OPENCL
                 make install
             - name: Test & Coverage
               run: |

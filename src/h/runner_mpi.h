@@ -1,6 +1,6 @@
 #ifndef RUNNER_MPI_H
 #define RUNNER_MPI_H
-#ifdef USE_MPI
+#ifdef TOO_MPI
 #include "mpi.h"
 #define MASTER 0
 
