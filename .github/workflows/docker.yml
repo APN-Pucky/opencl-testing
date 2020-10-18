@@ -19,7 +19,7 @@ jobs:
     container: intelopencl/intel-opencl:ubuntu-20.04-ppa
     steps:
       - run: apt-get install clinfo
-      - run: sudo clinfo
+      - run: clinfo
       - run: |
           echo This job does specify a container.
           echo It runs in the container instead of the VM.
