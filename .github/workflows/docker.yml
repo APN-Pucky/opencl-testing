@@ -19,6 +19,7 @@ jobs:
     container: intelopencl/intel-opencl:ubuntu-20.04-ppa
     steps:
       - run: apt-get install clinfo
+      - run: lscpu
       - run: clinfo
       - run: |
           echo This job does specify a container.
