@@ -6,8 +6,8 @@
 
 template<typename ...Args>
 void run_test(Runner<Args...>& r) {
-    SECTION("cpu") {
-        r.run_cpu();
+    SECTION("openmp") {
+        r.run_openmp();
     }
 #ifdef TOO_TEST_OPENCL
     SECTION("opencl") {
@@ -60,7 +60,7 @@ TEST_CASE( "array add", "[runner]" ) {
     auto r = Runner("test_array_add",test_array_add,N,a,b,c,N);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
     r.run_mpi();
-    for(int i = 0; i < N;++i)
+    for(int i = 0; i < N;++i) {
         REQUIRE( c[i] == 3 );
     }
 };

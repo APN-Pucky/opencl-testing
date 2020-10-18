@@ -100,4 +100,5 @@ class Runner
 
 #include "runner_opencl.h"
 #include "runner_mpi.h"
+#include "runner_openmp.h"
 #endif
