@@ -1,5 +1,5 @@
 #ifdef TOO_MPI
-#ifdef TOO_MPI_TEST
+#ifdef TOO_TEST_MPI
 #include "catch.hpp"
 #include "runner.h"
 #include "runner_test.h"

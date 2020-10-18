@@ -36,10 +36,10 @@ else (MPI_FOUND)
     message(WARNING "This application will compile without MPI")
 endif (MPI_FOUND)
 if(TOO_TEST_MPI)
-    add_definitions(-DTOO_MPI_TEST)
+    add_definitions(-DTOO_TEST_MPI)
 endif()
 if(TOO_TEST_OPENCL)
-    add_definitions(-DTOO_OPENCL_TEST)
+    add_definitions(-DTOO_TEST_OPENCL)
 endif()
 
 # add this line only when you are using openmpi which has a different c++ bindings

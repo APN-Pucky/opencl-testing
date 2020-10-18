@@ -12,6 +12,9 @@ __kernel void test_return(int a, __global int* b) {
     }
     else {
         //printf("less funny");
-        *b = 5;
+        *b = a;
     }
+}
+__kernel void test_add(int a, int b, __global int* c) { 
+    *c = a+b;
 }
