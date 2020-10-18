@@ -25,7 +25,7 @@ jobs:
               submodules: true
           - name: Install Dependencies
             run: |
-              sudo apt-get install -y make cmake libboost-all-dev lcov oclgrind ocl-icd-libopencl1 clinfo
+              sudo apt-get install -y make cmake libboost-all-dev lcov oclgrind ocl-icd-libopencl1 clinfo ocl-icd-opencl-dev beignet
               sudo apt-get install -y ${{ matrix.compiler }}
               sudo apt-cache search opencl
           - name: Build
