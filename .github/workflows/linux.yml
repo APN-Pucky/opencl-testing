@@ -41,7 +41,7 @@ jobs:
           - run: lscpu
           - run: sudo clinfo
           - name: OpenCL?
-            run: sudo oclgrind ./dist/test/openclTestC
+            run: sudo ./dist/test/openclTestC
           - uses: actions/upload-artifact@v2
             with:
               name: ${{ matrix.compiler }}-test-bin
