@@ -7,7 +7,12 @@ include_directories(${Boost_INCLUDE_DIR})
  
 add_library( too_lib ${too_cxx_SRC} ${too_ocl_SRC})
 
+if(MPI_FOUND)
 target_link_libraries( too_lib clew ${Boost_LIBRARIES} MPI::MPI_C )
+else()
+target_link_libraries( too_lib clew ${Boost_LIBRARIES} ${CMAKE_SOURCE_DIR}/external/msmpi/lib/x64/msmpi.lib )
+endif()
+
 
 add_executable( too main.cpp )
 
