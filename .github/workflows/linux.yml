@@ -25,7 +25,7 @@ jobs:
               submodules: true
           - name: Install Dependencies
             run: |
-              sudo apt-get install -y make cmake libboost-all-dev lcov oclgrind
+              sudo apt-get install -y make cmake libboost-all-dev lcov oclgrind ocl-icd-libopencl1 clinfo
               sudo apt-get install -y ${{ matrix.compiler }}
               sudo apt-cache search opencl
           - name: Build
@@ -39,6 +39,7 @@ jobs:
               cd build
               make test
           - run: lscpu
+          - run: clinfo
           - name: OpenCL?
             run: sudo oclgrind ./dist/test/openclTestC
           - uses: actions/upload-artifact@v2
