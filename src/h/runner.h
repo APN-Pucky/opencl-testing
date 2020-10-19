@@ -27,6 +27,7 @@ class Runner
             read_mem(sizeof...(Args)),
             sizes(sizeof...(Args))
         {
+            global_id = 0;
             for(auto a : sizes) a = 0;
             if( !CLPRESENT) {
                 printf("opencl library not found.\n");
