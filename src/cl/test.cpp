@@ -1,10 +1,10 @@
 
 #ifndef _OpenCL
+#include <cstdio>
 #define __global
 #define __constant
 #define __kernel
 //#define ulong unsigned long
-#include <cstdio>
 #include "runner.h"
 
 #else
@@ -40,7 +40,7 @@ __kernel void test_array_add(int a, int b, __global int* c, int N) {
 	int id = get_global_id(0);	
     if(id < N) {
         c[id] = a+b;
-        printf("id=%d\n",id);
+        //printf("id=%d\n",id);
 
     }
 }

@@ -4,6 +4,7 @@
 #include "mpi.h"
 #include "mpi_util.h"
 #include <vector>
+#include "debug.h"
 
 #define MASTER 0
 
@@ -17,12 +18,12 @@ void send(std::tuple<Args...>& args, int dest,std::vector<size_t>& sizes)
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
                 MPI_Send(std::get<I>(args),sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], MPI_BYTE,dest,I,MPI_COMM_WORLD);
-                printf("MPI: Send Array %d %ld\n",dest, I);
+                debug_printf("MPI: Send Array %d %ld\n",dest, I);
             }
         }
         else {
             MPI_Send(&std::get<I>(args),sizeof(typename std::tuple_element<I,std::tuple<Args...>>::type), MPI_BYTE,dest,I,MPI_COMM_WORLD);
-            printf("MPI: Send %d %ld\n",dest,I);
+            debug_printf("MPI: Send %d %ld\n",dest,I);
             //printf("here where i should NAT be %d %d %d %d ",I,index,std::get<I>(args),sizeof(int));
         }
     // do things
@@ -40,12 +41,12 @@ void recv(std::tuple<Args...>& args, int source, MPI_Status& status,std::vector<
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
                 MPI_Recv(std::get<I>(args),sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], MPI_BYTE,source,I,MPI_COMM_WORLD,&status);
-                printf("MPI: Recv Array %ld\n",I);
+                debug_printf("MPI: Recv Array %ld\n",I);
             }
         }
         else {
             MPI_Recv(&std::get<I>(args),sizeof(typename std::tuple_element<I,std::tuple<Args...>>::type), MPI_BYTE,source,I,MPI_COMM_WORLD,&status);
-            printf("MPI: Recv %ld\n",I);
+            debug_printf("MPI: Recv %ld\n",I);
             //printf("here where i should NAT be %d %d %d %d ",I,index,std::get<I>(args),sizeof(int));
         }
     // do things
@@ -63,7 +64,7 @@ void send_result(std::tuple<Args...>& args, int dest,std::vector<size_t>& sizes,
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
                 MPI_Send(&std::get<I>(args)[taskid*chunksize],sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)*chunksize, MPI_BYTE,dest,I,MPI_COMM_WORLD);
-                printf("MPI: Send Result Array %d %ld\n",dest, I);
+                debug_printf("MPI: Send Result Array %d %ld\n",dest, I);
             }
         }
     // do things
@@ -81,7 +82,7 @@ void recv_result(std::tuple<Args...>& args, int source, MPI_Status& status,std::
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
                 MPI_Recv(&std::get<I>(args)[source*chunksize],sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* chunksize, MPI_BYTE,source,I,MPI_COMM_WORLD,&status);
-                printf("MPI: Recv Result Array %ld\n",I);
+                debug_printf("MPI: Recv Result Array %ld\n",I);
             }
         }
     // do things
@@ -101,14 +102,16 @@ void Runner<Args...>::run_mpi()
     global_id =0;
     MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
     MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
-    printf ("MPI task %d has started...  ", taskid);
+    debug_printf ("MPI task %d has started...  ", taskid);
     chunksize = (N / numtasks);
     leftover = (N % numtasks);
 
     if(taskid == MASTER) {
+#ifndef NDEBUG
         printf("MASTER: ");
         std::apply([](auto&... a) {((std::cout << a << " "), ...);}, args);
         std::cout << std::endl;
+#endif
 
 
         for(int i = 1 ; i  < numtasks;++i){
@@ -130,12 +133,15 @@ void Runner<Args...>::run_mpi()
     }
 
     if(taskid > MASTER) {
+
+#ifndef NDEBUG
         printf("NOT MASTER: ");
         std::apply([](auto&&... a) {((std::cout << a  << " "), ...);}, args);
         std::cout << std::endl;
         recv<0,Args...>(args,MASTER,status,sizes);
         std::apply([](auto&&... a) {((std::cout << a  << " "), ...);}, args);
         std::cout << std::endl;
+#endif
 
         //run_opencl();
         global_id = taskid*chunksize;

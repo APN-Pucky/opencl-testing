@@ -3,23 +3,34 @@
 #include "runner_test.h"
 #include "test.h"
 #include "clew.h"
+#include <chrono>
 
 template<typename ...Args>
 void run_test(Runner<Args...>& r) {
+    auto start = std::chrono::high_resolution_clock::now();
+    SECTION("noparallel") {
+        printf("noparallel: ");
+        r.run_noparallel();
+    }
     SECTION("openmp") {
+        printf("openmpi: ");
         r.run_openmp();
     }
 #ifdef TOO_TEST_OPENCL
     SECTION("opencl") {
+        printf("opencl: ");
         r.run_opencl();
     }
 #endif
 #ifdef TOO_TEST_MPI
-    //SECTION("mpi") {
-    //    r.run_mpi();
-    //}
+    SECTION("mpi") {
+        printf("mpi: ");
+        r.run_mpi();
+    }
 #endif
-
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = finish - start;
+    std::cout << "Elapsed time: " << elapsed.count() << " s\n";
 }
 
 TEST_CASE( "run void noop", "[runner]" ) {
@@ -53,15 +64,27 @@ TEST_CASE( "add together", "[runner]" ) {
     REQUIRE ( c == 3);
 }
 
-TEST_CASE( "array add", "[runner]" ) {
-    int N =10;
+void array_add(int N) {
     int c[N];
     int a=1,b=2;
     auto r = Runner("test_array_add",test_array_add,N,a,b,(int*)c,N);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
-    r.run_mpi();
+    run_test(r);
     for(int i = 0; i < N;++i) {
         REQUIRE( c[i] == 3 );
     }
+}
+
+TEST_CASE( "array add", "[runner]" ) {
+    SECTION("N=10") {
+        array_add(10);
+    }
+    SECTION("N=1000") {
+        array_add(1000);
+    }
+    SECTION("N=100000") {
+        array_add(100000);
+    }
+    
 };
 

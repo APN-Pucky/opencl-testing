@@ -7,7 +7,8 @@
 #define __constant
 #define __kernel
 //#define get_global_id
-#define ulong unsigned long
+//#define ulong unsigned long
+#include "runner.h"
 
 #else
 

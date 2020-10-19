@@ -7,6 +7,7 @@
 #include <tuple>
 
 #include "clew.h"
+#include "debug.h"
 
 const int CLPRESENT = 0 == clewInit();
 cl_program load_cl_programs(cl_context context); 
@@ -83,6 +84,14 @@ class Runner
         }
         
         void run_openmp();
+        void run_noparallel() 
+        {
+            for(int i =0; i < N;++i) 
+            {
+                global_id = i;
+                run_cpu();
+            }
+        }
         void run_opencl(); 
         #ifdef TOO_MPI
         void run_mpi();

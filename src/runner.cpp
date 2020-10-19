@@ -27,7 +27,7 @@ cl_program load_cl_programs(cl_context context) {
     std::string path1 = "cl";
     std::string path2 = "src/cl";
     boost::filesystem::path full_path(boost::filesystem::current_path());
-    std::cout << "Current path is : " << full_path << std::endl;
+    debug_printf("Current path is : %s" , full_path.c_str());
     if( ! boost::filesystem::is_directory(path1) ) {
             path1 = path2;
     }

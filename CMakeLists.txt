@@ -26,6 +26,7 @@ endif()
 find_package(Boost COMPONENTS filesystem REQUIRED)
 
 
+# MPI
 find_package(MPI)
 if (MPI_FOUND)
     add_definitions(-DTOO_MPI)
@@ -40,6 +41,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clan
 add_definitions(-DOMPI_SKIP_MPICXX)
 endif()
 
+
+#OpenMP
+find_package(OpenMP)
 
 
 add_subdirectory(external)
