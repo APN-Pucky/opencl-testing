@@ -40,11 +40,13 @@ class Runner
             sizes(sizeof...(Args))
         {
             global_id = 0;
+            mode = noop;
             for(auto a : sizes) a = 0;
             if( !CLPRESENT) {
                 printf("opencl library not found.\n");
             }
         };
+        Runner(const Runner<Args...>& r) = default;
          
         /*
         template<typename T>
@@ -125,7 +127,7 @@ class Runner
 
 #include "runner_openmp.h"
 
-    private:
+    //private:
         size_t N;
         Mode mode;
         std::vector<cl_mem> mems;

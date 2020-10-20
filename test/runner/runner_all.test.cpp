@@ -24,6 +24,10 @@ void run_test(Runner<Args...>& r ) {
         printf("opencl: ");
         r.run_opencl();
     }
+    SECTION("hybrid") {
+        printf("hybrid: ");
+        r.run_hybrid();
+    }
 #endif
 #ifdef TOO_TEST_MPI
     SECTION("mpi") {
@@ -221,8 +225,8 @@ TEST_CASE( "speed2", "[runner]" ) {
     //    mat_mul(10);
     //}
 
-    SECTION("N=256") {
-        speed2(256);
+    SECTION("N=4x256") {
+        speed2(4*256);
     }
     //SECTION("N=100000") {
     //    mat_mul(100000);
