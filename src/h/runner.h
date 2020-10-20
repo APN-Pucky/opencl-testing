@@ -8,6 +8,8 @@
 
 #include "clew.h"
 #include "debug.h"
+#include <omp.h>
+
 
 const int CLPRESENT = 0 == clewInit();
 cl_program load_cl_programs(cl_context context); 
@@ -25,6 +27,8 @@ class Runner
             args(args_...),
             flags(sizeof...(Args)),
             mems(sizeof...(Args)),
+            map_buffer(sizeof...(Args)),
+            map_mem(sizeof...(Args)),
             read_mem(sizeof...(Args)),
             sizes(sizeof...(Args))
         {
@@ -83,7 +87,7 @@ class Runner
             //call(function_pointer,args);
         }
         
-        void run_openmp();
+        //void run_openmp();
         void run_noparallel() 
         {
             for(int i =0; i < N;++i) 
@@ -97,9 +101,13 @@ class Runner
         void run_mpi();
         #endif
 
+#include "runner_openmp.h"
+
     private:
         size_t N;
         std::vector<cl_mem> mems;
+        std::vector<cl_mem> map_mem;
+        std::vector<unsigned char *> map_buffer;
         std::vector<bool> read_mem;
         std::vector<size_t> sizes;
         std::vector<cl_mem_flags> flags;
@@ -110,5 +118,4 @@ class Runner
 
 #include "runner_opencl.h"
 #include "runner_mpi.h"
-#include "runner_openmp.h"
 #endif

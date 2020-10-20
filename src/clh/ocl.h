@@ -4,6 +4,7 @@
 #ifndef _OpenCL
 #include <cstdio>
 #define __global
+#define __local
 #define __constant
 #define __kernel
 //#define get_global_id

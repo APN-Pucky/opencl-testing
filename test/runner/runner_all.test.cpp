@@ -5,6 +5,9 @@
 #include "clew.h"
 #include <chrono>
 
+#define EPS 0.000001
+#define CLOSE(a , b) fabs(a-b) <= EPS*std::max(fabs(a),fabs(b))
+
 template<typename ...Args>
 void run_test(Runner<Args...>& r) {
     auto start = std::chrono::high_resolution_clock::now();
@@ -13,7 +16,7 @@ void run_test(Runner<Args...>& r) {
         r.run_noparallel();
     }
     SECTION("openmp") {
-        printf("openmpi: ");
+        printf("openmp: ");
         r.run_openmp();
     }
 #ifdef TOO_TEST_OPENCL
@@ -85,6 +88,108 @@ TEST_CASE( "array add", "[runner]" ) {
     SECTION("N=100000") {
         array_add(100000);
     }
-    
+};
+
+void vector_add(int N) {
+    int a[N],b[N],c[N];
+    for( int i = 0; i  < N ;++i) a[i] = 1;
+    for( int i = 0; i  < N ;++i) b[i] = 2;
+    auto r = Runner("test_vector_add",test_vector_add,N,(int*)a,(int*)b,(int*)c,N);
+    r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
+    r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
+    r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
+    run_test(r);
+    for(int i = 0; i < N;++i) {
+        REQUIRE( c[i] == 3 );
+    }
+}
+
+TEST_CASE( "vector add", "[runner]" ) {
+    SECTION("N=10") {
+        vector_add(10);
+    }
+    SECTION("N=1000") {
+        vector_add(1000);
+    }
+    SECTION("N=100000") {
+        vector_add(100000);
+    }
+};
+
+void mat_mul(int N) {
+    double matrix[N*N];
+    double vector[N];
+    double result[N];
+    for(int i = 0; i  < N ; ++i) {
+        for(int j = 0; j  < N ; ++j) {
+            //matrix[i*N+j] = 0.0;
+            matrix[i*N+j] = i*j + i+j;
+        }
+        vector[i]=i;
+    }
+    debug_printf("Result location %d \n", &result);
+    auto r = Runner("test_mat_mul",test_mat_mul,N,(double*)matrix,(double*)vector,(double*)result,N);
+    r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
+    r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
+    r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
+    run_test(r);
+    double cmp_result[N];
+    for(int i = 0; i < N;++i) {
+        global_id=i;
+        test_mat_mul((double*)matrix,(double*)vector,(double*)cmp_result,N);
+        //printf("%f %f  ", result[i],cmp_result[i]);
+        REQUIRE( CLOSE(result[i],cmp_result[i]  ));
+    }
+}
+TEST_CASE( "mat mul", "[runner]" ) {
+    //SECTION("N=10") {
+    //    mat_mul(10);
+    //}
+
+    SECTION("N=1000") {
+        mat_mul(1000);
+    }
+    //SECTION("N=100000") {
+    //    mat_mul(100000);
+    //}
+};
+
+
+void speed(int N) {
+    double matrix[N*N];
+    double vector[N];
+    double result[N];
+    for(int i = 0; i  < N ; ++i) {
+        for(int j = 0; j  < N ; ++j) {
+            //matrix[i*N+j] = 0.0;
+            matrix[i*N+j] = i*j + i+j;
+        }
+        vector[i]=i;
+    }
+    debug_printf("Result location %d \n", &result);
+    auto r = Runner("test_speed",test_speed,N,(double*)matrix,(double*)vector,(double*)result,N);
+    r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
+    r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
+    r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
+    run_test(r);
+    double cmp_result[N];
+    for(int i = 0; i < N;++i) {
+        global_id=i;
+        //test_mat_mul((double*)matrix,(double*)vector,(double*)cmp_result,N);
+        //printf("%f %f  ", result[i],cmp_result[i]);
+        //REQUIRE( CLOSE(result[i],cmp_result[i]  ));
+    }
+}
+TEST_CASE( "speed", "[runner]" ) {
+    //SECTION("N=10") {
+    //    mat_mul(10);
+    //}
+
+    //SECTION("N=40") {
+    //    speed(40);
+    //}
+    //SECTION("N=100000") {
+    //    mat_mul(100000);
+    //}
 };
 

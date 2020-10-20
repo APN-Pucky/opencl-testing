@@ -51,6 +51,9 @@ cl_program load_cl_programs(cl_context context) {
         programBuffer[i] = files.back().c_str();
         programSize[i] = files.back().length();
 	}
-    return clCreateProgramWithSource(context, n,
-            programBuffer, programSize, NULL);
+    cl_int err;
+    cl_program tmp = clCreateProgramWithSource(context, n,
+            programBuffer, programSize, &err);
+    if(err) printf("clCreateProgramWithSource Error %d\n",err);
+    return tmp;
 }

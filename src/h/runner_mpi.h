@@ -97,7 +97,6 @@ void Runner<Args...>::run_mpi()
 {
     int numtasks,taskid,leftover,chunksize;
     MPI_Status status;
-
     global_mpi_init(NULL, NULL);
     global_id =0;
     MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
@@ -114,22 +113,27 @@ void Runner<Args...>::run_mpi()
 #endif
 
 
+        //printf("tasks %d",numtasks);
         for(int i = 1 ; i  < numtasks;++i){
             send<0,Args...>(args,i,sizes);
         } 
         //run_opencl();
+        //printf("main");
         for(int i = 0; i < chunksize;++i) {
             run_cpu();
             global_id++;
         }
+        //printf("left");
         global_id = N-leftover;
         for(int i = 0; i < leftover;++i) {
             run_cpu();
             global_id++;
         }
+        //printf("recv start");
         for( int i = 1 ; i < numtasks;++i) {
             recv_result<0,Args...>(args,i,status,sizes,read_mem,chunksize);
         }
+        //printf("recv done");
     }
 
     if(taskid > MASTER) {
@@ -138,7 +142,9 @@ void Runner<Args...>::run_mpi()
         printf("NOT MASTER: ");
         std::apply([](auto&&... a) {((std::cout << a  << " "), ...);}, args);
         std::cout << std::endl;
+#endif
         recv<0,Args...>(args,MASTER,status,sizes);
+#ifndef NDEBUG
         std::apply([](auto&&... a) {((std::cout << a  << " "), ...);}, args);
         std::cout << std::endl;
 #endif
@@ -150,6 +156,7 @@ void Runner<Args...>::run_mpi()
             global_id++;
         }
         send_result<0,Args...>(args,MASTER,sizes,read_mem,taskid,chunksize);
+        //printf("send done");
     }
     //MPI_Barrier(MPI_COMM_WORLD);
     //MPI_Finalize();
