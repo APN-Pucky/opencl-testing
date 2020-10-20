@@ -65,7 +65,7 @@ void loop01(std::tuple<Args...>& args,cl_context& context, cl_command_queue& com
     }
     // do things
     if constexpr(I+1 != sizeof...(Args))
-        loop1<I+1>(args,commands,sizes,mems,read_mem);
+        loop01<I+1>(args,context,commands,sizes,flags,mems,read_mem,map_mem,map_buffer);
     }
 
 }
@@ -128,7 +128,7 @@ void loop03(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<si
     }
     // do things
     if constexpr(I+1 != sizeof...(Args))
-        loop3<I+1>(args,commands,sizes,mems,read_mem);
+        loop03<I+1>(args,commands,sizes,mems,read_mem,map_buffer);
     }
 }
 

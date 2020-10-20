@@ -69,3 +69,20 @@ __kernel void test_speed( __global double* matrix,  __global double* vector, __g
         result[id] = tmp;
     }
 }
+__kernel void test_speed2( __global double* matrix,  __global double* vector, __global double* result, __const int N) {
+    int id = get_global_id(0);	
+    
+    if(id < N && id >= 0) {
+        __local double lmatrix;
+        lmatrix = matrix[id];
+        __local double lvector;
+        lvector = vector[id];
+        double tmp = 0;
+        for(int j = 0; j < 10000000; ++j) {
+            tmp += lmatrix*lvector;
+            tmp += lmatrix+lvector;
+            tmp -= lmatrix-lvector;
+        }
+        result[id] = tmp;
+    }
+}

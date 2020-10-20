@@ -9,7 +9,7 @@
 #define CLOSE(a , b) fabs(a-b) <= EPS*std::max(fabs(a),fabs(b))
 
 template<typename ...Args>
-void run_test(Runner<Args...>& r) {
+void run_test(Runner<Args...>& r ) {
     auto start = std::chrono::high_resolution_clock::now();
     SECTION("noparallel") {
         printf("noparallel: ");
@@ -185,11 +185,48 @@ TEST_CASE( "speed", "[runner]" ) {
     //    mat_mul(10);
     //}
 
-    //SECTION("N=40") {
-    //    speed(40);
-    //}
+    SECTION("N=40") {
+        speed(40);
+    }
     //SECTION("N=100000") {
     //    mat_mul(100000);
     //}
 };
+
+void speed2(int N) {
+    double matrix[N];
+    double vector[N];
+    double result[N];
+    for(int i = 0; i  < N ; ++i) {
+        //matrix[i*N+j] = 0.0;
+        matrix[i] = i*i - i-i;
+        vector[i]=i;
+    }
+    debug_printf("Result location %d \n", &result);
+    auto r = Runner("test_speed2",test_speed2,N,(double*)matrix,(double*)vector,(double*)result,N);
+    r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
+    r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
+    r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
+    run_test(r);
+    double cmp_result[N];
+    for(int i = 0; i < N;++i) {
+        global_id=i;
+        //test_mat_mul((double*)matrix,(double*)vector,(double*)cmp_result,N);
+        //printf("%f %f  ", result[i],cmp_result[i]);
+        //REQUIRE( CLOSE(result[i],cmp_result[i]  ));
+    }
+}
+TEST_CASE( "speed2", "[runner]" ) {
+    //SECTION("N=10") {
+    //    mat_mul(10);
+    //}
+
+    SECTION("N=256") {
+        speed2(256);
+    }
+    //SECTION("N=100000") {
+    //    mat_mul(100000);
+    //}
+};
+
 

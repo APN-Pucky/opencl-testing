@@ -15,7 +15,14 @@ const int CLPRESENT = 0 == clewInit();
 cl_program load_cl_programs(cl_context context); 
 extern int global_id;
 #define get_global_id global_id +
-
+enum Mode {
+    noop,
+    cpu,
+    openmp,
+    opencl,
+    mpi,
+    num_modes
+};
 template<typename ... Args>
 class Runner
 {
@@ -65,7 +72,22 @@ class Runner
         }
         void run() 
         {
-
+            switch(mode) {
+                case cpu:
+                    run_cpu();
+                    break;
+                case noop: 
+                    break;
+                case mpi:
+                    run_mpi();
+                    break;
+                case openmp:
+                    run_openmp();
+                    break;
+                case opencl:
+                    run_opencl();
+                    break;
+            }
         }
 
 /*
@@ -105,6 +127,7 @@ class Runner
 
     private:
         size_t N;
+        Mode mode;
         std::vector<cl_mem> mems;
         std::vector<cl_mem> map_mem;
         std::vector<unsigned char *> map_buffer;

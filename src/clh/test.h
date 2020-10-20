@@ -14,3 +14,4 @@ __kernel void test_mat_mul( __global double* matrix, __global  double* vector, _
  * NxN matrix, N vector, N result
  */
 __kernel void test_speed( __global double* matrix, __global  double* vector, __global  double* result,int N);
+__kernel void test_speed2( __global double* matrix, __global  double* vector, __global  double* result,int N);
