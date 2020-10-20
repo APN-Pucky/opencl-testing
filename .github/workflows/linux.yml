@@ -25,6 +25,7 @@ jobs:
               submodules: true
           - name: Install Dependencies
             run: |
+              sudo apt-get update
               sudo apt-get install -y make cmake libboost-all-dev  libomp-dev lcov clinfo
               sudo apt-get install -y ${{ matrix.compiler }}
               sudo apt-cache search opencl
@@ -65,6 +66,7 @@ jobs:
                 submodules: true
             - name: Install Dependencies
               run: |
+                sudo apt-get update
                 sudo apt-get install -y make cmake libboost-all-dev libomp-dev lcov 
                 sudo apt-get install -y ${{ matrix.compiler }}
 
