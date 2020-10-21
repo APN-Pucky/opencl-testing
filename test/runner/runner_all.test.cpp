@@ -74,7 +74,7 @@ TEST_CASE( "add together", "[runner]" ) {
 void array_add(const int N) {
     int c[N];
     int a=1,b=2;
-    auto r = Runner("test_array_add",test_array_add,N,a,b,&c[0],N);
+    auto r = Runner<int,int,int*,int>("test_array_add",test_array_add,N,a,b,&c[0],N);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
     run_test(r);
     for(int i = 0; i < N;++i) {
@@ -86,11 +86,11 @@ TEST_CASE( "array add", "[runner]" ) {
     SECTION("N=10") {
         array_add(10);
     }
+    SECTION("N=100") {
+        array_add(100);
+    }
     SECTION("N=1000") {
         array_add(1000);
-    }
-    SECTION("N=100000") {
-        array_add(100000);
     }
 };
 
@@ -112,11 +112,11 @@ TEST_CASE( "vector add", "[runner]" ) {
     SECTION("N=10") {
         vector_add(10);
     }
+    SECTION("N=100") {
+        vector_add(100);
+    }
     SECTION("N=1000") {
         vector_add(1000);
-    }
-    SECTION("N=100000") {
-        vector_add(100000);
     }
 };
 
@@ -132,7 +132,7 @@ void mat_mul(int N) {
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner<double*,double*,double*>("test_mat_mul",test_mat_mul,N,(double*)matrix,(double*)vector,(double*)result,N);
+    auto r = Runner<double*,double*,double*,int>("test_mat_mul",test_mat_mul,N,(double*)matrix,(double*)vector,(double*)result,N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
@@ -171,7 +171,7 @@ void speed(int N) {
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner("test_speed",test_speed,N,(double*)matrix,(double*)vector,(double*)result,N);
+    auto r = Runner<double*,double*,double*,int>("test_speed",test_speed,N,(double*)matrix,(double*)vector,(double*)result,N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
@@ -209,7 +209,7 @@ void speed2(int N) {
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner("test_speed2",test_speed2,N,(double*)matrix,(double*)vector,(double*)result,N);
+    auto r = Runner<double*,double*,double*,int>("test_speed2",test_speed2,N,(double*)matrix,(double*)vector,(double*)result,N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
