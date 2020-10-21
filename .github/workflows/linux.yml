@@ -9,6 +9,7 @@ on:
 jobs:
     compile_ubuntu:
       runs-on: ubuntu-latest
+      continue-on-error: true
       strategy:
         matrix:
           compiler: [ gcc , clang ]
