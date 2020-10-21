@@ -50,8 +50,8 @@ endif()
 
 #OpenMP
 if(APPLE)
-    set(CMAKE_C_COMPILER clang)
-    set(CMAKE_CXX_COMPILER clang++)
+    #set(CMAKE_C_COMPILER clang)
+    #set(CMAKE_CXX_COMPILER clang++)
 
     if(CMAKE_C_COMPILER_ID MATCHES "Clang\$")
         set(OpenMP_C_FLAGS "-Xpreprocessor -fopenmp")

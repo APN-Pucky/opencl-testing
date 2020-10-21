@@ -35,12 +35,11 @@ jobs:
             - uses: msys2/setup-msys2@v2
               with:
                 msystem: ${{ matrix.msystem }}
-                install:  make cmake
+                install:  make cmake libgomp
             - name: Install Dependencies
               run: |
                 pacman --noconfirm -S ${{ matrix.mexe }}-msmpi
                 pacman --noconfirm -S ${{ matrix.mexe }}-openmp
-                pacman --noconfirm -S ${{ matrix.mexe }}-libgomp
                 pacman --noconfirm -S ${{ matrix.mexe }}-pthreads
                 pacman --noconfirm -S ${{ matrix.mexe }}-boost
                 pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
