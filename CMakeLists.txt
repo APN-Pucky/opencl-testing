@@ -8,9 +8,15 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-# CXX + STATIC
+# CXX 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#OpenMP
+find_package(OpenMP REQUIRED)
+
+
+# STATIC
 set( BUILD_SHARED_LIBRARIES OFF)
 
 if(TOO_C_STATIC) # This is MinGW
@@ -48,10 +54,6 @@ endif (MPI_FOUND)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 add_definitions(-DOMPI_SKIP_MPICXX)
 endif()
-
-
-#OpenMP
-find_package(OpenMP REQUIRED)
 
 
 add_subdirectory(external)
