@@ -72,7 +72,7 @@ TEST_CASE( "add together", "[runner]" ) {
     REQUIRE ( c == 3);
 }
 
-void array_add(const int N) {
+void array_add(int N) {
     std::vector<int> c(N);
     int a=1,b=2;
     auto r = Runner<int,int,int*,int>("test_array_add",test_array_add,N,a,b,&c[0],N);
@@ -95,7 +95,7 @@ TEST_CASE( "array add", "[runner]" ) {
     }
 };
 
-void vector_add(const int N) {
+void vector_add(int N) {
     std::vector<int> a(N),b(N),c(N);
     for( int i = 0; i  < N ;++i) a[i] = 1;
     for( int i = 0; i  < N ;++i) b[i] = 2;
@@ -123,7 +123,7 @@ TEST_CASE( "vector add", "[runner]" ) {
 
 void mat_mul(int N) {
     std::vector<double> matrix(N*N);
-    std::vector<double> vector(N);
+    std::vector<double> vecctor(N);
     std::vector<double> result(N);
     for(int i = 0; i  < N ; ++i) {
         for(int j = 0; j  < N ; ++j) {
@@ -133,15 +133,15 @@ void mat_mul(int N) {
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner<double*,double*,double*,int>("test_mat_mul",test_mat_mul,N,&matrix[0],&vector[0],&result[0],N);
+    auto r = Runner<double*,double*,double*,int>("test_mat_mul",test_mat_mul,N,&matrix[0],&vecctor[0],&result[0],N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
     run_test(r);
-    vector<double> cmp_result(N);
+    std::vector<double> cmp_result(N);
     for(int i = 0; i < N;++i) {
         global_ids[0]=i;
-        test_mat_mul(&matrix[0],&vector[0],&cmp_result[0],N);
+        test_mat_mul(&matrix[0],&vecctor[0],&cmp_result[0],N);
         //printf("%f %f  %d \n", result[i],cmp_result[i],i);
         REQUIRE( CLOSE(result[i],cmp_result[i]  ));
     }
@@ -160,9 +160,9 @@ TEST_CASE( "mat mul", "[runner]" ) {
 };
 
 
-void speed(const int N) {
+void speed(int N) {
     std::vector<double> matrix(N*N);
-    std::vector<double> vector(N);
+    std::vector<double> vecctor(N);
     std::vector<double> result(N);
     for(int i = 0; i  < N ; ++i) {
         for(int j = 0; j  < N ; ++j) {
@@ -172,7 +172,7 @@ void speed(const int N) {
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner<double*,double*,double*,int>("test_speed",test_speed,N,&matrix[0],&vector[0],&result[0],N);
+    auto r = Runner<double*,double*,double*,int>("test_speed",test_speed,N,&matrix[0],&vecctor[0],&result[0],N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
@@ -200,9 +200,9 @@ TEST_CASE( "speed", "[runner]" ) {
 };
 
 // TODO separate speed/benchmark executables
-void speed2(const int N) {
+void speed2(int N) {
     std::vector<double> matrix(N);
-    std::vector<double> vector(N);
+    std::vector<double> vecctor(N);
     std::vector<double> result(N);
     for(int i = 0; i  < N ; ++i) {
         //matrix[i*N+j] = 0.0;
@@ -210,12 +210,12 @@ void speed2(const int N) {
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner<double*,double*,double*,int>("test_speed2",test_speed2,N,&matrix[0],&vector[0],&result[0],N);
+    auto r = Runner<double*,double*,double*,int>("test_speed2",test_speed2,N,&matrix[0],&vecctor[0],&result[0],N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
     run_test(r);
-    double cmp_result[N];
+    std::vector<double> cmp_result(N);
     for(int i = 0; i < N;++i) {
         global_ids[0]=i;
         //test_mat_mul((double*)matrix,(double*)vector,(double*)cmp_result,N);
