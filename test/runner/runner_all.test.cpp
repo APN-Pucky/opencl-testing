@@ -71,7 +71,7 @@ TEST_CASE( "add together", "[runner]" ) {
     REQUIRE ( c == 3);
 }
 
-void array_add(const int N) {
+void array_add(int N) {
     int c[N];
     int a=1,b=2;
     auto r = Runner<int,int,int*,int>("test_array_add",test_array_add,N,a,b,&c[0],N);
