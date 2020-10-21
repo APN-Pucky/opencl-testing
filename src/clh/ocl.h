@@ -7,6 +7,7 @@
 #define __private
 #define __local
 #define __constant
+#define __const
 #define __global
 #define __kernel
 //#define get_global_id

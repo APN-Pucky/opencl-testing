@@ -51,11 +51,12 @@ __kernel void test_mat_mul( __global double* matrix,  __global double* vector, _
     }
 }
 __kernel void test_speed( __global double* matrix,  __global double* vector, __global double* result, __const int N) {
+    __local double lmatrix[40];
+    __local double lvector[40];
+
     int id = get_global_id(0);	
     
     if(id < N && id >= 0) {
-        __local double lmatrix[40];
-        __local double lvector[40];
         for(int i = 0; i  < N ;++i) lmatrix[i] = matrix[N*id+i];
         for(int i = 0; i  < N ;++i) lvector[i] = vector[i]; 
         double tmp = 0;
@@ -71,12 +72,12 @@ __kernel void test_speed( __global double* matrix,  __global double* vector, __g
     }
 }
 __kernel void test_speed2( __global double* matrix,  __global double* vector, __global double* result, __const int N) {
+    __local double lmatrix;
+    __local double lvector;
     int id = get_global_id(0);	
     
     if(id < N && id >= 0) {
-        __local double lmatrix;
         lmatrix = matrix[id];
-        __local double lvector;
         lvector = vector[id];
         double tmp = 0;
         for(int j = 0; j < 10000000; ++j) {
