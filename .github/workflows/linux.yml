@@ -23,9 +23,11 @@ jobs:
           - uses: actions/checkout@v2
             with:
               submodules: true
+              # TODO own Docker with all nec. preinstalled
           - name: Install Dependencies
             run: |
               sudo apt-get update
+              sudo apt-get upgrade
               sudo apt-get install -y make cmake libboost-all-dev lcov clinfo
               sudo apt-get install -y ${{ matrix.compiler }}
               sudo apt-cache search opencl
