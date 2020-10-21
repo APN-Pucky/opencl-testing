@@ -171,7 +171,7 @@ void speed(const int N) {
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner<double*,double*,double*,int>("test_speed",test_speed,N,(double*)matrix,(double*)vector,(double*)result,N);
+    auto r = Runner<double*,double*,double*,int>("test_speed",test_speed,N,&matrix[0],&vector[0],&result[0],N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
