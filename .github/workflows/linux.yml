@@ -32,7 +32,7 @@ jobs:
               sudo apt-cache search opencl
           - run:
               sudo apt-cache search libomp
-          - run: sudo apt-get install -f libomp-10-dev libomp5-10
+          - run: sudo apt-get install -f libomp-10-dev libomp5-10 libomp libomp-dev
             if: ${{ matrix.compiler == 'clang' }}
           - name: Build
             run: |
