@@ -130,7 +130,7 @@ void mat_mul(int N) {
             //matrix[i*N+j] = 0.0;
             matrix[i*N+j] = i+j;
         }
-        vector[i]=i;
+        vecctor[i]=i;
     }
     debug_printf("Result location %d \n", &result);
     auto r = Runner<double*,double*,double*,int>("test_mat_mul",test_mat_mul,N,&matrix[0],&vecctor[0],&result[0],N);
@@ -169,7 +169,7 @@ void speed(int N) {
             //matrix[i*N+j] = 0.0;
             matrix[i*N+j] = i*j + i+j;
         }
-        vector[i]=i;
+        vecctor[i]=i;
     }
     debug_printf("Result location %d \n", &result);
     auto r = Runner<double*,double*,double*,int>("test_speed",test_speed,N,&matrix[0],&vecctor[0],&result[0],N);
@@ -207,7 +207,7 @@ void speed2(int N) {
     for(int i = 0; i  < N ; ++i) {
         //matrix[i*N+j] = 0.0;
         matrix[i] = i*i - i-i;
-        vector[i]=i;
+        vecctor[i]=i;
     }
     debug_printf("Result location %d \n", &result);
     auto r = Runner<double*,double*,double*,int>("test_speed2",test_speed2,N,&matrix[0],&vecctor[0],&result[0],N);
