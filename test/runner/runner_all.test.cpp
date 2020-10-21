@@ -11,10 +11,10 @@
 template<typename ...Args>
 void run_test(Runner<Args...>& r ) {
     auto start = std::chrono::high_resolution_clock::now();
-    SECTION("noparallel") {
-        printf("noparallel: ");
-        r.run_noparallel();
-    }
+    //SECTION("noparallel") {
+    //    printf("noparallel: ");
+    //    r.run_noparallel();
+    //}
     SECTION("openmp") {
         printf("openmp: ");
         r.run_openmp();
@@ -127,7 +127,7 @@ void mat_mul(int N) {
     for(int i = 0; i  < N ; ++i) {
         for(int j = 0; j  < N ; ++j) {
             //matrix[i*N+j] = 0.0;
-            matrix[i*N+j] = i*j + i+j;
+            matrix[i*N+j] = i+j;
         }
         vector[i]=i;
     }
@@ -139,9 +139,9 @@ void mat_mul(int N) {
     run_test(r);
     double cmp_result[N];
     for(int i = 0; i < N;++i) {
-        global_id=i;
+        global_ids[0]=i;
         test_mat_mul((double*)matrix,(double*)vector,(double*)cmp_result,N);
-        //printf("%f %f  ", result[i],cmp_result[i]);
+        //printf("%f %f  %d \n", result[i],cmp_result[i],i);
         REQUIRE( CLOSE(result[i],cmp_result[i]  ));
     }
 }
@@ -150,8 +150,8 @@ TEST_CASE( "mat mul", "[runner]" ) {
     //    mat_mul(10);
     //}
 
-    SECTION("N=1000") {
-        mat_mul(1000);
+    SECTION("N=3*256") {
+        mat_mul(256*3);
     }
     //SECTION("N=100000") {
     //    mat_mul(100000);
@@ -178,7 +178,7 @@ void speed(int N) {
     run_test(r);
     double cmp_result[N];
     for(int i = 0; i < N;++i) {
-        global_id=i;
+        global_ids[0]=i;
         //test_mat_mul((double*)matrix,(double*)vector,(double*)cmp_result,N);
         //printf("%f %f  ", result[i],cmp_result[i]);
         //REQUIRE( CLOSE(result[i],cmp_result[i]  ));
@@ -214,7 +214,7 @@ void speed2(int N) {
     run_test(r);
     double cmp_result[N];
     for(int i = 0; i < N;++i) {
-        global_id=i;
+        global_ids[0]=i;
         //test_mat_mul((double*)matrix,(double*)vector,(double*)cmp_result,N);
         //printf("%f %f  ", result[i],cmp_result[i]);
         //REQUIRE( CLOSE(result[i],cmp_result[i]  ));
@@ -225,8 +225,8 @@ TEST_CASE( "speed2", "[runner]" ) {
     //    mat_mul(10);
     //}
 
-    SECTION("N=4x256") {
-        speed2(4*256);
+    SECTION("N=10x256") {
+        speed2(90*256);
     }
     //SECTION("N=100000") {
     //    mat_mul(100000);

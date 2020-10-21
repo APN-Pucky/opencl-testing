@@ -47,6 +47,7 @@ __kernel void test_mat_mul( __global double* matrix,  __global double* vector, _
                 tmp += matrix[N*id+i]*vector[i];
             }
         result[id] = tmp;
+        //printf("MY ID IS :%d @ %d \n",id,omp_get_num_threads());
     }
 }
 __kernel void test_speed( __global double* matrix,  __global double* vector, __global double* result, __const int N) {

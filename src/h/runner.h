@@ -13,8 +13,10 @@
 
 const int CLPRESENT = 0 == clewInit();
 cl_program load_cl_programs(cl_context context); 
-extern int global_id;
-#define get_global_id global_id +
+//extern int global_id;
+//const int num_threads = omp_get_max_threads();
+extern int* global_ids;
+#define get_global_id global_ids[omp_get_thread_num()] +
 enum Mode {
     noop,
     cpu,
@@ -39,7 +41,7 @@ class Runner
             read_mem(sizeof...(Args)),
             sizes(sizeof...(Args))
         {
-            global_id = 0;
+            //global_id = 0;
             mode = noop;
             for(auto a : sizes) a = 0;
             if( !CLPRESENT) {
@@ -116,7 +118,7 @@ class Runner
         {
             for(int i =0; i < N;++i) 
             {
-                global_id = i;
+                global_ids[0] = i;
                 run_cpu();
             }
         }

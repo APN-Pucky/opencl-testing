@@ -137,6 +137,7 @@ void loop03(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<si
 template< typename... Args>
 void Runner<Args...>::run_opencl()
 {
+    auto t0 = std::chrono::high_resolution_clock::now();
     if( !CLPRESENT ) {
         printf("opencl library not found.\n");
         return;
@@ -168,7 +169,6 @@ void Runner<Args...>::run_opencl()
         printf("clCreateContext Error: %d\n",err);
     }
 
-    auto start = std::chrono::high_resolution_clock::now();
 
     // create program from buffer
     program = load_cl_programs(context);
@@ -198,9 +198,8 @@ void Runner<Args...>::run_opencl()
         printf("Kernel name: %s",function_name.c_str());
         printf("KERNEL Kernel error%d",err);
     }
-    auto finish = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = finish - start;
-    std::cout << "Compile time: " << elapsed.count() << " s\n";
+    auto t1 = std::chrono::high_resolution_clock::now();
+    std::cout << "Compile time: " << ((std::chrono::duration<double>)(t1-t0)).count() << " s\n";
     /*
     loop0<0,Args...>(args,context,sizes,flags,mems);
     loop1<0,Args...>(args,commands,sizes,mems,read_mem);
@@ -221,7 +220,11 @@ void Runner<Args...>::run_opencl()
     err = clEnqueueNDRangeKernel(commands, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
     if(err) printf("NDRANGE Kernel error%d",err);
 
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "MemMove time: " << ((std::chrono::duration<double>)(t2-t1)).count() << " s\n";
     clFinish(commands);
+    auto t3 = std::chrono::high_resolution_clock::now();
+    std::cout << "Calc time: " << ((std::chrono::duration<double>)(t3-t2)).count() << " s\n";
 
     //loop3<0,Args...>(args,commands,sizes,mems,read_mem);
     loop03<0,Args...>(args,commands,sizes,mems,read_mem,map_buffer);
@@ -238,5 +241,9 @@ void Runner<Args...>::run_opencl()
     clReleaseKernel(kernel);
     clReleaseCommandQueue(commands);
     clReleaseContext(context);
+    auto t4 = std::chrono::high_resolution_clock::now();
+    std::cout << "Cleanup time: " << ((std::chrono::duration<double>)(t4-t3)).count() << " s\n";
+
+
 } 
 #endif

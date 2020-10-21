@@ -98,7 +98,7 @@ void Runner<Args...>::run_mpi()
     int numtasks,taskid,leftover,chunksize;
     MPI_Status status;
     global_mpi_init(NULL, NULL);
-    global_id =0;
+    global_ids[0] =0;
     MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
     MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
     debug_printf ("MPI task %d has started...  ", taskid);
@@ -121,13 +121,13 @@ void Runner<Args...>::run_mpi()
         //printf("main");
         for(int i = 0; i < chunksize;++i) {
             run_cpu();
-            global_id++;
+            global_ids[0]++;
         }
         //printf("left");
-        global_id = N-leftover;
+        global_ids[0] = N-leftover;
         for(int i = 0; i < leftover;++i) {
             run_cpu();
-            global_id++;
+            global_ids[0]++;
         }
         //printf("recv start");
         for( int i = 1 ; i < numtasks;++i) {
@@ -150,10 +150,10 @@ void Runner<Args...>::run_mpi()
 #endif
 
         //run_opencl();
-        global_id = taskid*chunksize;
+        global_ids[0] = taskid*chunksize;
         for(int i = 0; i < chunksize;++i) {
             run_cpu();
-            global_id++;
+            global_ids[0]++;
         }
         send_result<0,Args...>(args,MASTER,sizes,read_mem,taskid,chunksize);
         //printf("send done");

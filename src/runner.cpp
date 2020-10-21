@@ -17,8 +17,9 @@ void Runner::add_argument(T& t)
     this->sizes.push_back(sizeof(T));
 }
 */
-
-int global_id = 0;
+//const int num_t = omp_get_max_threads();
+int global_ids_a[100];
+int* global_ids = &global_ids_a[0];
 /*
  * Loads cl programs in directories cl/ 
  */
