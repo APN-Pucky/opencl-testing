@@ -39,6 +39,7 @@ jobs:
             - name: Install Dependencies
               run: |
                 pacman --noconfirm -S ${{ matrix.mexe }}-msmpi
+                pacman --noconfirm -S ${{ matrix.mexe }}-openmp
                 pacman --noconfirm -S ${{ matrix.mexe }}-winpthreads
                 pacman --noconfirm -S ${{ matrix.mexe }}-boost
                 pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}

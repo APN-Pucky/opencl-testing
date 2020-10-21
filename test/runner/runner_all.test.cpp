@@ -4,6 +4,7 @@
 #include "test.h"
 #include "clew.h"
 #include <chrono>
+#include <vector>
 
 #define EPS 0.000001
 #define CLOSE(a , b) fabs(a-b) <= EPS*std::max(fabs(a),fabs(b))
@@ -137,7 +138,7 @@ void mat_mul(int N) {
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
     run_test(r);
-    double cmp_result[N];
+    vector<double> cmp_result(N);
     for(int i = 0; i < N;++i) {
         global_ids[0]=i;
         test_mat_mul(&matrix[0],&vector[0],&cmp_result[0],N);
@@ -176,7 +177,7 @@ void speed(const int N) {
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
     run_test(r);
-    double cmp_result[N];
+    std::vector<double> cmp_result(N);
     for(int i = 0; i < N;++i) {
         global_ids[0]=i;
         //test_mat_mul((double*)matrix,(double*)vector,(double*)cmp_result,N);
