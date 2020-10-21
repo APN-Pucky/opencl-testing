@@ -32,6 +32,8 @@ jobs:
               sudo apt-get install -y make cmake libboost-all-dev lcov clinfo
               sudo apt-get install -y ${{ matrix.compiler }}
               sudo apt-cache search opencl
+          - run:
+              sudo apt-cache search libomp
           - run: sudo apt-get install -f libomp-dev
             if: ${{ matrix.compiler == 'clang' }}
           - name: Build
