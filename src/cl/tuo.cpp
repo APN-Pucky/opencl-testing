@@ -35,7 +35,7 @@ __kernel void simulate_test(  __global int* all_cards, const int count, const in
 __kernel void simulate( const int size_all_cards, __global int* g_all_cards, const int size_gmydeck, __global int* g_mydeck, const int size_genemydeck, __global int* g_enemydeck, const int size_gwinner,__global int* g_winner, const int count, const int g_seed) 
 {
 	int id = get_global_id(0);	
-	ulong seed = g_seed + id;
+	unsigned long seed = g_seed + id;
 
 	
         
