@@ -41,7 +41,7 @@ jobs:
                 pacman --noconfirm -S ${{ matrix.mexe }}-msmpi
                 pacman --noconfirm -S ${{ matrix.mexe }}-winpthreads
                 pacman --noconfirm -S ${{ matrix.mexe }}-boost
-                pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.cxx }}
+                pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
             - name:  Build
               run: |
                 mkdir build

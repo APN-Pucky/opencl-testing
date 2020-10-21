@@ -71,7 +71,7 @@ TEST_CASE( "add together", "[runner]" ) {
     REQUIRE ( c == 3);
 }
 
-void array_add(int N) {
+void array_add(const int N) {
     int c[N];
     int a=1,b=2;
     auto r = Runner<int,int,int*,int>("test_array_add",test_array_add,N,a,b,&c[0],N);
@@ -94,7 +94,7 @@ TEST_CASE( "array add", "[runner]" ) {
     }
 };
 
-void vector_add(int N) {
+void vector_add(const int N) {
     int a[N],b[N],c[N];
     for( int i = 0; i  < N ;++i) a[i] = 1;
     for( int i = 0; i  < N ;++i) b[i] = 2;
@@ -120,7 +120,7 @@ TEST_CASE( "vector add", "[runner]" ) {
     }
 };
 
-void mat_mul(int N) {
+void mat_mul(const int N) {
     double matrix[N*N];
     double vector[N];
     double result[N];
@@ -159,7 +159,7 @@ TEST_CASE( "mat mul", "[runner]" ) {
 };
 
 
-void speed(int N) {
+void speed(const int N) {
     double matrix[N*N];
     double vector[N];
     double result[N];
@@ -199,7 +199,7 @@ TEST_CASE( "speed", "[runner]" ) {
 };
 
 // TODO separate speed/benchmark executables
-void speed2(int N) {
+void speed2(const int N) {
     double matrix[N];
     double vector[N];
     double result[N];
