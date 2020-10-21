@@ -140,7 +140,7 @@ void mat_mul(int N) {
     double cmp_result[N];
     for(int i = 0; i < N;++i) {
         global_ids[0]=i;
-        test_mat_mul((double*)matrix,(double*)vector,(double*)cmp_result,N);
+        test_mat_mul(&matrix[0],&vector[0],&cmp_result[0],N);
         //printf("%f %f  %d \n", result[i],cmp_result[i],i);
         REQUIRE( CLOSE(result[i],cmp_result[i]  ));
     }
