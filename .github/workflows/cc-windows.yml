@@ -42,6 +42,10 @@ jobs:
                 pacman --noconfirm -S ${{ matrix.mexe }}-winpthreads
                 pacman --noconfirm -S ${{ matrix.mexe }}-boost
                 pacman --noconfirm -S ${{ matrix.mexe }}-${{ matrix.compiler }}
+            - run: g++ -print-file-name=libgomp.a
+            - run: g++ -print-file-name=libgomp.lib
+            - run: g++ -print-file-name=libgomp.dll
+            - run: g++ -print-file-name=libgomp.so
             - name:  Build
               run: |
                 mkdir build

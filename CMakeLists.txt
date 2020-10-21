@@ -17,7 +17,7 @@ find_package(OpenMP REQUIRED)
 
 
 # STATIC
-set( BUILD_SHARED_LIBRARIES ON)
+set( BUILD_SHARED_LIBRARIES OFF)
 
 if(TOO_C_STATIC) # This is MinGW
   # -static-libgcc  -static 

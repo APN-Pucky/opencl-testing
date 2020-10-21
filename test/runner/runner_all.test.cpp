@@ -98,7 +98,7 @@ void vector_add(int N) {
     std::vector<int> a(N),b(N),c(N);
     for( int i = 0; i  < N ;++i) a[i] = 1;
     for( int i = 0; i  < N ;++i) b[i] = 2;
-    auto r = Runner<int*,int*,int*,int>("test_vector_add",test_vector_add,N,&a[0],&b[0],&c[0],N);
+    auto r = Runner<int*,int*,int*,int>("test_vector_add",test_vector_add,N,a.data(),b.data(),c.data(),N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
