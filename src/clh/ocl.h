@@ -3,6 +3,7 @@
 
 #ifndef _OpenCL
 #include <cstdio>
+#include <iostream>
 #define __private
 #define __local
 #define __constant

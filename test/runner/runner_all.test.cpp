@@ -188,15 +188,17 @@ TEST_CASE( "speed", "[runner]" ) {
     //SECTION("N=10") {
     //    mat_mul(10);
     //}
-
+    /*
     SECTION("N=40") {
         speed(40);
     }
+    //*/
     //SECTION("N=100000") {
     //    mat_mul(100000);
     //}
 };
 
+// TODO separate speed/benchmark executables
 void speed2(int N) {
     double matrix[N];
     double vector[N];
@@ -224,10 +226,11 @@ TEST_CASE( "speed2", "[runner]" ) {
     //SECTION("N=10") {
     //    mat_mul(10);
     //}
-
+    /*
     SECTION("N=10x256") {
         speed2(9*256);
     }
+    //*/
     //SECTION("N=100000") {
     //    mat_mul(100000);
     //}
