@@ -72,7 +72,7 @@ TEST_CASE( "add together", "[runner]" ) {
 }
 
 void array_add(const int N) {
-    int c[N];
+    std::vector<int> c(N);
     int a=1,b=2;
     auto r = Runner<int,int,int*,int>("test_array_add",test_array_add,N,a,b,&c[0],N);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
@@ -95,10 +95,10 @@ TEST_CASE( "array add", "[runner]" ) {
 };
 
 void vector_add(const int N) {
-    int a[N],b[N],c[N];
+    std::vector<int> a(N),b(N),c(N);
     for( int i = 0; i  < N ;++i) a[i] = 1;
     for( int i = 0; i  < N ;++i) b[i] = 2;
-    auto r = Runner<int*,int*,int*,int>("test_vector_add",test_vector_add,N,(int*)a,(int*)b,(int*)c,N);
+    auto r = Runner<int*,int*,int*,int>("test_vector_add",test_vector_add,N,&a[0],&b[0],&c[0],N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
@@ -120,10 +120,10 @@ TEST_CASE( "vector add", "[runner]" ) {
     }
 };
 
-void mat_mul(const int N) {
-    double matrix[N*N];
-    double vector[N];
-    double result[N];
+void mat_mul(int N) {
+    std::vector<double> matrix(N*N);
+    std::vector<double> vector(N);
+    std::vector<double> result(N);
     for(int i = 0; i  < N ; ++i) {
         for(int j = 0; j  < N ; ++j) {
             //matrix[i*N+j] = 0.0;
@@ -132,7 +132,7 @@ void mat_mul(const int N) {
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner<double*,double*,double*,int>("test_mat_mul",test_mat_mul,N,(double*)matrix,(double*)vector,(double*)result,N);
+    auto r = Runner<double*,double*,double*,int>("test_mat_mul",test_mat_mul,N,&matrix[0],&vector[0],&result[0],N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
@@ -160,9 +160,9 @@ TEST_CASE( "mat mul", "[runner]" ) {
 
 
 void speed(const int N) {
-    double matrix[N*N];
-    double vector[N];
-    double result[N];
+    std::vector<double> matrix(N*N);
+    std::vector<double> vector(N);
+    std::vector<double> result(N);
     for(int i = 0; i  < N ; ++i) {
         for(int j = 0; j  < N ; ++j) {
             //matrix[i*N+j] = 0.0;
@@ -200,16 +200,16 @@ TEST_CASE( "speed", "[runner]" ) {
 
 // TODO separate speed/benchmark executables
 void speed2(const int N) {
-    double matrix[N];
-    double vector[N];
-    double result[N];
+    std::vector<double> matrix(N);
+    std::vector<double> vector(N);
+    std::vector<double> result(N);
     for(int i = 0; i  < N ; ++i) {
         //matrix[i*N+j] = 0.0;
         matrix[i] = i*i - i-i;
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner<double*,double*,double*,int>("test_speed2",test_speed2,N,(double*)matrix,(double*)vector,(double*)result,N);
+    auto r = Runner<double*,double*,double*,int>("test_speed2",test_speed2,N,&matrix[0],&vector[0],&result[0],N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
