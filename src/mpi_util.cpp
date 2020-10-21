@@ -10,6 +10,7 @@ void global_mpi_finalize() {
     int already_finalized;
     MPI_Finalized(&already_finalized);
     if(!already_finalized) MPI_Finalize();
+    exit(0);
 }
 /*
  * Calls MPI_Init if it isn't initialized already and registers mpirunnerfinalize on various exit-conditions.

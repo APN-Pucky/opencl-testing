@@ -226,7 +226,7 @@ TEST_CASE( "speed2", "[runner]" ) {
     //}
 
     SECTION("N=10x256") {
-        speed2(90*256);
+        speed2(9*256);
     }
     //SECTION("N=100000") {
     //    mat_mul(100000);
