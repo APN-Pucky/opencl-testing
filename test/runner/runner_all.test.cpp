@@ -83,14 +83,14 @@ void array_add(int N) {
 }
 
 TEST_CASE( "array add", "[runner]" ) {
+    SECTION("N=1") {
+        array_add(1);
+    }
     SECTION("N=10") {
         array_add(10);
     }
     SECTION("N=100") {
         array_add(100);
-    }
-    SECTION("N=1000") {
-        array_add(1000);
     }
 };
 
@@ -109,14 +109,14 @@ void vector_add(int N) {
 }
 
 TEST_CASE( "vector add", "[runner]" ) {
+    SECTION("N=1") {
+        vector_add(1);
+    }
     SECTION("N=10") {
         vector_add(10);
     }
     SECTION("N=100") {
         vector_add(100);
-    }
-    SECTION("N=1000") {
-        vector_add(1000);
     }
 };
 
@@ -150,9 +150,9 @@ TEST_CASE( "mat mul", "[runner]" ) {
     //    mat_mul(10);
     //}
 
-    SECTION("N=3*256") {
-        mat_mul(256*3);
-    }
+    //SECTION("N=3*256") {
+    //    mat_mul(256*3);
+    //}
     //SECTION("N=100000") {
     //    mat_mul(100000);
     //}

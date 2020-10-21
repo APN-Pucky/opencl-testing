@@ -15,6 +15,7 @@ jobs:
                 submodules: true
             - name: Install Dependencies
               run: brew install boost openmpi libomp 
+            - run: brew --prefix libomp
             - name:  Build
               run: |
                 mkdir build
