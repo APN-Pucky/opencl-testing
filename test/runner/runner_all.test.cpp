@@ -71,10 +71,10 @@ TEST_CASE( "add together", "[runner]" ) {
     REQUIRE ( c == 3);
 }
 
-void array_add(int N) {
+void array_add(const int N) {
     int c[N];
     int a=1,b=2;
-    auto r = Runner("test_array_add",test_array_add,N,a,b,(int*)c,N);
+    auto r = Runner("test_array_add",test_array_add,N,a,b,&c[0],N);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
     run_test(r);
     for(int i = 0; i < N;++i) {
@@ -98,7 +98,7 @@ void vector_add(int N) {
     int a[N],b[N],c[N];
     for( int i = 0; i  < N ;++i) a[i] = 1;
     for( int i = 0; i  < N ;++i) b[i] = 2;
-    auto r = Runner("test_vector_add",test_vector_add,N,(int*)a,(int*)b,(int*)c,N);
+    auto r = Runner<int*,int*,int*,int>("test_vector_add",test_vector_add,N,(int*)a,(int*)b,(int*)c,N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
@@ -132,7 +132,7 @@ void mat_mul(int N) {
         vector[i]=i;
     }
     debug_printf("Result location %d \n", &result);
-    auto r = Runner("test_mat_mul",test_mat_mul,N,(double*)matrix,(double*)vector,(double*)result,N);
+    auto r = Runner<double*,double*,double*>("test_mat_mul",test_mat_mul,N,(double*)matrix,(double*)vector,(double*)result,N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
