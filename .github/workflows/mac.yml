@@ -21,7 +21,7 @@ jobs:
               run: |
                 mkdir build
                 cd build
-                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DTOO_TEST_MPI=1 -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include" -DOpenMP_CXX_LIB_NAMES="omp" -DOpenMP_omp_LIBRARY=$(brew --prefix libomp)/lib/libomp.a
+                cmake .. -DCMAKE_INSTALL_PREFIX=../dist -DTOO_TEST_MPI=1 -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include" -DOpenMP_CXX_LIB_NAMES="omp" -DOpenMP_C_FLAGS="-Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include" -DOpenMP_C_LIB_NAMES="omp" -DOpenMP_omp_LIBRARY=$(brew --prefix libomp)/lib/libomp.a
                 make install
             - name: Test
               run: |
