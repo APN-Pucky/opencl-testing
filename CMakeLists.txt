@@ -14,8 +14,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set( BUILD_SHARED_LIBRARIES OFF)
 
 if(TOO_C_STATIC) # This is MinGW
-  # -static-libgcc 
-  set( CMAKE_EXE_LINKER_FLAGS "-static -static-libstdc++")
+  # -static-libgcc  -static 
+  set( CMAKE_EXE_LINKER_FLAGS "-static-libstdc++")
   set( CMAKE_EXECUTABLE_SUFFIX ".exe")
 endif()
 
