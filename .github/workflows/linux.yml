@@ -27,13 +27,12 @@ jobs:
           - name: Install Dependencies
             run: |
               sudo apt-get update --fix-missing
-              sudo apt-get -f install
               sudo apt-get install -y make cmake libboost-all-dev lcov clinfo
               sudo apt-get install -y ${{ matrix.compiler }}
               sudo apt-cache search opencl
           - run:
               sudo apt-cache search libomp
-          - run: sudo apt-get install -f libomp-dev
+          - run: sudo apt-get install -f libomp-10-dev
             if: ${{ matrix.compiler == 'clang' }}
           - name: Build
             run: |
