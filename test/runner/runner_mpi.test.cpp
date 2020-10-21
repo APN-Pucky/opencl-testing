@@ -2,7 +2,6 @@
 #ifdef TOO_TEST_MPI
 #include "catch.hpp"
 #include "runner.h"
-#include "runner_test.h"
 #include "test.h"
 
 TEST_CASE( "mpi unsigned add", "[mpi]" ) {

@@ -1,12 +1,11 @@
 #ifdef TOO_TEST_OPENCL
 #include "catch.hpp"
 #include "runner.h"
-#include "runner_test.h"
 #include "test.h"
 
 TEST_CASE( "opencl unsigned add", "[opencl]" ) {
-    unsigned int a=1,b=2,c=0;
-    auto r = Runner("add",add,1,a,b,&c);
+    int a=1,b=2,c=0;
+    auto r = Runner("test_add",test_add,1,a,b,&c);
     r.run_opencl();
     //REQUIRE( c == 3 );
 }
