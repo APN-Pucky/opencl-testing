@@ -180,9 +180,11 @@ void Runner<Args...>::run_opencl()
     char *buffer = (char*) calloc(len, sizeof(char));
     ret = clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, len, buffer, NULL);
 
-    printf("%s",buffer);
 
-    if(err) printf("BUILD Kernel error%d",err);
+    if(err) {
+        printf("%s",buffer);
+        printf("BUILD Kernel error%d",err);
+    }
 
     // read kernel source back in from program to check
     clGetProgramInfo(program, CL_PROGRAM_SOURCE, 0, NULL, &kernelSourceSize);
@@ -200,7 +202,7 @@ void Runner<Args...>::run_opencl()
         printf("KERNEL Kernel error%d",err);
     }
     auto t1 = std::chrono::high_resolution_clock::now();
-    std::cout << "Compile time: " << ((std::chrono::duration<double>)(t1-t0)).count() << " s\n";
+    debug_printf("Compile time: %d s\n" ,((std::chrono::duration<double>)(t1-t0)).count());
     /*
     loop0<0,Args...>(args,context,sizes,flags,mems);
     loop1<0,Args...>(args,commands,sizes,mems,read_mem);
@@ -217,16 +219,16 @@ void Runner<Args...>::run_opencl()
     clGetKernelWorkGroupInfo(kernel, device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local), &local, NULL);
 
     //local = 64;
-    global = (N/local+1)*local;
-    debug_printf("global: %ld local %ld\n",global, local);
+    global = ((N+local-1)/local)*local;
+    printf("global: %ld local %ld\n",global, local);
     err = clEnqueueNDRangeKernel(commands, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
     if(err) printf("NDRANGE Kernel error%d",err);
 
     auto t2 = std::chrono::high_resolution_clock::now();
-    std::cout << "MemMove time: " << ((std::chrono::duration<double>)(t2-t1)).count() << " s\n";
+    debug_printf("Compile time: %d s\n" ,((std::chrono::duration<double>)(t2-t1)).count());
     clFinish(commands);
     auto t3 = std::chrono::high_resolution_clock::now();
-    std::cout << "Calc time: " << ((std::chrono::duration<double>)(t3-t2)).count() << " s\n";
+    debug_printf("Compile time: %d s\n" ,((std::chrono::duration<double>)(t3-t2)).count());
 
     //loop3<0,Args...>(args,commands,sizes,mems,read_mem);
     loop03<0,Args...>(args,commands,sizes,mems,read_mem,map_buffer);
@@ -244,7 +246,7 @@ void Runner<Args...>::run_opencl()
     clReleaseCommandQueue(commands);
     clReleaseContext(context);
     auto t4 = std::chrono::high_resolution_clock::now();
-    std::cout << "Cleanup time: " << ((std::chrono::duration<double>)(t4-t3)).count() << " s\n";
+    debug_printf("Compile time: %d s\n" ,((std::chrono::duration<double>)(t4-t3)).count());
 
 
 } 
