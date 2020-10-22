@@ -56,6 +56,7 @@ TEST_CASE( "test sim run and return", "[cpu]" ) {
 	   // printf("%d",results[i]);
     //}
 
+    global_ids[0] = 0;
     r.run_cpu();
     printf("\nsingle run %d\n",results[0]);
     REQUIRE (results[0] >= 0);
