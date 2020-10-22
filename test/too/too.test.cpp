@@ -9,7 +9,7 @@
 #include "tyrant.h"
 #include "tuo.h"
 #include "runner.h"
-
+/*
 TEST_CASE( "test sim run and return", "[cpu]" ) {
     const unsigned int size_card=10+4*3*9+Skill::num_skills*2+2;
     const unsigned int size_all_cards = 2*size_card;
@@ -68,3 +68,4 @@ TEST_CASE( "test sim run and return", "[cpu]" ) {
 	//printf("\nsingle run %d\n",results[0]);
 
 }
+//*/
