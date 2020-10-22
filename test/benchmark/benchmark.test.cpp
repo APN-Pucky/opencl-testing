@@ -51,7 +51,7 @@ void speed(int N) {
         }
         vecctor[i]=i;
     }
-    debug_printf("Result location %d \n", &result);
+    debug_printf("Result location %p \n", &result);
     auto r = Runner<double*,double*,double*,int>("test_speed",test_speed,N,&matrix[0],&vecctor[0],&result[0],N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N*N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
@@ -91,7 +91,7 @@ void speed2(int N) {
         matrix[i] = i*i - i-i;
         vecctor[i]=i;
     }
-    debug_printf("Result location %d \n", &result);
+    debug_printf("Result location %p \n", &result);
     auto r = Runner<double*,double*,double*,int>("test_speed2",test_speed2,N,&matrix[0],&vecctor[0],&result[0],N);
     r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
     r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
