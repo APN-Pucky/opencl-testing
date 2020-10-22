@@ -13,5 +13,8 @@ int main(int argc, char* argv[])
         cout << "opencl library not found." << endl;
         return 0;
     }
+    else {
+        cout << "opencl library found." << endl;
+    }
     return 0;
 }
