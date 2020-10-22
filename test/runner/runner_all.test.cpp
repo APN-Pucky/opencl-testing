@@ -149,10 +149,11 @@ TEST_CASE( "mat mul", "[runner]" ) {
     //SECTION("N=10") {
     //    mat_mul(10);
     //}
-
-    //SECTION("N=3*256") {
-    //    mat_mul(256*3);
-    //}
+    ///*
+    SECTION("N=3*256") {
+        mat_mul(256*3);
+    }
+    //*/
     //SECTION("N=100000") {
     //    mat_mul(100000);
     //}

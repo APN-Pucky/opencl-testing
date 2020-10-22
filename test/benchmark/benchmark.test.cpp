@@ -71,9 +71,9 @@ TEST_CASE( "speed", "[benchmark]" ) {
     //    speed(10);
     //}
     ///*
-    SECTION("N=256") {
-        printf("Speed: N=%i : ",256);
-        speed(256);
+    SECTION("N=40") {
+        printf("Speed: N=%i : ",40);
+        speed(40);
     }
     //*/
     //SECTION("N=100000") {
@@ -124,5 +124,44 @@ TEST_CASE( "speed2", "[benchmark]" ) {
 };
 
 TEST_CASE("speed2 optimize", "[benchmark]") {
+    int N = 100*256;
+    std::vector<double> matrix(N);
+    std::vector<double> vecctor(N);
+    std::vector<double> result(N);
+    for(int i = 0; i  < N ; ++i) {
+        //matrix[i*N+j] = 0.0;
+        matrix[i] = i*i - i-i;
+        vecctor[i]=i;
+    }
+    debug_printf("Result location %d \n", &result);
+    auto r = Runner<double*,double*,double*,int>("test_speed2",test_speed2,N,&matrix[0],&vecctor[0],&result[0],N);
+    r.set_mem<0>(CL_MEM_READ_ONLY,N,false);
+    r.set_mem<1>(CL_MEM_READ_ONLY,N,false);
+    r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
+
+    auto start_openmp = std::chrono::high_resolution_clock::now();
+    r.run_openmp();
+    auto end_openmp = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end_openmp - start_openmp;
+    auto diff_openmp = elapsed;
+    printf(" OpenMP : Elapsed time: %f s\n",elapsed.count());
+
+    auto start_opencl = std::chrono::high_resolution_clock::now();
+    r.run_opencl();
+    auto end_opencl = std::chrono::high_resolution_clock::now();
+    elapsed = end_opencl - start_opencl;
+    auto diff_opencl = elapsed;
+    printf(" OpenCL : Elapsed time: %f s\n",elapsed.count());
+
+    int relative = (int)(diff_openmp.count()*100/(diff_opencl.count()+diff_openmp.count()));
+    std::list<double> asca = {1,0.75,0.5,0.25,1.25,1.5,2};
+    for(auto& sca: asca ) {
+        r.hybrid_scale = relative*sca;
+        auto start_hybrid = std::chrono::high_resolution_clock::now();
+        r.run_hybrid();
+        auto end_hybrid = std::chrono::high_resolution_clock::now();
+        elapsed = end_hybrid - start_hybrid;
+        printf(" Hybrid : scale: %d \% : Elapsed time: %f s\n",r.hybrid_scale,elapsed.count());
+    }
 
 }

@@ -20,6 +20,7 @@ void Runner::add_argument(T& t)
 //const int num_t = omp_get_max_threads();
 int global_ids_a[100];
 int* global_ids = &global_ids_a[0];
+int global_size;
 /*
  * Loads cl programs in directories cl/ 
  */

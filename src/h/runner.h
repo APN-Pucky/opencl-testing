@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <tuple>
+#include <algorithm>
 
 #include "clew.h"
 #include "debug.h"
@@ -16,7 +17,9 @@ cl_program load_cl_programs(cl_context context);
 //extern int global_id;
 //const int num_threads = omp_get_max_threads();
 extern int* global_ids;
+extern int global_size;
 #define get_global_id global_ids[omp_get_thread_num()] +
+#define get_global_size global_size +
 enum Mode {
     noop,
     cpu,
@@ -29,6 +32,8 @@ template<typename ... Args>
 class Runner
 {
     public:
+
+
         Runner(std::string function_name_, void(*function_pointer_)(Args...), size_t N_,Args...args_) :
             function_name(function_name_),
             function_pointer(function_pointer_),
@@ -42,13 +47,51 @@ class Runner
             sizes(sizeof...(Args))
         {
             //global_id = 0;
+            global_size = N_;
             mode = noop;
             for(auto a : sizes) a = 0;
             if( !CLPRESENT) {
                 printf("opencl library not found.\n");
             }
+            if(!opencl_initialized) {
+                self_init=true;
+                init_opencl();
+            }
         };
-        Runner(const Runner<Args...>& r) = default;
+        Runner(const Runner<Args...>& r) {
+            self_init =false;
+
+            hybrid_scale= r.hybrid_scale;
+            N = r.N;
+            mode = r.mode;
+            mems = r.mems;
+            map_mem = r.map_mem;
+            map_buffer = r.map_buffer;
+            read_mem = r.read_mem;
+            sizes = r.sizes;
+            flags = r.flags;
+            function_name = r.function_name;
+            args = r.args;
+            function_pointer = r.function_pointer;
+            bool opencl_initialized = true;
+            bool self_init = false;
+            platform = r.platform;
+            device_id = r.device_id;
+            commands = r.commands;
+            context = r.context;
+            kernel = r.kernel;
+            program = r.program;
+
+            kernelSourceSize = r.kernelSourceSize;
+            global = r.global;
+            local = r.local; 
+            kernelSource = r.kernelSource;
+
+        };
+        ~Runner() {
+            if(self_init)finish_opencl();
+        }            
+
          
         /*
         template<typename T>
@@ -94,6 +137,9 @@ class Runner
             }
         }
 
+        void init_opencl();
+        void finish_opencl();
+
 /*
         template<typename Function, typename Tuple, size_t ... I>
         auto call(Function f, Tuple t, std::index_sequence<I ...>)
@@ -122,6 +168,10 @@ class Runner
                 run_cpu();
             }
         }
+        size_t multiple_of_local(size_t N1) {
+            auto tmp = ((N1+local-1)/local)*local;
+            return tmp;
+            };
         void run_opencl(); 
         #ifdef TOO_MPI
         void run_mpi();
@@ -130,6 +180,8 @@ class Runner
 #include "runner_openmp.h"
 
     //private:
+        // scaling of opencl portion in run_hybrid() in percent
+        int hybrid_scale= 25;
         size_t N;
         Mode mode;
         std::vector<cl_mem> mems;
@@ -141,6 +193,20 @@ class Runner
         std::string function_name;
         std::tuple<Args...> args;
         void(*function_pointer)(Args...);
+
+
+        bool opencl_initialized = false;
+        bool self_init = false;
+        cl_int err;
+        cl_platform_id platform;
+        cl_device_id device_id;
+        cl_command_queue commands;
+        cl_context context;
+        cl_program program;
+        cl_kernel kernel;
+        size_t kernelSourceSize;
+        size_t global=N,local;
+        char  *kernelSource;
 };
 
 #include "runner_opencl.h"

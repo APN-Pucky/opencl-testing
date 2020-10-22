@@ -51,15 +51,15 @@ void loop01(std::tuple<Args...>& args,cl_context& context, cl_command_queue& com
             cl_int err;
             debug_printf("Create %ld %d with %ld of size %ld \n",I,err,flags[I],sizes[I]);
             mems[I] = clCreateBuffer(context,  flags[I],  size, NULL, &err);
-            auto tmp= clCreateBuffer(context,  flags[I] | CL_MEM_ALLOC_HOST_PTR,  sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], NULL, &err);
+            auto tmp= clCreateBuffer(context,  flags[I] | CL_MEM_ALLOC_HOST_PTR,  size, NULL, &err);
             map_mem[I] = tmp;
-            auto tmp_pointer = (unsigned char *) clEnqueueMapBuffer(commands,tmp,CL_TRUE,read_mem[I]?CL_MAP_READ:CL_MAP_WRITE,0,sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I],0,NULL,NULL,NULL);
+            auto tmp_pointer = (unsigned char *) clEnqueueMapBuffer(commands,tmp,CL_TRUE,read_mem[I]?CL_MAP_READ:CL_MAP_WRITE,0,size,0,NULL,NULL,NULL);
             map_buffer[I] = tmp_pointer;
             if(!read_mem[I]) {
                 for(int i=0; i  < size;++i) {
                     tmp_pointer[i] = ((unsigned char *)   std::get<I>(args))[i];
                 }
-                cl_int ret = clEnqueueWriteBuffer(commands, mems[I], CL_TRUE, 0, sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], tmp_pointer, 0, NULL, NULL);
+                cl_int ret = clEnqueueWriteBuffer(commands, mems[I], CL_TRUE, 0, size, tmp_pointer, 0, NULL, NULL);
                 debug_printf("Write %ld %d\n",I,ret);
             }
         }
@@ -117,13 +117,13 @@ void loop03(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<si
     {
         if(sizes[I] != 0 && read_mem[I]) {
             int size = sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I];
-            cl_int ret =clEnqueueReadBuffer( commands, mems[I], CL_TRUE, 0, sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)*sizes[I], map_buffer[I], 0, NULL, NULL );
+            cl_int ret =clEnqueueReadBuffer( commands, mems[I], CL_TRUE, 0, size, map_buffer[I], 0, NULL, NULL );
             for(int i=0; i  < size;++i) {
                 ((unsigned char *)   std::get<I>(args))[i] = map_buffer[I][i];
             }
             debug_printf("Read %ld %d \n", I,ret);
             debug_printf("Read %d \n", std::get<I>(args));
-            debug_printf("Read %ld %ld\n",  sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)*sizes[I],sizes[I]);
+            debug_printf("Read %ld %ld\n",  size,sizes[I]);
             //printf("here where i should be %d %ld %d ",I,sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type),std::get<I>(args)[1]);
         }
     }
@@ -133,29 +133,26 @@ void loop03(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<si
     }
 }
 
-
+template< typename... Args>
+void Runner<Args...>::finish_opencl() {
+    auto t3 = std::chrono::high_resolution_clock::now();
+    clReleaseProgram(program);
+    clReleaseKernel(kernel);
+    clReleaseCommandQueue(commands);
+    clReleaseContext(context);
+    auto t4 = std::chrono::high_resolution_clock::now();
+    debug_printf("Cleanup time: %f s\n" ,((std::chrono::duration<double>)(t4-t3)).count());
+}
 
 template< typename... Args>
-void Runner<Args...>::run_opencl()
+void Runner<Args...>::init_opencl()
 {
     auto t0 = std::chrono::high_resolution_clock::now();
     if( !CLPRESENT ) {
         printf("opencl library not found.\n");
         return;
     }
-
-    cl_int err;
-    cl_platform_id platform;
-    cl_device_id device_id;
-    cl_command_queue commands;
-    cl_context context;
-    cl_program program;
-
-    size_t kernelSourceSize;
-    size_t global=N,local;
-    char  *kernelSource;
-
-    debug_printf("clGetPlatformIDs\n");
+        debug_printf("clGetPlatformIDs\n");
     // get first available platform and gpu and create context
     err = clGetPlatformIDs(1, &platform, NULL);
     if (err != CL_SUCCESS) {
@@ -196,13 +193,26 @@ void Runner<Args...>::run_opencl()
     commands = clCreateCommandQueue(context, device_id, 0, &err);
 
 
-    cl_kernel kernel = clCreateKernel(program, function_name.c_str(),&err);
+    kernel = clCreateKernel(program, function_name.c_str(),&err);
     if(err) {
         printf("Kernel name: %s",function_name.c_str());
         printf("KERNEL Kernel error%d",err);
     }
     auto t1 = std::chrono::high_resolution_clock::now();
-    debug_printf("Compile time: %d s\n" ,((std::chrono::duration<double>)(t1-t0)).count());
+    debug_printf("Compile time: %f s\n" ,((std::chrono::duration<double>)(t1-t0)).count());
+
+    clGetKernelWorkGroupInfo(kernel, device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local), &local, NULL);
+
+    opencl_initialized = true;
+}
+
+
+
+template< typename... Args>
+void Runner<Args...>::run_opencl()
+{
+    auto t1 = std::chrono::high_resolution_clock::now();
+
     /*
     loop0<0,Args...>(args,context,sizes,flags,mems);
     loop1<0,Args...>(args,commands,sizes,mems,read_mem);
@@ -216,19 +226,18 @@ void Runner<Args...>::run_opencl()
     loop2<0,Args...>(args,kernel, index, sizes,mems);
 
 
-    clGetKernelWorkGroupInfo(kernel, device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local), &local, NULL);
 
     //local = 64;
     global = ((N+local-1)/local)*local;
-    printf("global: %ld local %ld\n",global, local);
+    debug_printf("N: %ld, global: %ld local %ld\n",N,global, local);
     err = clEnqueueNDRangeKernel(commands, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
     if(err) printf("NDRANGE Kernel error%d",err);
 
     auto t2 = std::chrono::high_resolution_clock::now();
-    debug_printf("Compile time: %d s\n" ,((std::chrono::duration<double>)(t2-t1)).count());
+    debug_printf("MemLoad time: %f s\n" ,((std::chrono::duration<double>)(t2-t1)).count());
     clFinish(commands);
     auto t3 = std::chrono::high_resolution_clock::now();
-    debug_printf("Compile time: %d s\n" ,((std::chrono::duration<double>)(t3-t2)).count());
+    debug_printf("Run time: %f s\n" ,((std::chrono::duration<double>)(t3-t2)).count());
 
     //loop3<0,Args...>(args,commands,sizes,mems,read_mem);
     loop03<0,Args...>(args,commands,sizes,mems,read_mem,map_buffer);
@@ -236,18 +245,13 @@ void Runner<Args...>::run_opencl()
     for(int j = 0; j < sizeof...(Args);++j) {
         const int i = j;
         if(sizes[i] != 0) {
+            //printf("release mem");
             clReleaseMemObject(mems[i]);
+            //printf("release memmap");
             clReleaseMemObject(map_mem[i]);
         }
     }
 
-    clReleaseProgram(program);
-    clReleaseKernel(kernel);
-    clReleaseCommandQueue(commands);
-    clReleaseContext(context);
-    auto t4 = std::chrono::high_resolution_clock::now();
-    debug_printf("Compile time: %d s\n" ,((std::chrono::duration<double>)(t4-t3)).count());
-
-
+    
 } 
 #endif
