@@ -9,6 +9,7 @@
 # Install
 ```
 git clone --recursive https://github.com/APN-Pucky/opencl-testing.git
+cd opencl-testing
 mkdir build
 cd build
 cmake ..
