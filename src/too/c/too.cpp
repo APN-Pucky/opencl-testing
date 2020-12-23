@@ -9,11 +9,9 @@
 //#include "tyrant.h"
 #include "runner.h"
 #include "tuo.h"
-#include "test.h"
-#include "clh/card.h"
-#include "clh/step.h"
+#include "card.h"
+#include "step.h"
 
-#define MALLOC_CHECK_ 2
 
 int runX() {
     //const unsigned int size_card=10+4*3*size_skillspec+Skill::num_skills*2+2;

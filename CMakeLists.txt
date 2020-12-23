@@ -37,7 +37,7 @@ endif()
 
 # BOOST 
 #set(Boost_DEBUG 1)
-find_package(Boost COMPONENTS filesystem REQUIRED)
+find_package(Boost COMPONENTS filesystem system thread regex timer REQUIRED)
 
 
 # MPI
@@ -65,7 +65,8 @@ include(CodeCoverage)
 APPEND_COVERAGE_COMPILER_FLAGS()
 endif()
 
-include_directories(src/h)
+include_directories(src/runner/h)
+include_directories(src/too/h)
 add_subdirectory(src)
 
 #Tests

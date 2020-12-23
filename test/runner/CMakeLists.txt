@@ -1,11 +1,12 @@
 set( too_test_SRC 
   #runner_cpu.test.cpp
+  cl/test.cpp
   runner_all.test.cpp
   runner_mpi.test.cpp
   runner_opencl.test.cpp
 )
 
-include_directories(../../src/clh)
+include_directories(clh)
 include_directories(${Boost_INCLUDE_DIR})
 
 set( TARGET_NAME runner_test)

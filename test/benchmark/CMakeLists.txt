@@ -1,9 +1,10 @@
 set( too_test_SRC 
   #runner_cpu.test.cpp
+  cl/test.cpp
   benchmark.test.cpp
 )
 
-include_directories(../../src/clh)
+include_directories(clh)
 include_directories(${Boost_INCLUDE_DIR})
 
 set( TARGET_NAME benchmark)
@@ -31,13 +32,13 @@ install(TARGETS ${TARGET_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bench
 	
 add_custom_command(
  TARGET ${TARGET_NAME} POST_BUILD
- COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/src/cl ${CMAKE_CURRENT_BINARY_DIR}/cl 
+ COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/test/benchmark/cl ${CMAKE_CURRENT_BINARY_DIR}/cl 
  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/cl
 )	
 
 add_custom_command(
  TARGET ${TARGET_NAME} POST_BUILD
- COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/src/clh ${CMAKE_CURRENT_BINARY_DIR}/clh 
+ COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/test/benchmark/clh ${CMAKE_CURRENT_BINARY_DIR}/clh 
  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/clh
 )
 

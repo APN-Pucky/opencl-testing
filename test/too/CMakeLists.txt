@@ -2,7 +2,7 @@ set( too_test_SRC
   too.test.cpp 
 )
 
-include_directories(../../src/clh)
+include_directories(../../src/too/clh)
 include_directories(${Boost_INCLUDE_DIR})
 
 
