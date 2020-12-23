@@ -1,5 +1,11 @@
-set( too_cxx_SRC too.cpp runner.cpp mpi_util.cpp)
-set( too_ocl_SRC cl/tuo.cpp cl/test.cpp)
+set( too_cxx_SRC too.cpp runner_id.cpp  mpi_util.cpp)
+set( too_ocl_SRC 
+cl/tuo.cpp 
+cl/test.cpp 
+cl/step.cpp 
+cl/card.cpp 
+cl/tyrant.cpp
+)
 
 include_directories(h)
 include_directories(clh)
@@ -34,6 +40,7 @@ install(TARGETS too_lib RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(DIRECTORY cl DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(DIRECTORY clh DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
+#TODO move to respective area
 install(DIRECTORY cl DESTINATION ${CMAKE_INSTALL_PREFIX}/test)
 install(DIRECTORY clh DESTINATION ${CMAKE_INSTALL_PREFIX}/test)
 

@@ -1,5 +1,5 @@
 #include "too.h"
 
 int main() {
-    run();
+    return run();
 }

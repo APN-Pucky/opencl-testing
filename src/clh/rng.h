@@ -1,3 +1,4 @@
+
 #include "ocl.h"
 //simple rng
 int rng_int(unsigned long seed) {

@@ -10,16 +10,12 @@
 #include "clew.h"
 #include "debug.h"
 #include <omp.h>
+#include "runner_id.h"
 
 
 const int CLPRESENT = 0 == clewInit();
-cl_program load_cl_programs(cl_context context); 
 //extern int global_id;
 //const int num_threads = omp_get_max_threads();
-extern int* global_ids;
-extern int global_size;
-#define get_global_id global_ids[omp_get_thread_num()] +
-#define get_global_size global_size +
 enum Mode {
     noop,
     cpu,
@@ -53,6 +49,7 @@ class Runner
             if( !CLPRESENT) {
                 printf("opencl library not found.\n");
             }
+            //opencl_initialized = true;
             if(!opencl_initialized) {
                 self_init=true;
                 init_opencl();
@@ -139,6 +136,7 @@ class Runner
 
         void init_opencl();
         void finish_opencl();
+        cl_program load_cl_programs(cl_context context); 
 
 /*
         template<typename Function, typename Tuple, size_t ... I>
@@ -192,6 +190,7 @@ class Runner
         std::vector<cl_mem_flags> flags;
         std::string function_name;
         std::tuple<Args...> args;
+	    std::string code;
         void(*function_pointer)(Args...);
 
 

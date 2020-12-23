@@ -1,3 +1,4 @@
+
 #include "ocl.h"
 __kernel void simulate_test(  __global int* all_cards, const int count, const int gseed);
 

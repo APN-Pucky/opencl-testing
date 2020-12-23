@@ -6,17 +6,17 @@
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
-#include "tyrant.h"
-#include "tuo.h"
+//#include "tyrant.h"
 #include "runner.h"
+#include "tuo.h"
 #include "test.h"
+#include "clh/card.h"
+#include "clh/step.h"
 
-int run() {
-    return 0;
-}
+#define MALLOC_CHECK_ 2
 
 int runX() {
-    const unsigned int size_card=10+4*3*9+Skill::num_skills*2+2;
+    //const unsigned int size_card=10+4*3*size_skillspec+Skill::num_skills*2+2;
     const unsigned int size_all_cards = 2*size_card;
     const unsigned int size_deck=10;
     const unsigned int sims = 1024;
@@ -56,12 +56,14 @@ int runX() {
     r.set_mem<3>(CL_MEM_READ_ONLY,size_deck,false);
     r.set_mem<5>(CL_MEM_READ_ONLY,size_deck,false);
     r.set_mem<7>(CL_MEM_WRITE_ONLY,N,true);
+
     r.run_opencl();
+    //r.run_noparallel();
     for (int i = 0; i  < N ; ++i) {
 	    printf("%d",results[i]);
     }
 
-    r.run_cpu();
+    //r.run_cpu();
     printf("\nsingle run %d\n",results[0]);
 
 
@@ -70,5 +72,10 @@ int runX() {
     //simulate(allcards,size_all_cards,mydeck,enemydeck,results,N,seed);
 	//printf("\nsingle run %d\n",results[0]);
 
+    //r.~Runner();
     return 0;
+}
+
+int run() {
+    return runX();
 }

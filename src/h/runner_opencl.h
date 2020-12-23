@@ -7,6 +7,44 @@
 
 #include "runner.h"
 
+template< typename... Args>
+cl_program Runner<Args...>::load_cl_programs(cl_context context) {
+    std::vector<std::string> filenames;
+    std::string path1 = "cl";
+    std::string path2 = "src/cl";
+    boost::filesystem::path full_path(boost::filesystem::current_path());
+    debug_printf("Current path is : %s" , full_path.c_str());
+    if( ! boost::filesystem::is_directory(path1) ) {
+            path1 = path2;
+    }
+    for (boost::filesystem::directory_entry& entry : boost::filesystem::directory_iterator(path1))  {
+        filenames.push_back(entry.path().string());
+    }
+    std::sort(filenames.begin(),filenames.end());
+
+
+	int n =  filenames.size();
+    const char** programBuffer = (const char**) malloc(n);
+    size_t* programSize = ( size_t*) malloc(n);
+    std::stringstream strStream;
+	for(int i=0; i < n; ++i) {
+        std::ifstream inFile;
+		inFile.open(filenames[i]); //open the input file
+    	strStream << inFile.rdbuf() << "\n"; //read the file
+    	//std::string str = strStream.str(); //str holds the content of the file
+		//files.push_back(str);
+    }
+    code = strStream.str();
+    programBuffer[0] = code.c_str();
+    //std::cout << programBuffer[0] << std::endl;
+    programSize[0] = 0;//files.back().length();
+
+    cl_int err;
+    cl_program tmp = clCreateProgramWithSource(context, 1,
+            programBuffer, programSize, &err);
+    if(err) printf("clCreateProgramWithSource Error %d\n",err);
+    return tmp;
+}
 
 template<size_t I = 0,typename ...Args>
 void loop0(std::tuple<Args...>& args,cl_context& context, std::vector<size_t>& sizes,std::vector<cl_mem_flags>& flags,std::vector<cl_mem>& mems) {
@@ -14,9 +52,11 @@ void loop0(std::tuple<Args...>& args,cl_context& context, std::vector<size_t>& s
     if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
     {
         if(sizes[I] != 0) {
+            int size = sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I];
             cl_int err;
-            mems[I] = clCreateBuffer(context,  flags[I],  sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], NULL, &err);
-            debug_printf("Create %ld %d with %ld of size %ld \n",I,err,flags[I],sizes[I]);
+            mems[I] = clCreateBuffer(context,  flags[I],  size, NULL, &err);
+            debug_printf("clCreateBuffer %ld %ld %ld NULL %d\n", I, flags[I],size,err);
+            //debug_printf("Create %ld flag %ld of size %ld totsize %ld err %d\n",I,flags[I],sizes[I],size,err);
         }
     }
     // do things
@@ -31,8 +71,10 @@ void loop1(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<siz
     if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
     {
         if(sizes[I] != 0 && !read_mem[I] ) {
-            cl_int ret = clEnqueueWriteBuffer(commands, mems[I], CL_TRUE, 0, sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], std::get<I>(args), 0, NULL, NULL);
-            debug_printf("Write %ld %d\n",I,ret);
+            int size = sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I];
+            cl_int ret = clEnqueueWriteBuffer(commands, mems[I], CL_TRUE, 0, size, std::get<I>(args), 0, NULL, NULL);
+            debug_printf("clEnqueueWriteBuffer %ld mems[I] CL_TRUE 0 %ld args[I] 0 NULL NULL ret=%d\n",I,size,ret);
+            //debug_printf("Write %ld %d\n",I,ret);
         }
     }
     // do things
@@ -49,8 +91,8 @@ void loop01(std::tuple<Args...>& args,cl_context& context, cl_command_queue& com
         if(sizes[I] != 0 ) {
             int size = sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I];
             cl_int err;
-            debug_printf("Create %ld %d with %ld of size %ld \n",I,err,flags[I],sizes[I]);
             mems[I] = clCreateBuffer(context,  flags[I],  size, NULL, &err);
+            debug_printf("Create %ld flag %ld of size %ld totsize %ld err %d\n",I,flags[I],sizes[I],size,err);
             auto tmp= clCreateBuffer(context,  flags[I] | CL_MEM_ALLOC_HOST_PTR,  size, NULL, &err);
             map_mem[I] = tmp;
             auto tmp_pointer = (unsigned char *) clEnqueueMapBuffer(commands,tmp,CL_TRUE,read_mem[I]?CL_MAP_READ:CL_MAP_WRITE,0,size,0,NULL,NULL,NULL);
@@ -77,13 +119,16 @@ void loop2(std::tuple<Args...>& args, cl_kernel& kernel, int& index, std::vector
                 //printf("here where i should be %d %d ",I,index);
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
-                clSetKernelArg(kernel, index++, sizeof(cl_mem), &mems[I]);
-               debug_printf("Set Pointer %ld %d",I,index);
+               clSetKernelArg(kernel, index++, sizeof(cl_mem), &mems[I]);
+               debug_printf("clSetKernelArg %ld kernel %d sizeof(cl_mem) &mems[I]\n",I,index);
+               //debug_printf("Set Pointer %ld %d",I,index);
             }
         }
         else {
-            clSetKernelArg(kernel, index++, sizeof(typename std::tuple_element<I,std::tuple<Args...>>::type), &(std::get<I>(args)));
-            debug_printf("Set Direct %ld %d",I,index);
+            int size = sizeof(typename std::tuple_element<I,std::tuple<Args...>>::type);
+            clSetKernelArg(kernel, index++, size, &(std::get<I>(args)));
+            debug_printf("clSetKernelArg %ld kernel %d %ld &args[I]\n",I,index,size);
+            //debug_printf("Set Direct %ld %d",I,index);
             //printf("here where i should NAT be %d %d %d %d ",I,index,std::get<I>(args),sizeof(int));
         }
     // do things
@@ -97,10 +142,12 @@ void loop3(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<siz
     if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
     {
         if(sizes[I] != 0 && read_mem[I]) {
-            cl_int ret =clEnqueueReadBuffer( commands, mems[I], CL_TRUE, 0, sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)*sizes[I], std::get<I>(args), 0, NULL, NULL );
-            debug_printf("Read %ld %d \n", I,ret);
-            debug_printf("Read %d \n", std::get<I>(args));
-            debug_printf("Read %ld %ld\n",  sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)*sizes[I],sizes[I]);
+            int size = sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)*sizes[I];
+            cl_int ret =clEnqueueReadBuffer( commands, mems[I], CL_TRUE, 0, size, std::get<I>(args), 0, NULL, NULL );
+            debug_printf("clEnqueueReadBuffer %ld commands mems[I] CL_TRUE, 0, %ld args[I] 0 NULL NULL err=%d \n", I,size,ret);
+            //debug_printf("Read %ld %d \n", I,ret);
+            //debug_printf("Read %d \n", std::get<I>(args));
+            //debug_printf("Read %ld %ld\n",  sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)*sizes[I],sizes[I]);
             //printf("here where i should be %d %ld %d ",I,sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type),std::get<I>(args)[1]);
         }
     }
@@ -136,10 +183,15 @@ void loop03(std::tuple<Args...>& args,cl_command_queue& commands, std::vector<si
 template< typename... Args>
 void Runner<Args...>::finish_opencl() {
     auto t3 = std::chrono::high_resolution_clock::now();
+    debug_printf("clReleaseProgram");
     clReleaseProgram(program);
+    debug_printf("clReleaseKernel");
     clReleaseKernel(kernel);
+    debug_printf("clReleaseCommandQueue");
     clReleaseCommandQueue(commands);
+    debug_printf("clReleaseContext");
     clReleaseContext(context);
+    debug_printf("clReleaseContext done");
     auto t4 = std::chrono::high_resolution_clock::now();
     debug_printf("Cleanup time: %f s\n" ,((std::chrono::duration<double>)(t4-t3)).count());
 }
@@ -152,7 +204,7 @@ void Runner<Args...>::init_opencl()
         printf("opencl library not found.\n");
         return;
     }
-        debug_printf("clGetPlatformIDs\n");
+    debug_printf("clGetPlatformIDs\n");
     // get first available platform and gpu and create context
     err = clGetPlatformIDs(1, &platform, NULL);
     if (err != CL_SUCCESS) {
@@ -171,6 +223,10 @@ void Runner<Args...>::init_opencl()
     // create program from buffer
     program = load_cl_programs(context);
     err = clBuildProgram(program,0,NULL,"-D _OpenCL -I clh/ -I src/clh/ -cl-std=CL2.0",NULL,NULL);
+    if(err) {
+        printf("clBuildProgram error %d",err);
+    }
+
     size_t len = 0;
     cl_int ret = CL_SUCCESS;
     ret = clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, 0, NULL, &len);
@@ -180,14 +236,14 @@ void Runner<Args...>::init_opencl()
 
     if(err) {
         printf("%s",buffer);
-        printf("BUILD Kernel error%d",err);
+        printf("clGetProgranBuildInfo error %d",err);
     }
 
     // read kernel source back in from program to check
     clGetProgramInfo(program, CL_PROGRAM_SOURCE, 0, NULL, &kernelSourceSize);
     kernelSource = (char*) malloc(kernelSourceSize);
     clGetProgramInfo(program, CL_PROGRAM_SOURCE, kernelSourceSize, kernelSource, NULL);
-    //printf("\nKernel source:\n\n%s\n", kernelSource);
+    debug_printf("\nKernel source:\n\n%s\n", kernelSource);
     free(kernelSource);
 
     commands = clCreateCommandQueue(context, device_id, 0, &err);
@@ -216,7 +272,7 @@ void Runner<Args...>::run_opencl()
     /*
     loop0<0,Args...>(args,context,sizes,flags,mems);
     loop1<0,Args...>(args,commands,sizes,mems,read_mem);
-    */
+    //*/
     loop01<0,Args...>(args,context,commands,sizes,flags,mems,read_mem,map_mem,map_buffer);
 
     
@@ -245,13 +301,10 @@ void Runner<Args...>::run_opencl()
     for(int j = 0; j < sizeof...(Args);++j) {
         const int i = j;
         if(sizes[i] != 0) {
-            //printf("release mem");
+            debug_printf("release mem(-map) %d \n" ,i);
             clReleaseMemObject(mems[i]);
-            //printf("release memmap");
             clReleaseMemObject(map_mem[i]);
         }
     }
-
-    
 } 
 #endif

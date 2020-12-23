@@ -165,6 +165,7 @@ int main() {
 
 
 
+    clReleaseMemObject(input0);
     clReleaseMemObject(input1);
     clReleaseMemObject(input2);
     clReleaseMemObject(output);
