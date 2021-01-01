@@ -2,6 +2,7 @@
 #ifndef _OpenCL
 #include "../../tuo/h/ocl_load.h"
 #endif
+#include "ocl_debug.h"
 
 int attack(__global int* card) {
 	return card[1];
@@ -131,7 +132,8 @@ void card_to_data(int* data, const struct CLCard c) {
     data[10+12*size_skillspec+2*num_skills+1] = c.m_category;
 }
 
-void print_faction(CLFaction f) {
+void print_faction(enum CLFaction f) {
+#ifdef OCL_DEBUG
     switch (f)
     {
     case bloodthirsty:
@@ -153,9 +155,11 @@ void print_faction(CLFaction f) {
         printf("undefined");
         break;
     }
+#endif
 }
 
-void print_cardtype(CLCardType t) {
+void print_cardtype(enum CLCardType t) {
+#ifdef OCL_DEBUG
     switch(t){
         case commander:
             printf("Commander");
@@ -170,30 +174,35 @@ void print_cardtype(CLCardType t) {
             printf("undefined");
             break;
     }
+#endif
 }
 
 void print_card(const struct CLCard* c) {
+#ifdef OCL_DEBUG
     printf("[");
-    #ifndef _OpenCL
+#ifndef _OpenCL
     printf("%s: ",name_by_id(c->m_id));
-    #else
+#else
     printf("|%i|: " , c->m_id);
-    #endif
+#endif
     printf("%i/%i/%i ", c->m_attack,c->m_health,c->m_delay);
     print_faction(c->m_faction);
     printf("]");
+#endif
 }
 void print_cardstatus(const struct CLCardStatus* c) {
+#ifdef OCL_DEBUG
     printf("P%d ",c->m_player); 
     print_cardtype(c->m_card->m_type);
     if(c->m_card->m_type!=commander)printf(" %d",c->m_index);
     printf(" [");
-    #ifndef _OpenCL
+#ifndef _OpenCL
     printf("%s ",name_by_id(c->m_card->m_id));
-    #else
+#else
     printf("|%i| " , c->m_card->m_id);
-    #endif
+#endif
     if(c->m_card->m_type!=commander)printf("att:%i " , c->m_attack);
     printf("hp:%i" , c->m_hp);
     printf("]");
+#endif
 }

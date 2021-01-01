@@ -13,7 +13,7 @@ cl_program Runner<Args...>::load_cl_programs(cl_context context) {
     std::string path1 = "cl";
     std::string path2 = "src/cl";
     boost::filesystem::path full_path(boost::filesystem::current_path());
-    debug_printf("Current path is : %s" , full_path.c_str());
+    debug_printf("Current path is : %s\n" , full_path.c_str());
     if( ! boost::filesystem::is_directory(path1) ) {
             path1 = path2;
     }
@@ -29,12 +29,14 @@ cl_program Runner<Args...>::load_cl_programs(cl_context context) {
     std::stringstream strStream;
 	for(int i=0; i < n; ++i) {
         std::ifstream inFile;
+        printf("Reading %s\n" ,filenames[i].c_str());
 		inFile.open(filenames[i]); //open the input file
     	strStream << inFile.rdbuf() << "\n"; //read the file
     	//std::string str = strStream.str(); //str holds the content of the file
 		//files.push_back(str);
     }
     code = strStream.str();
+    //std::cout << code << std::endl;
     programBuffer[0] = code.c_str();
     //std::cout << programBuffer[0] << std::endl;
     programSize[0] = 0;//files.back().length();

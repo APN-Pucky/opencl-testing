@@ -11,7 +11,7 @@ TEST_CASE( "test sim run and return", "[cpu]" ) {
     //const unsigned int size_card=10+4*3*size_skillspec+Skill::num_skills*2+2;
     const unsigned int size_all_cards = all_cards_size*size_card;
     //const unsigned int size_deck=10;
-    const unsigned int sims = 1024;
+    const unsigned int sims = 1024000;
     const unsigned int N = sims;
     const unsigned long seed = 5;
 
@@ -50,10 +50,18 @@ TEST_CASE( "test sim run and return", "[cpu]" ) {
     r.set_mem<5>(CL_MEM_READ_ONLY,size_deck,false);
     r.set_mem<7>(CL_MEM_WRITE_ONLY,N,true);
 
+    auto start = std::chrono::high_resolution_clock::now();
     //r.run_opencl();
     r.run_noparallel();
+    //r.run_openmp();
+    //r.run_hybrid();
+    //r.run_cpu();
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = finish - start;
+    std::cout << " == > Elapsed time: " << elapsed.count() << " s\n";
+
     for (int i = 0; i  < N ; ++i) {
-	    printf("%d",results[i]);
+	    //printf("%d",results[i]);
     }
 
     //r.run_cpu();

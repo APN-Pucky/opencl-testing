@@ -4,14 +4,15 @@
 #include "card.h"
 
 const __constant int size_deck= 12;
-const __constant int size_cards= 10;
+#define SIZE_CARDS 10
+const __constant int size_cards= SIZE_CARDS;
 
 struct CLDeck {
-    CLCard commander;
-    CLCard alpha_dominion;
-    //CLCard fortress_cards[4];
-    CLCard cards[size_cards];
-    unsigned num_cards =10;
+    struct CLCard commander;
+    struct CLCard alpha_dominion;
+    //struct CLCard fortress_cards[4];
+    struct CLCard cards[SIZE_CARDS];
+    unsigned num_cards;
 };
 
 #endif

@@ -20,6 +20,9 @@ TEST_CASE( "commander vs commander", "[CvC]") {
     CLCard* c2 = &s.sides[1].deck.commander;
     set_commander(c1,1,5);
     set_commander(c2,2,15);
+    s.sides[0].deck.num_cards = 0;
+    s.sides[1].deck.num_cards = 0;
+
     state_sim(&s);
     REQUIRE (s.returns[0] == 0);
 }
@@ -31,6 +34,9 @@ TEST_CASE( "assault vs commander" , "[AvC]") {
     set_commander(c1,1,5);
     set_commander(c2,2,15);
     set_assault(c,3,1,1);
+    s.sides[0].deck.num_cards = 1;
+    s.sides[1].deck.num_cards = 0;
+
     state_sim(&s);
     REQUIRE (s.returns[0] == 1);
 }
@@ -44,6 +50,9 @@ TEST_CASE( "assault vs assault" , "[AvA]") {
     set_commander(c1,2,15);
     set_assault(c0c0,3,1,1);
     set_assault(c1c0,4,2,2);
+    s.sides[0].deck.num_cards = 1;
+    s.sides[1].deck.num_cards = 1;
+
     state_sim(&s);
     REQUIRE (s.returns[0] == -1);
 }

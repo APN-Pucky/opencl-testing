@@ -36,6 +36,7 @@ __kernel void simulate( const int size_all_cards, __global int* g_all_cards, con
 					print_card(&state.sides[p].deck.cards[i-2]);printf("\n");
 				}
 			}
+			state.sides[p].deck.num_cards = p?size_genemydeck:size_gmydeck;
 		}
 
 		state_sim(&state);

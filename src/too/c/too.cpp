@@ -18,7 +18,7 @@
 int runX() {
     int all_cards_size;
     CLCard* all_cards = load_all_cards(&all_cards_size);
-    printf("Loaded %d cards", all_cards_size);
+    printf("Loaded %d cards\n", all_cards_size);
     //const unsigned int size_card=10+4*3*size_skillspec+Skill::num_skills*2+2;
     const unsigned int size_all_cards = all_cards_size*size_card;
     const unsigned int size_deck=10;

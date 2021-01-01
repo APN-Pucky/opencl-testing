@@ -52,7 +52,7 @@ class Runner
             //opencl_initialized = true;
             if(!opencl_initialized) {
                 self_init=true;
-                init_opencl();
+                //init_opencl();
             }
         };
         Runner(const Runner<Args...>& r) {
@@ -179,7 +179,7 @@ class Runner
 
     //private:
         // scaling of opencl portion in run_hybrid() in percent
-        int hybrid_scale= 25;
+        int hybrid_scale= 50;
         size_t N;
         Mode mode;
         std::vector<cl_mem> mems;
