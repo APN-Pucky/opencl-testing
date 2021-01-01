@@ -52,7 +52,7 @@ class Runner
             //opencl_initialized = true;
             if(!opencl_initialized) {
                 self_init=true;
-                //init_opencl();
+                init_opencl();
             }
         };
         Runner(const Runner<Args...>& r) {
@@ -171,6 +171,8 @@ class Runner
             return tmp;
             };
         void run_opencl(); 
+        void wait_opencl(); 
+        void load_opencl(); 
         #ifdef TOO_MPI
         void run_mpi();
         #endif
@@ -179,7 +181,7 @@ class Runner
 
     //private:
         // scaling of opencl portion in run_hybrid() in percent
-        int hybrid_scale= 50;
+        int hybrid_scale= 15;
         size_t N;
         Mode mode;
         std::vector<cl_mem> mems;

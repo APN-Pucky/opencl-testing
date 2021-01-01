@@ -14,10 +14,11 @@ void sim_attack_damage(struct TUOState* s,struct  CLCardStatus* atk,struct  CLCa
 
 void sim_attack(struct TUOState* s,struct  CLCardStatus* cs) {
     //printf("|%d| attacks\n",cs->m_card->m_id);
-    if(sim_exists_assault_by_index(s,cs->m_index, enemy(s->currentPlayer))){
-        sim_attack_damage(s,cs,sim_get_assault_by_index(s,cs->m_index,enemy(s->currentPlayer)));
+    Player e = s->enemy[s->currentPlayer];
+    if(sim_exists_assault_by_index(s,cs->m_index, e)){
+        sim_attack_damage(s,cs,sim_get_assault_by_index(s,cs->m_index,e));
     }
     else {
-        sim_attack_damage(s,cs,&s->sides[enemy(s->currentPlayer)].board.commander);
+        sim_attack_damage(s,cs,&s->sides[e].board.commander);
     }
 }

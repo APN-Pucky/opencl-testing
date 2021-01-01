@@ -32,10 +32,11 @@ void sim_remove_assault_by_index(struct TUOBoard* b,int j) {
 
 void sim_remove_dead_cards(struct TUOState* s) {
     Player p = s->currentPlayer;
+	Player e = s->enemy[p];
 	for(int j =0; j<size_assaults;j++) {
-        if(sim_exists_assault_by_index(s,j,enemy(p))){
-            if(sim_get_assault_by_index(s,j,enemy(p))->m_hp <= 0) {
-                sim_remove_assault_by_index(&s->sides[enemy(p)].board, j);
+        if(sim_exists_assault_by_index(s,j,e)){
+            if(sim_get_assault_by_index(s,j,e)->m_hp <= 0) {
+                sim_remove_assault_by_index(&s->sides[e].board, j);
                 j--;
             }
         }

@@ -1,14 +1,12 @@
-#include "../h/card.h"
-#include "../../too/clh/card.h"
+
+#include <cstring>
 #include "cards.h"
 #include "deck.h"
 #include "tyrant.h"
 #include "tyrant_optimize.h"
 #include "read.h"
 #include "xml.h"
-#include <cstring>
-void copy_skill(CLSkillSpec* out,SkillSpec* in);
-void copy_card( CLCard* out,Card* in) ;
+#include "ocl_load.h"
 
 const char* name_by_id(const unsigned card_id) {
     const auto cardIter = all_cards.cards_by_id.find(card_id);

@@ -26,7 +26,7 @@ Player enemy(Player p) {
 }
 
 void state_NextPlayer(struct TUOState* s) {
-	s->currentPlayer = enemy(s->currentPlayer);
+	s->currentPlayer = s->enemy[s->currentPlayer];
 	s->round++;
 }
 
@@ -56,6 +56,8 @@ void state_Reset(struct TUOState* s) {
 	s->returns[0] = 0;
 	s->returns[1] = 0;
 	s->round = 1;
+	s->enemy[0] = 1;
+	s->enemy[1] = 0;
 	for(Player p= 0; p < 2; p++) {
 		s->sides[p].hand.index=0;
 		for(int i =0; i  < size_deck-2;++i) {

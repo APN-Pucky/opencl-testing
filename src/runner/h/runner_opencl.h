@@ -264,13 +264,10 @@ void Runner<Args...>::init_opencl()
     opencl_initialized = true;
 }
 
-
-
 template< typename... Args>
-void Runner<Args...>::run_opencl()
+void Runner<Args...>::load_opencl()
 {
     auto t1 = std::chrono::high_resolution_clock::now();
-
     /*
     loop0<0,Args...>(args,context,sizes,flags,mems);
     loop1<0,Args...>(args,commands,sizes,mems,read_mem);
@@ -290,9 +287,14 @@ void Runner<Args...>::run_opencl()
     debug_printf("N: %ld, global: %ld local %ld\n",N,global, local);
     err = clEnqueueNDRangeKernel(commands, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
     if(err) printf("NDRANGE Kernel error%d",err);
-
     auto t2 = std::chrono::high_resolution_clock::now();
     debug_printf("MemLoad time: %f s\n" ,((std::chrono::duration<double>)(t2-t1)).count());
+}
+
+template< typename... Args>
+void Runner<Args...>::wait_opencl()
+{
+    auto t2 = std::chrono::high_resolution_clock::now();
     clFinish(commands);
     auto t3 = std::chrono::high_resolution_clock::now();
     debug_printf("Run time: %f s\n" ,((std::chrono::duration<double>)(t3-t2)).count());
@@ -308,5 +310,13 @@ void Runner<Args...>::run_opencl()
             clReleaseMemObject(map_mem[i]);
         }
     }
+
+}
+
+template< typename... Args>
+void Runner<Args...>::run_opencl()
+{
+    load_opencl();
+    wait_opencl();
 } 
 #endif

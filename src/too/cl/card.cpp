@@ -24,12 +24,19 @@ struct CLCardStatus cardstatus(__global int* all_cards, int id) {
 void card_from_data(struct CLCard* pc,__global int* all_cards, const int size_all_cards, int id) {
     for(__global int* i= all_cards; i < all_cards+size_all_cards;i+=size_card) {
         if(*(i+5)==id) {
+            *pc = *((struct CLCard*)i);
+            return;
+        }
+    }
+}
+void old_card_from_data(struct CLCard* pc,__global int* all_cards, const int size_all_cards, int id) {
+    for(__global int* i= all_cards; i < all_cards+size_all_cards;i+=size_card) {
+        if(*(i+5)==id) {
             for(int j =0; j<size_card;++j) {
                 ((int*)(pc))[j] = *(i+j);
             }
             return;
         }
-
     }
 }
 void clear_cardstatus(struct CLCardStatus* pcs){

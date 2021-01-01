@@ -29,7 +29,6 @@ void run_hybrid() {
     int downscale = 100;
     auto clrunner = Runner(*this);
     debug_printf("post copy");
-    //TODO fix this to localwork size (256) scaled
     clrunner.N = std::min(N,multiple_of_local((N*scale+downscale-1)/downscale));
     debug_printf("clrunner.N = %i", clrunner.N);
     int leftover = N-clrunner.N;
@@ -44,13 +43,18 @@ void run_hybrid() {
             }
         }
     }
+    clrunner.load_opencl();
     #pragma omp parallel for
     for(int i =0; i < leftover+1;++i) 
     {
         global_ids[omp_get_thread_num()] = clrunner.N-1+i;
-        if(i==0)
-            clrunner.run_opencl();
-        else
+        if(i==0){
+            //clrunner.wait_opencl();
+            //clrunner.run_opencl();
+        }
+        else {
             run_cpu();
+        }
     }
+    clrunner.wait_opencl();
 }

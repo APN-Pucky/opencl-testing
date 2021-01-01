@@ -1,4 +1,3 @@
-#include "deck.h"
 #include <boost/thread/barrier.hpp>
 #include <boost/thread/mutex.hpp>
 #include <iostream>
@@ -13,6 +12,11 @@
 #include <jni.h>
 #include <android/log.h>
 #endif
+// Own Header
+#include "deck.h"
+#include "cards.h"
+
+
 //------------------------------------------------------------------------------
 
 struct Requirement

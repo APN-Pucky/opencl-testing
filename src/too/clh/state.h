@@ -44,6 +44,7 @@ struct TUOSide {
 
 struct TUOState { 
     Player currentPlayer;
+    Player enemy[2];
     bool isTerminal;
     int returns[2];
     int round;

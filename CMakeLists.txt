@@ -77,11 +77,17 @@ if(TOO_TEST_OPENCL)
     add_definitions(-DTOO_TEST_OPENCL)
 endif()
 
+
+if(TOO_PERFORMANCE)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g")
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg -g")
+SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg -g")
+endif()
+
 include(CTest)
 include(Catch)
 enable_testing()
 add_subdirectory(test)
-
 
 
 if(TOO_COVERAGE)
@@ -94,6 +100,7 @@ SETUP_TARGET_FOR_COVERAGE_LCOV(
             clhybrid_test 
             test_test
             runner_test
+            sim_test
             too_test
         EXCLUDE "/usr/*"
         EXCLUDE "${PROJECT_SOURCE_DIR}/external/*"
