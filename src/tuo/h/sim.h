@@ -431,7 +431,7 @@ inline std::string skill_description(const Cards& cards, const _SkillSpec<x_type
         skill_names[s.id] +
         (s.card_id == 0 ? "" : " " + card_name_by_id_safe(cards, s.card_id) + " id[" + to_string(s.card_id) + "]") +
         (s.all ? " all" : s.n == 0 ? "" : std::string(" ") + to_string(s.n)) +
-        (s.y == allfactions ? "" : std::string(" ") + faction_names[s.y]) +
+        (s.y == Faction::allfactions ? "" : std::string(" ") + faction_names[s.y]) +
         (s.s == Skill::no_skill ? "" : std::string(" ") + skill_names[s.s]) +
         (s.s2 == Skill::no_skill ? "" : std::string(" ") + skill_names[s.s2]) +
         (s.x == 0 ? "" : std::string(" ") + to_string(s.x)) +

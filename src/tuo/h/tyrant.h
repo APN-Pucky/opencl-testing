@@ -14,6 +14,7 @@
 #include <boost/algorithm/string.hpp>
 
 
+namespace Fix{
 enum Fix
 {
     no_fix,
@@ -23,9 +24,10 @@ enum Fix
     legion_under_mega,
     num_fixes
 };
+}
 
 class Card;
-
+namespace Faction {
 enum Faction
 {
     allfactions,
@@ -37,7 +39,8 @@ enum Faction
     progenitor,
     num_factions
 };
-extern const std::string faction_names[num_factions];
+}
+extern const std::string faction_names[Faction::num_factions];
 
 namespace Skill {
 enum Skill
@@ -292,18 +295,18 @@ inline PassiveBGE::PassiveBGE passive_bge_name_to_id(const std::string& name_)
     return PassiveBGE::no_bge;
 }
 
-inline Faction faction_name_to_id(const std::string& name_)
+inline Faction::Faction faction_name_to_id(const std::string& name_)
 {
     std::string name(name_);
     name.erase(std::remove_if(name.begin(), name.end(), boost::is_any_of("-")), name.end()); //Mostly useless
-    for (unsigned i(allfactions); i < num_factions; ++i)
+    for (unsigned i(Faction::allfactions); i < Faction::num_factions; ++i)
     {
         if (boost::iequals(faction_names[i], name))
         {
-            return static_cast<Faction>(i);
+            return static_cast<Faction::Faction>(i);
         }
     }
-    return allfactions;
+    return Faction::allfactions;
 }
 
 inline void map_keys_to_set(const std::unordered_map<unsigned, unsigned>& m, std::unordered_set<unsigned>& s)
@@ -412,7 +415,7 @@ struct _SkillSpec
 {
     Skill::Skill id;
     x_type x;
-    Faction y;
+    Faction::Faction y;
     unsigned n;
     unsigned c;
     Skill::Skill s;

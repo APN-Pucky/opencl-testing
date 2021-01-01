@@ -185,7 +185,7 @@ void Cards::erase_fusion_recipe(unsigned id)
 }
 
 // class Card
-void Card::add_skill(Skill::Trigger trigger, Skill::Skill id, unsigned x, Faction y, unsigned n, unsigned c, Skill::Skill s, Skill::Skill s2, bool all, unsigned card_id)
+void Card::add_skill(Skill::Trigger trigger, Skill::Skill id, unsigned x, Faction::Faction y, unsigned n, unsigned c, Skill::Skill s, Skill::Skill s2, bool all, unsigned card_id)
 {
     std::vector<SkillSpec>* storage(nullptr);
     switch (trigger)

@@ -44,14 +44,14 @@ Skill::Skill skill_name_to_id(const std::string & name)
     }
 }
 
-Faction skill_faction(xml_node<>* skill)
+Faction::Faction skill_faction(xml_node<>* skill)
 {
     xml_attribute<>* y(skill->first_attribute("y"));
     if (y)
     {
-        return static_cast<Faction>(atoi(y->value()));
+        return static_cast<Faction::Faction>(atoi(y->value()));
     }
-    return allfactions;
+    return Faction::allfactions;
 }
 
 Skill::Trigger skill_trigger(xml_node<>* skill)
@@ -175,8 +175,8 @@ void parse_card_node(Cards& all_cards, Card* card, xml_node<>* card_node)
     if (fusion_level_node) { card->m_fusion_level = atoi(fusion_level_node->value()); }
     if (attack_node) { card->m_attack = atoi(attack_node->value()); 
 	    if(abs(1-atk_scale)>eps)
-		card->m_attack = ceil(card->m_attack/(atk_scale));
-}
+		    card->m_attack = ceil(card->m_attack/(atk_scale));
+    }
     if (health_node) { card->m_health = atoi(health_node->value()); 
 	    if(abs(1-hp_scale)>eps)
 		card->m_health = ceil(card->m_health/(hp_scale));
@@ -279,7 +279,7 @@ void parse_card_node(Cards& all_cards, Card* card, xml_node<>* card_node)
         }
     }
     if (rarity_node) { card->m_rarity = atoi(rarity_node->value()); }
-    if (type_node) { card->m_faction = static_cast<Faction>(atoi(type_node->value())); }
+    if (type_node) { card->m_faction = static_cast<Faction::Faction>(atoi(type_node->value())); }
     card->m_set = set;
 
     // fortresses

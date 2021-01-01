@@ -1,9 +1,12 @@
 
 #include "ocl.h"
-#ifndef TYRANT_H_INCLUDED
-#define TYRANT_H_INCLUDED
+#ifndef CLTYRANT_H_INCLUDED
+#define CLTYRANT_H_INCLUDED
 
-enum Fix
+#define Player int
+
+/*
+enum CLFix
 {
     no_fix,
     enhance_early,
@@ -11,11 +14,11 @@ enum Fix
     death_from_bge,
     legion_under_mega,
     num_fixes
-};
+};*/
 
 //class Card;
 
-enum Faction
+enum CLFaction
 {
     allfactions,
     imperial,
@@ -27,7 +30,7 @@ enum Faction
     num_factions
 };
 
-enum Skill
+enum CLSkill
 {
     // Placeholder for no-skill:
     no_skill,
@@ -61,28 +64,28 @@ enum Skill
     // End of skills
     num_skills
 };
-enum Trigger
+enum CLTrigger
 {
     activate,
-    play,
+    played, // TODO revert?
     attacked,
     death,
     num_triggers
 };
-struct SkillSpec
+struct CLSkillSpec
 {
-    enum Skill id;
+    enum CLSkill id;
     unsigned x;
-    enum Faction y;
+    enum CLFaction y;
     unsigned n;
     unsigned c;
-    enum Skill s;
-    enum Skill s2;
+    enum CLSkill s;
+    enum CLSkill s2;
     bool all;
     unsigned card_id;
 };
 const __constant int size_skillspec = 9;
-void skillspec_to_data(int* data,struct SkillSpec ss); 
+void skillspec_to_data(int* data,struct CLSkillSpec ss); 
 /*enum PassiveBGE
 {
     // Placeholder for no-bge:
@@ -98,14 +101,14 @@ void skillspec_to_data(int* data,struct SkillSpec ss);
     num_passive_bges
 };*/
 
-enum CardType {
+enum CLCardType {
     commander,
     assault,
     structure,
     num_cardtypes
 };
 
-enum CardCategory {
+enum CLCardCategory {
     normal,
     special,
     fortress_defense,

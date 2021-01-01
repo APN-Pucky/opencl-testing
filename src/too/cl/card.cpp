@@ -1,5 +1,26 @@
 #include "card.h"
-void card_from_data(struct Card* pc,__global int* all_cards, const int size_all_cards, int id) {
+#ifndef _OpenCL
+#include "../../tuo/h/ocl_load.h"
+#endif
+
+int attack(__global int* card) {
+	return card[1];
+}
+int hp(__global int* card) {
+	return card[0];
+}
+
+__global int* card(__global int* all_cards, int id) {
+	return all_cards+id*size_card;
+}
+
+struct CLCardStatus cardstatus(__global int* all_cards, int id) {
+	struct CLCardStatus ret;
+	ret.m_hp =hp( card(all_cards,id));
+	ret.m_attack =attack( card(all_cards,id));
+	return ret;
+}
+void card_from_data(struct CLCard* pc,__global int* all_cards, const int size_all_cards, int id) {
     for(__global int* i= all_cards; i < all_cards+size_all_cards;i+=size_card) {
         if(*(i+5)==id) {
             for(int j =0; j<size_card;++j) {
@@ -10,8 +31,76 @@ void card_from_data(struct Card* pc,__global int* all_cards, const int size_all_
 
     }
 }
-
-void card_to_data(int* data, const struct Card c) {
+void clear_card_status(struct CLCardStatus* pcs){
+    (*pcs).m_card = 0;
+    (*pcs).m_index = 0;
+    (*pcs).m_action_index = 0;
+    (*pcs).m_player= 0;
+    (*pcs).m_delay= 0;
+    (*pcs).m_hp = 0;
+    (*pcs).m_absorption = 0;
+    //(*pcs).m_step
+    (*pcs).m_perm_health_buff = 0;
+    (*pcs).m_perm_attack_buff = 0;
+    (*pcs).m_temp_attack_buff = 0;
+    (*pcs).m_corroded_rate = 0;
+    (*pcs).m_corroded_weakened= 0;
+    (*pcs).m_subdued= 0;
+    (*pcs).m_enfeebled= 0;
+    (*pcs).m_evaded= 0;
+    (*pcs).m_inhibited= 0;
+    (*pcs).m_sabotaged= 0;
+    (*pcs).m_jammed= false;
+    (*pcs).m_overloaded= false;
+    (*pcs).m_paybacked= 0;
+    (*pcs).m_tributed= 0;
+    (*pcs).m_poisoned= 0;
+    (*pcs).m_protected= 0;
+    (*pcs).m_protected_stasis= 0;
+    (*pcs).m_enraged= 0;
+    (*pcs).m_entrapped= 0;
+    (*pcs).m_marked= 0;
+    (*pcs).m_diseased= 0;
+    (*pcs).m_rush_attempted= false;
+    (*pcs).m_sundered= false;
+    (*pcs).m_summoned= false;
+}
+void cardstatus_from_card(struct CLCardStatus* pcs,struct CLCard* pc){
+    pcs->m_card = pc;
+    pcs->m_index = 0;
+    pcs->m_action_index = 0;
+    pcs->m_player= 0;
+    pcs->m_delay= pc->m_delay;
+    pcs->m_hp = pc->m_health;
+    pcs->m_absorption = 0;
+    //pcs->m_step
+    pcs->m_perm_health_buff = 0;
+    pcs->m_perm_attack_buff = 0;
+    pcs->m_temp_attack_buff = 0;
+    pcs->m_attack = pc->m_attack;
+    pcs->m_corroded_rate = 0;
+    pcs->m_corroded_weakened= 0;
+    pcs->m_subdued= 0;
+    pcs->m_enfeebled= 0;
+    pcs->m_evaded= 0;
+    pcs->m_inhibited= 0;
+    pcs->m_sabotaged= 0;
+    pcs->m_jammed= false;
+    pcs->m_overloaded= false;
+    pcs->m_paybacked= 0;
+    pcs->m_tributed= 0;
+    pcs->m_poisoned= 0;
+    pcs->m_protected= 0;
+    pcs->m_protected_stasis= 0;
+    pcs->m_enraged= 0;
+    pcs->m_entrapped= 0;
+    pcs->m_marked= 0;
+    pcs->m_diseased= 0;
+    pcs->m_rush_attempted= false;
+    pcs->m_sundered= false;
+    pcs->m_summoned= false;
+}
+void card_to_data(int* data, const struct CLCard c) {
     data[0] = c.m_attack;
     data[1] = c.m_base_id;
     data[2] = c.m_delay;
@@ -42,9 +131,19 @@ void card_to_data(int* data, const struct Card c) {
     data[10+12*size_skillspec+2*num_skills+1] = c.m_category;
 }
 
-void print_card(const struct Card c) {
-    printf("ID: %i " , c.m_id);
-    printf("ATK: %i " , c.m_attack);
-    printf("DEF: %i " , c.m_health);
-    printf("\n");
+void print_card(const struct CLCard* c) {
+    #ifndef _OpenCL
+    printf("%s ",name_by_id(c->m_id));
+    #endif
+    printf("ID: %i " , c->m_id);
+    printf("ATK: %i " , c->m_attack);
+    printf("DEF: %i " , c->m_health);
+}
+void print_cardstatus(const struct CLCardStatus* c) {
+    #ifndef _OpenCL
+    printf("%s ",name_by_id(c->m_card->m_id));
+    #endif
+    printf("ID: %i " , c->m_card->m_id);
+    printf("ATK: %i " , c->m_attack);
+    printf("DEF: %i " , c->m_hp);
 }

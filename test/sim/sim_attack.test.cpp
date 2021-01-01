@@ -33,7 +33,19 @@ TEST_CASE( "assault vs commander" , "[AvC]") {
     set_assault(c,3,1,1);
     state_sim(&s);
     REQUIRE (s.returns[0] == 1);
-
+}
+TEST_CASE( "assault vs assault" , "[AvA]") {
+    TUOState s;
+    CLCard* c0 = &s.sides[0].deck.commander;
+    CLCard* c0c0 = &s.sides[0].deck.cards[0];
+    CLCard* c1 = &s.sides[1].deck.commander;
+    CLCard* c1c0 = &s.sides[1].deck.cards[0];
+    set_commander(c0,1,5);
+    set_commander(c1,2,15);
+    set_assault(c0c0,3,1,1);
+    set_assault(c1c0,4,2,2);
+    state_sim(&s);
+    REQUIRE (s.returns[0] == -1);
 }
 
 /*

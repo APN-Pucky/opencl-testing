@@ -1631,7 +1631,7 @@ bool parse_bge(
 			{
 				unsigned skill_index = 1;
 				// activation BG skill
-				SkillSpec bg_skill{skill_id, 0, allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
+				SkillSpec bg_skill{skill_id, 0, Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
 
 				// skill [ ALL | N ] ...
 				if (skill_index < tokens.size() && boost::to_lower_copy(tokens[skill_index]) == "all")
@@ -1648,11 +1648,11 @@ bool parse_bge(
 				// skill n [ FACTION ] ...
 				if ((skill_index + 1) < tokens.size())
 				{
-					for (auto f = allfactions + 1; f < num_factions; ++f)
+					for (auto f = Faction::allfactions + 1; f < Faction::num_factions; ++f)
 					{
 						if (boost::to_lower_copy(tokens[skill_index]) == faction_names[f])
 						{
-							bg_skill.y = static_cast<Faction>(f);
+							bg_skill.y = static_cast<Faction::Faction>(f);
 							skill_index += 1;
 							break;
 						}
@@ -3309,24 +3309,3 @@ DeckResults start(int argc, const char** argv) {
 }
 
 
-#ifndef TEST
-int main(int argc,const char** argv)
-{
-#ifndef NTIMER
-	boost::timer::auto_cpu_timer t;
-#endif
-	if (argc == 2 && strcmp(argv[1], "-version") == 0)
-	{
-		std::cout << "Tyrant Unleashed Optimizer " << TYRANT_OPTIMIZER_VERSION << std::endl;
-		return 0;
-	}
-	if (argc < 2)
-	{
-		usage(argc, argv);
-		return 255;
-	}
-	//init();
-	start(argc,argv);
-	return 0;
-}
-#endif

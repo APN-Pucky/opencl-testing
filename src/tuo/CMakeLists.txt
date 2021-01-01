@@ -26,7 +26,7 @@ set( TARGET_LINK_LIBS ${Boost_LIBRARIES} )
 
 target_link_libraries(tuo_lib ${TARGET_LINK_LIBS})
 
-add_executable(tuo tyrant_optimize.cpp)
+add_executable(tuo main.cpp)
 target_link_libraries(tuo tuo_lib)
 
 #option(USE_OPENMP "Use OpenMP instead of Boost" OFF)

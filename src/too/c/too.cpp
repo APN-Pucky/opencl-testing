@@ -12,10 +12,15 @@
 #include "card.h"
 #include "step.h"
 
+#include "../../tuo/h/ocl_load.h"
+
 
 int runX() {
+    int all_cards_size;
+    CLCard* all_cards = load_all_cards(&all_cards_size);
+    printf("Loaded %d cards", all_cards_size);
     //const unsigned int size_card=10+4*3*size_skillspec+Skill::num_skills*2+2;
-    const unsigned int size_all_cards = 2*size_card;
+    const unsigned int size_all_cards = all_cards_size*size_card;
     const unsigned int size_deck=10;
     const unsigned int sims = 1024;
     const unsigned int N = sims;
@@ -23,27 +28,27 @@ int runX() {
 
     int mydeck[size_deck];
     int enemydeck[size_deck];
-    int allcards[size_all_cards];
-    for( int i =0; i < size_all_cards;++i) {
-        allcards[i] = 0;
-    }
-    allcards[0] = 2;
-    allcards[1] = 2;
-    allcards[2] = 2;
-    allcards[4] = 2;
-    allcards[5] = 2;
+    int* allcards = (int*)all_cards;
+    //for( int i =0; i < size_all_cards;++i) {
+    //    allcards[i] = 0;
+    //}
+    //allcards[0] = 2;
+    //allcards[1] = 2;
+    //allcards[2] = 2;
+    //allcards[4] = 2;
+    //allcards[5] = 2;
 
-    allcards[size_card +0] = 1;
-    allcards[size_card +1] = 1;
-    allcards[size_card +2] = 1;
-    allcards[size_card +4] = 1;
-    allcards[size_card +5] = 1;
+    //allcards[size_card +0] = 1;
+    //allcards[size_card +1] = 1;
+    //allcards[size_card +2] = 1;
+    //allcards[size_card +4] = 1;
+    //allcards[size_card +5] = 1;
 
     int results[N];
 
     for(int i =0; i  < size_deck ;++i) {
-	    mydeck[i] = 1;
-	    enemydeck[i] = 2;
+	    mydeck[i] = 44520;
+	    enemydeck[i] = 41760;
     }
     for(int i =0; i  < N; ++i) {
 	    results[i] = -2;

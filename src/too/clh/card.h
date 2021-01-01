@@ -1,12 +1,12 @@
 #include "tyrant.h"
-#ifndef CARD_H_INCLUDED
-#define CARD_H_INCLUDED
-struct Card 
+#ifndef CLCARD_H_INCLUDED
+#define CLCARD_H_INCLUDED
+struct CLCard 
 {
     unsigned m_attack;
     unsigned m_base_id;  // The id of the original card if a card is unique and alt/upgraded. The own id of the card otherwise.
     unsigned m_delay;
-    enum Faction m_faction;
+    enum CLFaction m_faction;
     unsigned m_health;
     unsigned m_id;
     unsigned m_level;
@@ -14,15 +14,15 @@ struct Card
     //std::string m_name;
     unsigned m_rarity;
     unsigned m_set;
-    struct SkillSpec m_skills[3];
-    struct SkillSpec m_skills_on_play[3];
+    struct CLSkillSpec m_skills[3];
+    struct CLSkillSpec m_skills_on_play[3];
     //APN
-    struct SkillSpec m_skills_on_attacked[3];
-    struct SkillSpec m_skills_on_death[3];
+    struct CLSkillSpec m_skills_on_attacked[3];
+    struct CLSkillSpec m_skills_on_death[3];
     unsigned m_skill_value[num_skills];
-    enum Trigger m_skill_trigger[num_skills];
-    enum CardType m_type;
-    enum CardCategory m_category;
+    enum CLTrigger m_skill_trigger[num_skills];
+    enum CLCardType m_type;
+    enum CLCardCategory m_category;
     //const Card* m_top_level_card; // [TU] corresponding full-level card
     //unsigned m_recipe_cost;
     //std::map<const Card*, unsigned> m_recipe_cards;
@@ -30,14 +30,14 @@ struct Card
 };
 //const __constant int size_card = sizeof(Card)/sizeof(unsigned);//10+4*3*size_skillspec+num_skills*2+2;
 const __constant int size_card = 10+4*3*size_skillspec+num_skills*2+2;
-struct CardStatus
+struct CLCardStatus
 {
-    const struct Card* m_card;
+    const struct CLCard* m_card;
     unsigned m_index;
     unsigned m_action_index;
     unsigned m_player;
     unsigned m_delay;
-    unsigned m_hp;
+    signed m_hp;
     unsigned m_absorption;
     //CardStep m_step;
     unsigned m_perm_health_buff;
@@ -90,11 +90,21 @@ struct CardStatus
     //inline unsigned ext_hp(unsigned value);
 };
 
+void clear_cardstatus(struct CLCardStatus * cs);
 
-void card_from_data(struct Card* cp, __global int* all_cards, const int size_all_cards, int id);
+void card_from_data(struct CLCard* cp, __global int* all_cards, const int size_all_cards, int id);
   
-void card_to_data(int* data, const struct Card c);
+void card_to_data(int* data, const struct CLCard c);
 
-void print_card(const struct Card c);
+void print_card(const struct CLCard* c);
+void print_cardstatus(const struct CLCardStatus* c);
 
+void card_from_data(struct CLCard* pc,__global int* all_cards, const int size_all_cards, int id) ;
+void cardstatus_from_card(struct CLCardStatus* pcs,struct CLCard* pc);
+
+struct CLCardStatus cardstatus(__global int* all_cards, int id) ;
+
+__global int* card(__global int* all_cards, int id) ;
+int hp(__global int* card) ;
+int attack(__global int* card) ;
 #endif 

@@ -20,7 +20,7 @@ include_directories(${Boost_INCLUDE_DIR})
  
 add_library( too_lib ${too_cxx_SRC} ${too_ocl_SRC})
 
-set( TARGET_LINK_LIBS ${Boost_LIBRARIES} clew runner_lib)
+set( TARGET_LINK_LIBS ${Boost_LIBRARIES} clew runner_lib tuo_lib)
 if(MPI_FOUND)
   set( TARGET_LINK_LIBS ${TARGET_LINK_LIBS} MPI::MPI_C)
 #target_link_libraries(${TARGET_NAME} PUBLIC MPI::MPI_C too_lib)

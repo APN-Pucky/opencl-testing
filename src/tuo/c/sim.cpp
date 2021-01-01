@@ -284,7 +284,7 @@ std::string card_description(const Cards& cards, const Card* c)
             break;
     }
     if (c->m_rarity >= 4) { desc += " " + rarity_names[c->m_rarity]; }
-    if (c->m_faction != allfactions) { desc += " " + faction_names[c->m_faction]; }
+    if (c->m_faction != Faction::allfactions) { desc += " " + faction_names[c->m_faction]; }
     for (auto& skill: c->m_skills_on_play) { desc += ", " + skill_description(cards, skill, Skill::Trigger::play); }
     for (auto& skill: c->m_skills) { desc += ", " + skill_description(cards, skill, Skill::Trigger::activate); }
     //APN
@@ -364,12 +364,12 @@ std::string CardStatus::description() const
         {
             if (m_enraged && !std::count_if(card_skills.begin(), card_skills.end(), [](const SkillSpec ss) { return (ss.id == Skill::berserk); }))
             {
-                SkillSpec ss{Skill::berserk, m_enraged, allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
+                SkillSpec ss{Skill::berserk, m_enraged, Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
                 card_skills.emplace_back(ss);
             }
             if (m_entrapped && !std::count_if(card_skills.begin(), card_skills.end(), [](const SkillSpec ss) { return (ss.id == Skill::counter); }))
             {
-                SkillSpec ss{Skill::counter, m_entrapped, allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
+                SkillSpec ss{Skill::counter, m_entrapped, Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
                 card_skills.emplace_back(ss);
             }
         }
@@ -561,8 +561,8 @@ void prepend_on_death(Field* fd,bool paybacked=false)
         {
             if (fd->bg_effects[fd->tapi][PassiveBGE::revenge] < 0)
                 throw std::runtime_error("BGE Revenge: value must be defined & positive");
-            SkillSpec ss_heal{Skill::heal, (unsigned)fd->bg_effects[fd->tapi][PassiveBGE::revenge], allfactions, 0, 0, Skill::no_skill, Skill::no_skill, true, 0,};
-            SkillSpec ss_rally{Skill::rally, (unsigned)fd->bg_effects[fd->tapi][PassiveBGE::revenge], allfactions, 0, 0, Skill::no_skill, Skill::no_skill, true, 0,};
+            SkillSpec ss_heal{Skill::heal, (unsigned)fd->bg_effects[fd->tapi][PassiveBGE::revenge], Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, true, 0,};
+            SkillSpec ss_rally{Skill::rally, (unsigned)fd->bg_effects[fd->tapi][PassiveBGE::revenge], Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, true, 0,};
             CardStatus* commander = &fd->players[status->m_player]->commander;
             _DEBUG_MSG(2, "Revenge: Preparing (head) skills  %s and %s\n",
                     skill_description(fd->cards, ss_heal).c_str(),
@@ -2435,7 +2435,7 @@ inline void perform_skill<Skill::mimic>(Field* fd, CardStatus* src, CardStatus* 
     const SkillSpec & mim_ss = *mimickable_skills[mim_idx];
     Skill::Skill mim_skill_id = static_cast<Skill::Skill>(mim_ss.id);
     auto skill_value = s.x + src->enhanced(mim_skill_id); //enhanced skill from mimic ?!?
-    SkillSpec mimicked_ss{mim_skill_id, skill_value, allfactions, mim_ss.n, 0, mim_ss.s, mim_ss.s2, mim_ss.all, mim_ss.card_id,};
+    SkillSpec mimicked_ss{mim_skill_id, skill_value, Faction::allfactions, mim_ss.n, 0, mim_ss.s, mim_ss.s2, mim_ss.all, mim_ss.card_id,};
     _DEBUG_MSG(1, " * Mimicked skill: %s\n", skill_description(fd->cards, mimicked_ss).c_str());
     skill_table[mim_skill_id](fd, src, mimicked_ss);
 }
@@ -2443,7 +2443,7 @@ inline void perform_skill<Skill::mimic>(Field* fd, CardStatus* src, CardStatus* 
     template<unsigned skill_id>
 inline unsigned select_fast(Field* fd, CardStatus* src, const std::vector<CardStatus*>& cards, const SkillSpec& s)
 {
-    if ((s.y == allfactions)
+    if ((s.y == Faction::allfactions)
             || fd->bg_effects[fd->tapi][PassiveBGE::metamorphosis]
             || fd->bg_effects[fd->tapi][PassiveBGE::megamorphosis])
     {
@@ -2455,7 +2455,7 @@ inline unsigned select_fast(Field* fd, CardStatus* src, const std::vector<CardSt
     else
     {
         auto pred = [fd, src, s](CardStatus* c) {
-            return ((c->m_card->m_faction == s.y || c->m_card->m_faction == progenitor) && skill_predicate<skill_id>(fd, src, c, s));
+            return ((c->m_card->m_faction == s.y || c->m_card->m_faction == Faction::progenitor) && skill_predicate<skill_id>(fd, src, c, s));
         };
         return fd->make_selection_array(cards.begin(), cards.end(), pred);
     }
@@ -2725,7 +2725,7 @@ bool check_and_perform_bravery(Field* fd, CardStatus* src)
         if (__builtin_expect(fd->bg_effects[fd->tapi][PassiveBGE::superheroism], false))
         {
             unsigned bge_value = bravery_value * fd->bg_effects[fd->tapi][PassiveBGE::superheroism];
-            const SkillSpec ss_heal{Skill::heal, bge_value, allfactions, 0, 0, Skill::no_skill, Skill::no_skill, true, 0,};
+            const SkillSpec ss_heal{Skill::heal, bge_value, Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, true, 0,};
             _DEBUG_MSG(1, "%s activates SuperHeroism: %s\n", status_description(src).c_str(),
                     skill_description(fd->cards, ss_heal).c_str());
             //fd->skill_queue.emplace(fd->skill_queue.begin()+0, src, ss_heal);
@@ -2901,7 +2901,7 @@ void perform_targetted_allied_fast(Field* fd, CardStatus* src, const SkillSpec& 
             && (num_inhibited > 0))
     {
         SkillSpec diverted_ss = s;
-        diverted_ss.y = allfactions;
+        diverted_ss.y = Faction::allfactions;
         diverted_ss.n = 1;
         diverted_ss.all = false;
         for (unsigned i = 0; i < num_inhibited; ++ i)
@@ -2994,7 +2994,7 @@ void perform_targetted_hostile_fast(Field* fd, CardStatus* src, const SkillSpec&
     // apply TurningTides
     if (__builtin_expect(has_turningtides, false) && (turningtides_value > 0))
     {
-        SkillSpec ss_rally{Skill::rally, turningtides_value, allfactions, 0, 0, Skill::no_skill, Skill::no_skill, s.all, 0,};
+        SkillSpec ss_rally{Skill::rally, turningtides_value, Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, s.all, 0,};
         _DEBUG_MSG(1, "TurningTides %u!\n", turningtides_value);
         perform_targetted_allied_fast<Skill::rally>(fd, &fd->players[src->m_player]->commander, ss_rally);
     }
@@ -3093,7 +3093,7 @@ void perform_targetted_hostile_fast(Field* fd, CardStatus* src, const SkillSpec&
                 // apply TurningTides
                 if (__builtin_expect(has_turningtides, false) && (turningtides_value > 0))
                 {
-                    SkillSpec ss_rally{Skill::rally, turningtides_value, allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
+                    SkillSpec ss_rally{Skill::rally, turningtides_value, Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
                     _DEBUG_MSG(1, "Paybacked TurningTides %u!\n", turningtides_value);
                     perform_targetted_allied_fast<Skill::rally>(fd, &fd->players[pb_status->m_player]->commander, ss_rally);
                 }
@@ -3135,7 +3135,7 @@ void perform_targetted_hostile_fast(Field* fd, CardStatus* src, const SkillSpec&
                 turningtides_value = std::max(turningtides_value, safe_minus(old_attack, src->attack_power()));
                 if (turningtides_value > 0)
                 {
-                    SkillSpec ss_rally{Skill::rally, turningtides_value, allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
+                    SkillSpec ss_rally{Skill::rally, turningtides_value, Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
                     _DEBUG_MSG(1, "Paybacked TurningTides %u!\n", turningtides_value);
                     perform_targetted_allied_fast<Skill::rally>(fd, &fd->players[pb_status->m_player]->commander, ss_rally);
                 }
@@ -3584,7 +3584,7 @@ Results<uint64_t> play(Field* fd,bool skip_init, bool skip_preplay,unsigned turn
                 unsigned bge_value = (dst->skill(Skill::valor) + dst->skill(Skill::bravery)+ 1) / 2;
                 if (bge_value <= 0)
                 { continue; }
-                SkillSpec ss_protect{Skill::protect, bge_value, allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
+                SkillSpec ss_protect{Skill::protect, bge_value, Faction::allfactions, 0, 0, Skill::no_skill, Skill::no_skill, false, 0,};
                 if (dst->m_inhibited > 0)
                 {
                     _DEBUG_MSG(1, "Heroism: %s on %s but it is inhibited\n",
@@ -3595,7 +3595,7 @@ Results<uint64_t> play(Field* fd,bool skip_init, bool skip_preplay,unsigned turn
                     if (__builtin_expect(fd->bg_effects[fd->tapi][PassiveBGE::divert], false))
                     {
                         SkillSpec diverted_ss = ss_protect;
-                        diverted_ss.y = allfactions;
+                        diverted_ss.y = Faction::allfactions;
                         diverted_ss.n = 1;
                         diverted_ss.all = false;
                         // for (unsigned i = 0; i < num_inhibited; ++ i)

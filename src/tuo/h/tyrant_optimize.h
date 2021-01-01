@@ -89,7 +89,7 @@ namespace tuo {
 	//fort_climb
 	EXTERN unsigned yfpool;
 	EXTERN unsigned efpool;
-	EXTERN std::vector<Faction> factions;
+	EXTERN std::vector<Faction::Faction> factions;
 	EXTERN bool invert_factions;
 	EXTERN bool only_recent;
 	EXTERN bool prefered_recent;
@@ -134,6 +134,8 @@ void thread_evaluate(boost::barrier& main_barrier,
 int main(int argc, const char** argv);
 #endif
 DeckResults run(int argc, const char** argv);
+DeckResults start(int argc, const char** argv);
+void usage(int argc, const char** argv);
 void init();
 bool is_timeout_reached();
 bool valid_deck(Deck* your_deck);

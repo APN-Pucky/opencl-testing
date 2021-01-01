@@ -1,5 +1,5 @@
 #include "tyrant.h"
-void skillspec_to_data(int* data,struct SkillSpec ss) {
+void skillspec_to_data(int* data,struct CLSkillSpec ss) {
     data[0] = ss.id;
     data[1] = ss.x;
     data[2] = ss.y;
