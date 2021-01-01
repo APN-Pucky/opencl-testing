@@ -16,8 +16,10 @@ CLCardStatus* sim_get_assault_by_index(TUOState * s, int j,Player p) {
 
 void sim_remove_assault_by_index(TUOBoard* b,int j) {
 	printf("REMOVED ");print_cardstatus(&b->assaults[b->assaults_mask[j]]);printf("\n");
-    for(int k = j+1; k < _size_assaults-1;k++)
+    for(int k = j+1; k < _size_assaults-1;k++){
         b->assaults_mask[k-1]=b->assaults_mask[k];
+		b->assaults[b->assaults_mask[k-1]].m_index=k-1;
+	}
     b->assaults_mask[_size_assaults-1]=-1;
 }
 
@@ -35,7 +37,6 @@ void sim_remove_dead_cards(TUOState* s) {
 
 void sim_step(TUOState* s) {
 	//TODO add simulation logic here
-	printf("== ROUND %d ==\n", s->round);
 	Player p = s->currentPlayer;
 	for(int j =0; j<_size_assaults;j++) {
 		//printf("sim_step for %d at %d\n",p,j);
@@ -46,6 +47,7 @@ void sim_step(TUOState* s) {
     sim_remove_dead_cards(s);
 }
 void sim_play_card(struct TUOBoard* board, CLCard* c) {
+	//printf("Type : %d\n", c->m_type);
     if(c->m_type == assault) {
 		int n = board->index_assaults;
 		if(n >= _size_assaults) 
@@ -54,8 +56,12 @@ void sim_play_card(struct TUOBoard* board, CLCard* c) {
 		int j=0;
 		while(board->assaults_mask[j]!=-1)j++;
 		board->assaults[n].m_index = j;
+		board->assaults[n].m_player = board->player;
 		board->assaults_mask[j] = n;
 		board->index_assaults++;
+		print_cardstatus(&board->commander); 
+		printf(" plays Assault %d ",j); print_card(c);
+		printf("\n");
 	}
 	if(c->m_type == structure) {
 		int n = board->index_structures;
@@ -65,7 +71,12 @@ void sim_play_card(struct TUOBoard* board, CLCard* c) {
 		int j=0;
 		while(board->structures_mask[j]!=-1)j++;
 		board->structures[n].m_index = j;
+		board->assaults[n].m_player = board->player;
 		board->structures_mask[j] = n;
 		board->index_structures++;
+		printf("P%d Commander ",board->player);print_cardstatus(&board->commander); 
+		printf(" plays Structure %d ",j); print_card(c);
+		printf("\n");
+
 	}
 }

@@ -33,7 +33,7 @@ __kernel void simulate( const int size_all_cards, __global int* g_all_cards, con
 			for( int i = 2; i  < size_gmydeck;++i) {
 			 	card_from_data(&state.sides[p].deck.cards[i-2],g_all_cards,size_all_cards,p?g_enemydeck[i]: g_mydeck[i]);
 				if(id==0) {
-					print_card(&state.sides[p].deck.cards[i-2]);
+					print_card(&state.sides[p].deck.cards[i-2]);printf("\n");
 				}
 			}
 		}

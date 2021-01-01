@@ -8,16 +8,18 @@
 
 const __constant int kDefaultPlayers = 2;
 const __constant int kMaxRounds = 50;
-const __constant int _size_deck= 10;
 const __constant int _size_assaults= 20;
 const __constant int _size_structures= 20;
+struct TUOState;
 
 struct TUOHand {
-    int shuffle_mask[10];
+    int shuffle_mask[size_cards];
     unsigned index;
 };
 
 struct TUOBoard {
+    TUOState* state;
+    Player player;
     CLCardStatus commander;
     CLCardStatus assaults[_size_assaults];
     int assaults_mask[_size_assaults];

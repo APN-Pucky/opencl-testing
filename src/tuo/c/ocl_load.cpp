@@ -79,6 +79,7 @@ void copy_card( CLCard* out,Card* in) {
     out->m_id=       in->m_id;
     out->m_level=    in->m_level;
     out->m_fusion_level= in->m_fusion_level;
+    out->m_type = static_cast<CLCardType>(in->m_type);
     if(in->m_skills.size()>0)copy_skill(&out->m_skills[0],&in->m_skills[0]);
     if(in->m_skills.size()>1)copy_skill(&out->m_skills[1],&in->m_skills[1]);
     if(in->m_skills.size()>2)copy_skill(&out->m_skills[2],&in->m_skills[2]);

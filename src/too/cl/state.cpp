@@ -3,9 +3,13 @@
 
 void state_DoApplyAction(TUOState* s, ActionType a) {
 	Player p = s->currentPlayer;
-	sim_play_card(&s->sides[p].board,&s->sides[p].deck.cards[s->sides[p].hand.shuffle_mask[s->sides[p].hand.index]]);
+	printf("------------------------------------------------------------------------\n");
+	printf("TURN %d begins for ",s->round); print_cardstatus(&s->sides[p].board.commander);printf("\n");
+	if(s->sides[p].hand.index < s->sides[p].deck.num_cards)
+		sim_play_card(&s->sides[p].board,&s->sides[p].deck.cards[s->sides[p].hand.shuffle_mask[s->sides[p].hand.index]]);
 	sim_step(s);
 	s->sides[p].hand.index++;
+	printf("TURN %d ends for ",s->round); print_cardstatus(&s->sides[p].board.commander);printf("\n");
 	state_NextPlayer(s);
 }
 
@@ -49,11 +53,15 @@ void state_Reset(struct TUOState* s) {
 		for(int i =0; i  < size_deck-2;++i) {
 			s->sides[p].hand.shuffle_mask[i]=i;
 		}
+		s->sides[p].board.state= s;
+		s->sides[p].board.player = p;
 		s->sides[p].board.index_assaults = 0;
 		s->sides[p].board.index_structures= 0;
 
 		//Already set Commander CardStatus
 		cardstatus_from_card(&s->sides[p].board.commander,&s->sides[p].deck.commander);
+		s->sides[p].board.commander.m_player = p;
+		
 
 		for(int i =0; i  < _size_assaults;++i) {
 			//clear_cardstatus(&s->sides[p].board.assaults[i]);

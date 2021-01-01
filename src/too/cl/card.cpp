@@ -31,39 +31,39 @@ void card_from_data(struct CLCard* pc,__global int* all_cards, const int size_al
 
     }
 }
-void clear_card_status(struct CLCardStatus* pcs){
-    (*pcs).m_card = 0;
-    (*pcs).m_index = 0;
-    (*pcs).m_action_index = 0;
-    (*pcs).m_player= 0;
-    (*pcs).m_delay= 0;
-    (*pcs).m_hp = 0;
-    (*pcs).m_absorption = 0;
-    //(*pcs).m_step
-    (*pcs).m_perm_health_buff = 0;
-    (*pcs).m_perm_attack_buff = 0;
-    (*pcs).m_temp_attack_buff = 0;
-    (*pcs).m_corroded_rate = 0;
-    (*pcs).m_corroded_weakened= 0;
-    (*pcs).m_subdued= 0;
-    (*pcs).m_enfeebled= 0;
-    (*pcs).m_evaded= 0;
-    (*pcs).m_inhibited= 0;
-    (*pcs).m_sabotaged= 0;
-    (*pcs).m_jammed= false;
-    (*pcs).m_overloaded= false;
-    (*pcs).m_paybacked= 0;
-    (*pcs).m_tributed= 0;
-    (*pcs).m_poisoned= 0;
-    (*pcs).m_protected= 0;
-    (*pcs).m_protected_stasis= 0;
-    (*pcs).m_enraged= 0;
-    (*pcs).m_entrapped= 0;
-    (*pcs).m_marked= 0;
-    (*pcs).m_diseased= 0;
-    (*pcs).m_rush_attempted= false;
-    (*pcs).m_sundered= false;
-    (*pcs).m_summoned= false;
+void clear_cardstatus(struct CLCardStatus* pcs){
+    pcs->m_card = 0;
+    pcs->m_index = 0;
+    pcs->m_action_index = 0;
+    pcs->m_player= 0;
+    pcs->m_delay= 0;
+    pcs->m_hp = 0;
+    pcs->m_absorption = 0;
+    //pcs->m_step
+    pcs->m_perm_health_buff = 0;
+    pcs->m_perm_attack_buff = 0;
+    pcs->m_temp_attack_buff = 0;
+    pcs->m_corroded_rate = 0;
+    pcs->m_corroded_weakened= 0;
+    pcs->m_subdued= 0;
+    pcs->m_enfeebled= 0;
+    pcs->m_evaded= 0;
+    pcs->m_inhibited= 0;
+    pcs->m_sabotaged= 0;
+    pcs->m_jammed= false;
+    pcs->m_overloaded= false;
+    pcs->m_paybacked= 0;
+    pcs->m_tributed= 0;
+    pcs->m_poisoned= 0;
+    pcs->m_protected= 0;
+    pcs->m_protected_stasis= 0;
+    pcs->m_enraged= 0;
+    pcs->m_entrapped= 0;
+    pcs->m_marked= 0;
+    pcs->m_diseased= 0;
+    pcs->m_rush_attempted= false;
+    pcs->m_sundered= false;
+    pcs->m_summoned= false;
 }
 void cardstatus_from_card(struct CLCardStatus* pcs,struct CLCard* pc){
     pcs->m_card = pc;
@@ -131,19 +131,69 @@ void card_to_data(int* data, const struct CLCard c) {
     data[10+12*size_skillspec+2*num_skills+1] = c.m_category;
 }
 
+void print_faction(CLFaction f) {
+    switch (f)
+    {
+    case bloodthirsty:
+        printf("bloodthirsty");
+        break;
+    case xeno:
+        printf("xeno");
+        break;
+    case imperial:
+        printf("imperial");
+        break;
+    case righteous:
+        printf("righteous");
+        break;
+    case raider:
+        printf("raider");
+        break;
+    default:
+        printf("undefined");
+        break;
+    }
+}
+
+void print_cardtype(CLCardType t) {
+    switch(t){
+        case commander:
+            printf("Commander");
+            break;
+        case assault:
+            printf("Assault");
+            break;
+        case structure:
+            printf("Structure");
+            break;
+        default:
+            printf("undefined");
+            break;
+    }
+}
+
 void print_card(const struct CLCard* c) {
+    printf("[");
     #ifndef _OpenCL
-    printf("%s ",name_by_id(c->m_id));
+    printf("%s: ",name_by_id(c->m_id));
+    #else
+    printf("|%i|: " , c->m_id);
     #endif
-    printf("ID: %i " , c->m_id);
-    printf("ATK: %i " , c->m_attack);
-    printf("DEF: %i " , c->m_health);
+    printf("%i/%i/%i ", c->m_attack,c->m_health,c->m_delay);
+    print_faction(c->m_faction);
+    printf("]");
 }
 void print_cardstatus(const struct CLCardStatus* c) {
+    printf("P%d ",c->m_player); 
+    print_cardtype(c->m_card->m_type);
+    if(c->m_card->m_type!=commander)printf(" %d",c->m_index);
+    printf(" [");
     #ifndef _OpenCL
     printf("%s ",name_by_id(c->m_card->m_id));
+    #else
+    printf("|%i| " , c->m_card->m_id);
     #endif
-    printf("ID: %i " , c->m_card->m_id);
-    printf("ATK: %i " , c->m_attack);
-    printf("DEF: %i " , c->m_hp);
+    if(c->m_card->m_type!=commander)printf("att:%i " , c->m_attack);
+    printf("hp:%i" , c->m_hp);
+    printf("]");
 }
