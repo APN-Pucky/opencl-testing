@@ -29,10 +29,17 @@ TEST_CASE( "mpi array add2", "[mpi]" ) {
     auto r = Runner("test_array_add",test_array_add,N,a,b,c,N);
     r.set_mem<2>(CL_MEM_WRITE_ONLY,N,true);
     r.run_mpi();
-    int mpi_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-    debug_printf("MPI RANK : %d\n",mpi_rank);
+    // Get the number of processes
+    int world_size;
+    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+    // Get the rank of the process
+    int world_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+    printf("Hello world from processor %s, rank %d out of %d processors\n",
+           processor_name, world_rank, world_size);
     if(mpi_rank==0) {
+        printf("\n");
         for(int i = 0; i < N;++i) {
             printf("%d",c[i]);
             REQUIRE( c[i] == 3 );
