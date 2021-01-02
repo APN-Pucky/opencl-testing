@@ -18,12 +18,12 @@ void send(std::tuple<Args...>& args, int dest,std::vector<size_t>& sizes)
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
                 MPI_Send(std::get<I>(args),sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], MPI_BYTE,dest,I,MPI_COMM_WORLD);
-                debug_printf("MPI: Send Array %d %ld\n",dest, I);
+                debug_printf("MPI: Send Array %ld to %d\n", I,dest);
             }
         }
         else {
             MPI_Send(&std::get<I>(args),sizeof(typename std::tuple_element<I,std::tuple<Args...>>::type), MPI_BYTE,dest,I,MPI_COMM_WORLD);
-            debug_printf("MPI: Send %d %ld\n",dest,I);
+            debug_printf("MPI: Send %ld to %d\n",I,dest);
             //printf("here where i should NAT be %d %d %d %d ",I,index,std::get<I>(args),sizeof(int));
         }
     // do things
@@ -41,12 +41,12 @@ void recv(std::tuple<Args...>& args, int source, MPI_Status& status,std::vector<
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
                 MPI_Recv(std::get<I>(args),sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* sizes[I], MPI_BYTE,source,I,MPI_COMM_WORLD,&status);
-                debug_printf("MPI: Recv Array %ld\n",I);
+                debug_printf("MPI: Recv Array %ld from %d\n",I,source);
             }
         }
         else {
             MPI_Recv(&std::get<I>(args),sizeof(typename std::tuple_element<I,std::tuple<Args...>>::type), MPI_BYTE,source,I,MPI_COMM_WORLD,&status);
-            debug_printf("MPI: Recv %ld\n",I);
+            debug_printf("MPI: Recv %ld from %d\n",I,source);
             //printf("here where i should NAT be %d %d %d %d ",I,index,std::get<I>(args),sizeof(int));
         }
     // do things
@@ -64,7 +64,7 @@ void send_result(std::tuple<Args...>& args, int dest,std::vector<size_t>& sizes,
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
                 MPI_Send(&std::get<I>(args)[taskid*chunksize],sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)*chunksize, MPI_BYTE,dest,I,MPI_COMM_WORLD);
-                debug_printf("MPI: Send Result Array %d %ld\n",dest, I);
+                debug_printf("MPI: Send Result Array %ld to %d\n", I,dest);
             }
         }
     // do things
@@ -82,7 +82,7 @@ void recv_result(std::tuple<Args...>& args, int source, MPI_Status& status,std::
             if constexpr(std::is_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::value) 
             {
                 MPI_Recv(&std::get<I>(args)[source*chunksize],sizeof(typename std::remove_pointer<typename std::tuple_element<I,std::tuple<Args...>>::type>::type)* chunksize, MPI_BYTE,source,I,MPI_COMM_WORLD,&status);
-                debug_printf("MPI: Recv Result Array %ld\n",I);
+                debug_printf("MPI: Recv Result Array %ld from %d\n",I,source);
             }
         }
     // do things
@@ -101,13 +101,13 @@ void Runner<Args...>::run_mpi()
     global_ids[0] =0;
     MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
     MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
-    debug_printf ("MPI task %d has started...  ", taskid);
+    debug_printf ("MPI task %d has started...  \n", taskid);
     chunksize = (N / numtasks);
     leftover = (N % numtasks);
 
     if(taskid == MASTER) {
 #ifndef NDEBUG
-        printf("MASTER: ");
+        printf("MASTER DATA: ");
         std::apply([](auto&... a) {((std::cout << a << " "), ...);}, args);
         std::cout << std::endl;
 #endif
@@ -139,12 +139,13 @@ void Runner<Args...>::run_mpi()
     if(taskid > MASTER) {
 
 #ifndef NDEBUG
-        printf("NOT MASTER: ");
+        printf("NOT MASTER DATA (pre recv): ");
         std::apply([](auto&&... a) {((std::cout << a  << " "), ...);}, args);
         std::cout << std::endl;
 #endif
         recv<0,Args...>(args,MASTER,status,sizes);
 #ifndef NDEBUG
+        printf("NOT MASTER DATA (post recv): ");
         std::apply([](auto&&... a) {((std::cout << a  << " "), ...);}, args);
         std::cout << std::endl;
 #endif
@@ -158,7 +159,7 @@ void Runner<Args...>::run_mpi()
         send_result<0,Args...>(args,MASTER,sizes,read_mem,taskid,chunksize);
         //printf("send done");
     }
-    //MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
     //MPI_Finalize();
 }
 #endif

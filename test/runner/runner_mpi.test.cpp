@@ -3,6 +3,8 @@
 #include "catch.hpp"
 #include "runner.h"
 #include "test.h"
+#include "debug.h"
+#include <cstdio>
 
 TEST_CASE( "mpi unsigned add", "[mpi]" ) {
     int a=1,b=2,c=0;
@@ -29,9 +31,13 @@ TEST_CASE( "mpi array add2", "[mpi]" ) {
     r.run_mpi();
     int mpi_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+    debug_printf("MPI RANK : %d\n",mpi_rank);
     if(mpi_rank==0) {
-        for(int i = 0; i < N;++i)
+        for(int i = 0; i < N;++i) {
+            printf("%d",c[i]);
             REQUIRE( c[i] == 3 );
+        }
+        printf("\n");
     }
 };
 

@@ -193,7 +193,7 @@ void Runner<Args...>::finish_opencl() {
     clReleaseCommandQueue(commands);
     debug_printf("clReleaseContext");
     clReleaseContext(context);
-    debug_printf("clReleaseContext done");
+    debug_printf("clReleaseContext done\n");
     auto t4 = std::chrono::high_resolution_clock::now();
     debug_printf("Cleanup time: %f s\n" ,((std::chrono::duration<double>)(t4-t3)).count());
 }
@@ -245,7 +245,6 @@ void Runner<Args...>::init_opencl()
     clGetProgramInfo(program, CL_PROGRAM_SOURCE, 0, NULL, &kernelSourceSize);
     kernelSource = (char*) malloc(kernelSourceSize);
     clGetProgramInfo(program, CL_PROGRAM_SOURCE, kernelSourceSize, kernelSource, NULL);
-    debug_printf("\nKernel source:\n\n%s\n", kernelSource);
     free(kernelSource);
 
     commands = clCreateCommandQueue(context, device_id, 0, &err);
@@ -253,6 +252,7 @@ void Runner<Args...>::init_opencl()
 
     kernel = clCreateKernel(program, function_name.c_str(),&err);
     if(err) {
+        debug_printf("\nKernel source:\n\n%s\n", kernelSource);
         printf("Kernel name: %s",function_name.c_str());
         printf("KERNEL Kernel error%d",err);
     }
